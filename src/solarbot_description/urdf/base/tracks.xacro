@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ========================================================= -->
+  <!-- Track Module Macro                                        -->
+  <!-- ========================================================= -->
+
+  <xacro:macro name="track_module" params="name x y">
+
+    <joint name="${name}_joint" type="fixed">
+      <parent link="base_link"/>
+      <child link="${name}_track_link"/>
+
+      <origin xyz="${x} ${y} 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="${name}_track_link">
+
+      <visual>
+        <geometry>
+          <box size="${track_length} ${track_width} ${track_height}"/>
+        </geometry>
+
+        <material name="dark_gray"/>
+      </visual>
+
+      <collision>
+        <geometry>
+          <box size="${track_length} ${track_width} ${track_height}"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="0.4"/>
+
+        <origin xyz="0 0 0"/>
+
+        <inertia
+          ixx="0.001"
+          ixy="0"
+          ixz="0"
+          iyy="0.001"
+          iyz="0"
+          izz="0.001"/>
+      </inertial>
+
+    </link>
+
+  </xacro:macro>
+
+  <!-- ========================================================= -->
+  <!-- Instantiate the four track modules                        -->
+  <!-- ========================================================= -->
+
+  <xacro:track_module
+      name="front_left"
+      x="${front_track_x}"
+      y="${left_track_y}"/>
+
+  <xacro:track_module
+      name="front_right"
+      x="${front_track_x}"
+      y="${right_track_y}"/>
+
+  <xacro:track_module
+      name="rear_left"
+      x="${rear_track_x}"
+      y="${left_track_y}"/>
+
+  <xacro:track_module
+      name="rear_right"
+      x="${rear_track_x}"
+      y="${right_track_y}"/>
+
+</robot>

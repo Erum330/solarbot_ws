@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ========================================================= -->
+  <!-- CHASSIS DIMENSIONS (meters)                               -->
+  <!-- ========================================================= -->
+
+  <xacro:property name="chassis_length" value="0.393"/>
+  <xacro:property name="chassis_width"  value="0.206"/>
+  <xacro:property name="chassis_height" value="0.084"/>
+
+  <!-- ========================================================= -->
+  <!-- TRACK MODULES                                              -->
+  <!-- ========================================================= -->
+
+  <xacro:property name="track_length" value="0.115"/>
+  <xacro:property name="track_width"  value="0.050"/>
+  <xacro:property name="track_height" value="0.052"/>
+
+  <!-- Track module positions -->
+
+  <xacro:property name="front_track_x" value="0.125"/>
+  <xacro:property name="rear_track_x"  value="-0.125"/>
+
+  <xacro:property name="left_track_y"  value="0.128"/>
+  <xacro:property name="right_track_y" value="-0.128"/>
+
+  <!-- ========================================================= -->
+  <!-- ROBOT MASS                                                 -->
+  <!-- ========================================================= -->
+
+  <!-- Initial estimate -->
+  <xacro:property name="robot_mass" value="5.0"/>
+
+  <!-- ========================================================= -->
+  <!-- SENSOR POSITIONS                                           -->
+  <!-- ========================================================= -->
+
+  <!-- IMU -->
+  <xacro:property name="imu_x" value="0.0"/>
+  <xacro:property name="imu_y" value="0.0"/>
+  <xacro:property name="imu_z" value="0.020"/>
+
+  <!-- Downward Camera -->
+  <xacro:property name="camera_x" value="0.0"/>
+  <xacro:property name="camera_y" value="0.0"/>
+  <xacro:property name="camera_z" value="-0.030"/>
+
+  <!-- Forward ToF -->
+  <xacro:property name="front_tof_x" value="0.185"/>
+  <xacro:property name="front_tof_y" value="0.000"/>
+  <xacro:property name="front_tof_z" value="0.020"/>
+
+  <!-- Corner ToFs -->
+  <xacro:property name="corner_tof_x" value="0.160"/>
+  <xacro:property name="corner_tof_y" value="0.085"/>
+  <xacro:property name="corner_tof_z" value="-0.040"/>
+
+</robot>
