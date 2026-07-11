@@ -31,7 +31,7 @@
   <!-- ========================================================= -->
 
   <!-- Initial estimate -->
-  <xacro:property name="robot_mass" value="5.0"/>
+  <xacro:property name="robot_mass" value="5.5"/>
 
   <!-- ========================================================= -->
   <!-- SENSOR POSITIONS                                           -->
