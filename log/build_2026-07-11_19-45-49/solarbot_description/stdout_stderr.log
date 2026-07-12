@@ -1,0 +1,28 @@
+-- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+-- Override CMake install command with custom implementation using symlinks instead of copying resources
+-- Configuring done (1.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/erum/solarbot_ws/build/solarbot_description
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/base.xacro
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/materials.xacro
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/properties.xacro
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/sensors.xacro
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/solarbot.urdf.xacro
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/tracks.xacro
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/ament_index/resource_index/package_run_dependencies/solarbot_description
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/ament_index/resource_index/parent_prefix_path/solarbot_description
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/environment/ament_prefix_path.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/environment/ament_prefix_path.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/environment/path.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/environment/path.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/local_setup.bash
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/local_setup.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/local_setup.zsh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/local_setup.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/package.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/ament_index/resource_index/packages/solarbot_description
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/cmake/solarbot_descriptionConfig.cmake
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/cmake/solarbot_descriptionConfig-version.cmake
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/package.xml

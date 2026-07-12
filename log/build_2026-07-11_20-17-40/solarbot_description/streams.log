@@ -1,0 +1,29 @@
+[0.085s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_description -- -j2 -l2
+[0.238s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_description -- -j2 -l2
+[0.246s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_description
+[0.284s] -- Install configuration: ""
+[0.286s] -- Execute custom install script
+[0.288s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/launch/display.launch.py
+[0.291s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/rviz/display.rviz
+[0.291s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/base/chassis.xacro
+[0.292s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/base/tracks.xacro
+[0.296s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/common/materials.xacro
+[0.296s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/common/properties.xacro
+[0.297s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/sensors/sensors.xacro
+[0.301s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/solarbot.urdf.xacro
+[0.302s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/ament_index/resource_index/package_run_dependencies/solarbot_description
+[0.302s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/ament_index/resource_index/parent_prefix_path/solarbot_description
+[0.302s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/environment/ament_prefix_path.sh
+[0.302s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/environment/ament_prefix_path.dsv
+[0.303s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/environment/path.sh
+[0.309s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/environment/path.dsv
+[0.309s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/local_setup.bash
+[0.311s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/local_setup.sh
+[0.312s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/local_setup.zsh
+[0.312s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/local_setup.dsv
+[0.312s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/package.dsv
+[0.351s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/ament_index/resource_index/packages/solarbot_description
+[0.352s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/cmake/solarbot_descriptionConfig.cmake
+[0.352s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/cmake/solarbot_descriptionConfig-version.cmake
+[0.352s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/package.xml
+[0.456s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_description

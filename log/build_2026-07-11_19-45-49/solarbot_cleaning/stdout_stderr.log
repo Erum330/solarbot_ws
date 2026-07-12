@@ -1,0 +1,25 @@
+-- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+-- Override CMake install command with custom implementation using symlinks instead of copying resources
+-- Found ament_lint_auto: 0.17.3 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done (2.0s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/erum/solarbot_ws/build/solarbot_cleaning
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/ament_index/resource_index/package_run_dependencies/solarbot_cleaning
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/ament_index/resource_index/parent_prefix_path/solarbot_cleaning
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/ament_prefix_path.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/ament_prefix_path.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/path.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/path.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.bash
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.zsh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/package.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/ament_index/resource_index/packages/solarbot_cleaning
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/cmake/solarbot_cleaningConfig.cmake
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/cmake/solarbot_cleaningConfig-version.cmake
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/package.xml

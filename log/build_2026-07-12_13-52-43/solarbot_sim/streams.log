@@ -1,0 +1,41 @@
+[0.148s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_sim': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/erum/solarbot_ws/src/solarbot_sim -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/erum/solarbot_ws/install/solarbot_sim
+[1.080s] -- The C compiler identification is GNU 13.3.0
+[1.989s] -- The CXX compiler identification is GNU 13.3.0
+[2.048s] -- Detecting C compiler ABI info
+[2.449s] -- Detecting C compiler ABI info - done
+[2.489s] -- Check for working C compiler: /usr/bin/cc - skipped
+[2.491s] -- Detecting C compile features
+[2.496s] -- Detecting C compile features - done
+[2.530s] -- Detecting CXX compiler ABI info
+[2.905s] -- Detecting CXX compiler ABI info - done
+[2.916s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[2.916s] -- Detecting CXX compile features
+[2.917s] -- Detecting CXX compile features - done
+[2.980s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[3.534s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[3.730s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[4.172s] -- Configuring done (4.0s)
+[4.192s] -- Generating done (0.0s)
+[4.208s] -- Build files have been written to: /home/erum/solarbot_ws/build/solarbot_sim
+[4.218s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_sim' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/erum/solarbot_ws/src/solarbot_sim -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/erum/solarbot_ws/install/solarbot_sim
+[4.221s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_sim': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_sim -- -j2 -l2
+[4.324s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_sim' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_sim -- -j2 -l2
+[4.327s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_sim': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_sim
+[4.344s] -- Install configuration: ""
+[4.345s] -- Execute custom install script
+[4.353s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/ament_index/resource_index/package_run_dependencies/solarbot_sim
+[4.371s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/ament_index/resource_index/parent_prefix_path/solarbot_sim
+[4.396s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/ament_prefix_path.sh
+[4.416s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/ament_prefix_path.dsv
+[4.435s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/path.sh
+[4.454s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/path.dsv
+[4.471s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.bash
+[4.492s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.sh
+[4.515s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.zsh
+[4.538s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.dsv
+[4.565s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/package.dsv
+[4.582s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/ament_index/resource_index/packages/solarbot_sim
+[4.602s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/cmake/solarbot_simConfig.cmake
+[4.640s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/cmake/solarbot_simConfig-version.cmake
+[4.665s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/package.xml
+[4.708s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_sim' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_sim

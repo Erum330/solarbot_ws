@@ -1,19 +1,37 @@
 Panels:
   - Class: rviz_common/Displays
+    Help Height: 78
     Name: Displays
-  - Class: rviz_common/Views
-    Name: Views
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /RobotModel1
+        - /RobotModel1/Links1
+        - /TF1
+        - /TF1/Frames1
+      Splitter Ratio: 0.5
+    Tree Height: 600
   - Class: rviz_common/Selection
     Name: Selection
+  - Class: rviz_common/Tool Properties
+    Expanded:
+      - /2D Goal Pose1
+      - /Publish Point1
+    Name: Tool Properties
+  - Class: rviz_common/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
 
 Visualization Manager:
   Class: ""
   Displays:
-
+    # ── Global grid ───────────────────────────────────────────
     - Alpha: 0.5
-      Cell Size: 1
+      Cell Size: 0.1
       Class: rviz_default_plugins/Grid
-      Color: 160; 160; 160
+      Color: 160; 160; 164
       Enabled: true
       Line Style:
         Line Width: 0.03
@@ -27,37 +45,47 @@ Visualization Manager:
       Plane: XY
       Plane Cell Count: 20
       Reference Frame: <Fixed Frame>
+      Value: true
 
+    # ── Robot model ───────────────────────────────────────────
     - Alpha: 1
       Class: rviz_default_plugins/RobotModel
       Collision Enabled: false
+      Description File: ""
       Description Source: Topic
-      Description Topic:
-        Value: /robot_description
+      Description Topic: /robot_description
       Enabled: true
-      Mass Properties:
-        Inertia:
-          Alpha: 0.5
-          Enabled: false
-        Mass:
-          Alpha: 1
-          Enabled: false
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
       Name: RobotModel
       TF Prefix: ""
       Update Interval: 0
+      Value: true
       Visual Enabled: true
 
+    # ── TF frames ─────────────────────────────────────────────
     - Class: rviz_default_plugins/TF
       Enabled: true
       Frame Timeout: 15
-      Marker Scale: 0.3
+      Frames:
+        All Enabled: true
+      Marker Scale: 0.08          # Small enough to not hide the model
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
+      Tree:
+        {}
+      Update Interval: 0
+      Value: true
 
   Enabled: true
 
+  # ── Global options ──────────────────────────────────────────
   Global Options:
     Background Color: 48; 48; 48
     Fixed Frame: base_footprint
@@ -65,22 +93,58 @@ Visualization Manager:
 
   Name: root
 
-Tools:
-  - Class: rviz_default_plugins/Interact
-  - Class: rviz_default_plugins/MoveCamera
-  - Class: rviz_default_plugins/Select
-  - Class: rviz_default_plugins/FocusCamera
-  - Class: rviz_default_plugins/Measure
+  # ── Tools ───────────────────────────────────────────────────
+  Tools:
+    - Class: rviz_default_plugins/Interact
+      Hide Inactive Objects: true
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+      Line color: 128; 128; 0
+    - Class: rviz_default_plugins/SetInitialPose
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /initialpose
+    - Class: rviz_default_plugins/SetGoal
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /goal_pose
+    - Class: rviz_default_plugins/PublishPoint
+      Single click: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /clicked_point
 
-Views:
-  Current:
-    Class: rviz_default_plugins/Orbit
-    Distance: 2.0
-    Focal Point:
-      X: 0
-      Y: 0
-      Z: 0
-    Near Clip Distance: 0.01
-    Pitch: 0.6
-    Target Frame: base_footprint
-    Yaw: 0.8
+  # ── Camera view ─────────────────────────────────────────────
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 0.8
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.06
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0.03
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.01
+      Pitch: 0.5             # slight top-down angle
+      Target Frame: base_footprint
+      Yaw: 0.785             # 45 degrees — isometric-ish view
+    Saved: ~

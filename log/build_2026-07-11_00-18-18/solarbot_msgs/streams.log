@@ -1,0 +1,42 @@
+[0.050s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/erum/solarbot_ws/src/solarbot_msgs -DCMAKE_INSTALL_PREFIX=/home/erum/solarbot_ws/install/solarbot_msgs
+[0.366s] -- The C compiler identification is GNU 13.3.0
+[0.602s] -- The CXX compiler identification is GNU 13.3.0
+[0.747s] -- Detecting C compiler ABI info
+[1.180s] -- Detecting C compiler ABI info - done
+[1.201s] -- Check for working C compiler: /usr/bin/cc - skipped
+[1.204s] -- Detecting C compile features
+[1.205s] -- Detecting C compile features - done
+[1.263s] -- Detecting CXX compiler ABI info
+[1.799s] -- Detecting CXX compiler ABI info - done
+[1.815s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.815s] -- Detecting CXX compile features
+[1.820s] -- Detecting CXX compile features - done
+[1.849s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[2.604s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[3.126s] -- Found ament_lint_auto: 0.17.3 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[3.559s] -- Added test 'lint_cmake' to check CMake code style
+[3.565s] -- Added test 'xmllint' to check XML markup files
+[3.575s] -- Configuring done (3.5s)
+[3.597s] -- Generating done (0.0s)
+[3.616s] -- Build files have been written to: /home/erum/solarbot_ws/build/solarbot_msgs
+[3.637s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/erum/solarbot_ws/src/solarbot_msgs -DCMAKE_INSTALL_PREFIX=/home/erum/solarbot_ws/install/solarbot_msgs
+[3.639s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_msgs -- -j2 -l2
+[3.833s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_msgs -- -j2 -l2
+[3.837s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_msgs
+[3.881s] -- Install configuration: ""
+[3.885s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/ament_index/resource_index/package_run_dependencies/solarbot_msgs
+[3.887s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/ament_index/resource_index/parent_prefix_path/solarbot_msgs
+[3.889s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/environment/ament_prefix_path.sh
+[3.891s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/environment/ament_prefix_path.dsv
+[3.894s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/environment/path.sh
+[3.897s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/environment/path.dsv
+[3.901s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/local_setup.bash
+[3.911s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/local_setup.sh
+[3.911s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/local_setup.zsh
+[3.918s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/local_setup.dsv
+[3.919s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/package.dsv
+[3.922s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/ament_index/resource_index/packages/solarbot_msgs
+[3.922s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/cmake/solarbot_msgsConfig.cmake
+[3.926s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/cmake/solarbot_msgsConfig-version.cmake
+[3.926s] -- Installing: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/package.xml
+[3.938s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_msgs

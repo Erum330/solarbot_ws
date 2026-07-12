@@ -1,0 +1,42 @@
+[0.073s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_navigation': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/erum/solarbot_ws/src/solarbot_navigation -DCMAKE_INSTALL_PREFIX=/home/erum/solarbot_ws/install/solarbot_navigation
+[0.310s] -- The C compiler identification is GNU 13.3.0
+[0.608s] -- The CXX compiler identification is GNU 13.3.0
+[0.679s] -- Detecting C compiler ABI info
+[1.180s] -- Detecting C compiler ABI info - done
+[1.196s] -- Check for working C compiler: /usr/bin/cc - skipped
+[1.199s] -- Detecting C compile features
+[1.200s] -- Detecting C compile features - done
+[1.234s] -- Detecting CXX compiler ABI info
+[1.758s] -- Detecting CXX compiler ABI info - done
+[1.785s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.787s] -- Detecting CXX compile features
+[1.789s] -- Detecting CXX compile features - done
+[1.814s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[2.768s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[3.350s] -- Found ament_lint_auto: 0.17.3 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[3.826s] -- Added test 'lint_cmake' to check CMake code style
+[3.835s] -- Added test 'xmllint' to check XML markup files
+[3.850s] -- Configuring done (3.7s)
+[3.881s] -- Generating done (0.0s)
+[3.904s] -- Build files have been written to: /home/erum/solarbot_ws/build/solarbot_navigation
+[3.928s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_navigation' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/erum/solarbot_ws/src/solarbot_navigation -DCMAKE_INSTALL_PREFIX=/home/erum/solarbot_ws/install/solarbot_navigation
+[3.929s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_navigation': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_navigation -- -j2 -l2
+[4.128s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_navigation' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_navigation -- -j2 -l2
+[4.132s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_navigation': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_navigation
+[4.185s] -- Install configuration: ""
+[4.186s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/ament_index/resource_index/package_run_dependencies/solarbot_navigation
+[4.187s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/ament_index/resource_index/parent_prefix_path/solarbot_navigation
+[4.189s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/environment/ament_prefix_path.sh
+[4.189s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/environment/ament_prefix_path.dsv
+[4.193s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/environment/path.sh
+[4.194s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/environment/path.dsv
+[4.196s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/local_setup.bash
+[4.196s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/local_setup.sh
+[4.196s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/local_setup.zsh
+[4.197s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/local_setup.dsv
+[4.197s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/package.dsv
+[4.200s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/ament_index/resource_index/packages/solarbot_navigation
+[4.202s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/cmake/solarbot_navigationConfig.cmake
+[4.203s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/cmake/solarbot_navigationConfig-version.cmake
+[4.206s] -- Installing: /home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/package.xml
+[4.211s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_navigation' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_navigation

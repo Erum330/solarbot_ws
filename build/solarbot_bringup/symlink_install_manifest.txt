@@ -1,0 +1,15 @@
+/home/erum/solarbot_ws/install/solarbot_bringup/share/ament_index/resource_index/package_run_dependencies/solarbot_bringup
+/home/erum/solarbot_ws/install/solarbot_bringup/share/ament_index/resource_index/parent_prefix_path/solarbot_bringup
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/environment/ament_prefix_path.sh
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/environment/ament_prefix_path.dsv
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/environment/path.sh
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/environment/path.dsv
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/local_setup.bash
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/local_setup.sh
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/local_setup.zsh
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/local_setup.dsv
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/package.dsv
+/home/erum/solarbot_ws/install/solarbot_bringup/share/ament_index/resource_index/packages/solarbot_bringup
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/cmake/solarbot_bringupConfig.cmake
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/cmake/solarbot_bringupConfig-version.cmake
+/home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/package.xml

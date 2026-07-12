@@ -1,6 +1,160 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!-- sensor definitions -->
+  <!--
+    sensors.xacro
+    ─────────────────────────────────────────────────────────────────
+    All sensor link and joint definitions.
+
+    Sensors:
+      imu_link                    GY-91 / MPU9250 IMU
+      downward_camera_link        OV9732 downward-facing camera
+      downward_camera_optical_frame  ROS optical frame (Z forward, X right)
+      front_tof_link              Forward obstacle ToF
+      front_left_tof_link  }
+      front_right_tof_link }      Corner cliff ToF sensors
+      rear_left_tof_link   }      (detect panel edges, face downward)
+      rear_right_tof_link  }
+
+    Published ROS topics (driver nodes, not defined here):
+      /imu
+      /camera/image_raw
+      /front_tof
+      /front_left_tof   /front_right_tof
+      /rear_left_tof    /rear_right_tof
+
+    All positions come from common/properties.xacro.
+
+    NOTE — camera optical frame rotation:
+      rpy="-1.5708 0 -1.5708" rotates the frame so that:
+        Z_optical points downward (-Z_base_link)
+        X_optical points forward  (+X_base_link)
+      This is the correct REP-103 camera optical convention for a
+      downward-facing camera.  Do NOT use "0 1.5708 0" — that
+      points the camera sideways.
+
+    Depends on: common/properties.xacro, common/materials.xacro
+  ─────────────────────────────────────────────────────────────────
+  -->
+
+  <!-- ── ToF sensor macro ──────────────────────────────────── -->
+  <!--
+    Reusable macro for any ToF sensor.
+    params:
+      name  — becomes ${name}_link and ${name}_joint
+      x y z — position relative to base_link
+      rpy   — orientation (e.g. "0 0 0" = downward, "0 1.5708 0" = forward)
+  -->
+  <xacro:macro name="tof_sensor" params="name x y z rpy">
+
+    <link name="${name}_link">
+      <visual>
+        <geometry>
+          <box size="0.025 0.025 0.015"/>
+        </geometry>
+        <material name="blue"/>
+      </visual>
+    </link>
+
+    <joint name="${name}_joint" type="fixed">
+      <parent link="base_link"/>
+      <child  link="${name}_link"/>
+      <origin xyz="${x} ${y} ${z}" rpy="${rpy}"/>
+    </joint>
+
+  </xacro:macro>
+
+  <!-- ── IMU ───────────────────────────────────────────────── -->
+  <link name="imu_link">
+    <visual>
+      <geometry>
+        <box size="0.025 0.025 0.008"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="imu_link"/>
+    <origin xyz="${imu_x} ${imu_y} ${imu_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ── Downward camera ───────────────────────────────────── -->
+  <link name="downward_camera_link">
+    <visual>
+      <geometry>
+        <box size="0.030 0.030 0.020"/>
+      </geometry>
+      <material name="dark_gray"/>
+    </visual>
+  </link>
+
+  <joint name="downward_camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="downward_camera_link"/>
+    <origin xyz="${camera_x} ${camera_y} ${camera_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!--
+    Optical frame: massless, no visual.
+    The -1.5708 rotations convert from the ROS body convention
+    (X forward, Z up) to the camera optical convention
+    (Z forward = down into the panel, X right).
+  -->
+  <link name="downward_camera_optical_frame"/>
+
+  <joint name="downward_camera_optical_joint" type="fixed">
+    <parent link="downward_camera_link"/>
+    <child  link="downward_camera_optical_frame"/>
+    <origin xyz="0 0 -0.020" rpy="-1.5708 0 -1.5708"/>
+  </joint>
+
+  <!-- ── Front obstacle ToF (forward-facing) ───────────────── -->
+  <!--
+    rpy="0 1.5708 0" tilts the sensor to face forward (+X direction).
+    Detects obstacles ahead of the robot on the panel surface.
+  -->
+  <xacro:tof_sensor
+    name="front_tof"
+    x="${front_tof_x}"
+    y="${front_tof_y}"
+    z="${front_tof_z}"
+    rpy="0 1.5708 0"/>
+
+  <!-- ── Corner cliff ToF sensors (downward-facing) ────────── -->
+  <!--
+    rpy="0 0 0" — sensor faces straight down (-Z in base_link frame).
+    Placed at the four corners just inboard of the tracks so they
+    detect the panel edge drop-off before wheels reach it.
+    These feed edge_guard_node to trigger the safety stop + turn.
+  -->
+  <xacro:tof_sensor
+    name="front_left_tof"
+    x="${front_left_tof_x}"
+    y="${front_left_tof_y}"
+    z="${front_left_tof_z}"
+    rpy="0 0 0"/>
+
+  <xacro:tof_sensor
+    name="front_right_tof"
+    x="${front_right_tof_x}"
+    y="${front_right_tof_y}"
+    z="${front_right_tof_z}"
+    rpy="0 0 0"/>
+
+  <xacro:tof_sensor
+    name="rear_left_tof"
+    x="${rear_left_tof_x}"
+    y="${rear_left_tof_y}"
+    z="${rear_left_tof_z}"
+    rpy="0 0 0"/>
+
+  <xacro:tof_sensor
+    name="rear_right_tof"
+    x="${rear_right_tof_x}"
+    y="${rear_right_tof_y}"
+    z="${rear_right_tof_z}"
+    rpy="0 0 0"/>
 
 </robot>

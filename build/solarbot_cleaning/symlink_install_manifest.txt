@@ -1,0 +1,15 @@
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/ament_index/resource_index/package_run_dependencies/solarbot_cleaning
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/ament_index/resource_index/parent_prefix_path/solarbot_cleaning
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/ament_prefix_path.sh
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/ament_prefix_path.dsv
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/path.sh
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/path.dsv
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.bash
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.sh
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.zsh
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.dsv
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/package.dsv
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/ament_index/resource_index/packages/solarbot_cleaning
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/cmake/solarbot_cleaningConfig.cmake
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/cmake/solarbot_cleaningConfig-version.cmake
+/home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/package.xml

@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    electronics.xacro
+    ─────────────────────────────────────────────────────────────────
+    Visual placeholders for onboard electronics.
+    Purely cosmetic — no effect on kinematics or control.
+
+    Components:
+      battery_link      LiFePO4 pack (centre-rear)
+      raspberry_pi_link Raspberry Pi 5 (rear top plate)
+      esp32_link        ESP32 motor controller (front)
+      stm32_link        STM32 safety controller (front)
+
+    All positions come from common/properties.xacro.
+    Adjust xyz values there once physical mounting is confirmed.
+
+    Depends on: common/properties.xacro, common/materials.xacro
+  ─────────────────────────────────────────────────────────────────
+  -->
+
+  <!-- ── Battery pack ──────────────────────────────────────── -->
+  <link name="battery_link">
+    <visual>
+      <geometry>
+        <box size="0.120 0.070 0.035"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.120 0.070 0.035"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="battery_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="battery_link"/>
+    <origin xyz="${battery_x} ${battery_y} ${battery_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ── Raspberry Pi 5 ─────────────────────────────────────── -->
+  <link name="raspberry_pi_link">
+    <visual>
+      <geometry>
+        <box size="0.085 0.056 0.018"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+  </link>
+
+  <joint name="raspberry_pi_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="raspberry_pi_link"/>
+    <origin xyz="${rpi_x} ${rpi_y} ${rpi_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ── ESP32 motor controller ─────────────────────────────── -->
+  <link name="esp32_link">
+    <visual>
+      <geometry>
+        <box size="0.060 0.030 0.010"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>
+
+  <joint name="esp32_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="esp32_link"/>
+    <origin xyz="${esp32_x} ${esp32_y} ${esp32_z}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ── STM32 safety controller ────────────────────────────── -->
+  <link name="stm32_link">
+    <visual>
+      <geometry>
+        <box size="0.060 0.030 0.010"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+  </link>
+
+  <joint name="stm32_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="stm32_link"/>
+    <origin xyz="${stm32_x} ${stm32_y} ${stm32_z}" rpy="0 0 0"/>
+  </joint>
+
+</robot>

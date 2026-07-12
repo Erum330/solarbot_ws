@@ -1,0 +1,15 @@
+/home/erum/solarbot_ws/install/solarbot_navigation/share/ament_index/resource_index/package_run_dependencies/solarbot_navigation
+/home/erum/solarbot_ws/install/solarbot_navigation/share/ament_index/resource_index/parent_prefix_path/solarbot_navigation
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/environment/ament_prefix_path.sh
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/environment/ament_prefix_path.dsv
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/environment/path.sh
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/environment/path.dsv
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/local_setup.bash
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/local_setup.sh
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/local_setup.zsh
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/local_setup.dsv
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/package.dsv
+/home/erum/solarbot_ws/install/solarbot_navigation/share/ament_index/resource_index/packages/solarbot_navigation
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/cmake/solarbot_navigationConfig.cmake
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/cmake/solarbot_navigationConfig-version.cmake
+/home/erum/solarbot_ws/install/solarbot_navigation/share/solarbot_navigation/package.xml

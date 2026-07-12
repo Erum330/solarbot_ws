@@ -1,0 +1,31 @@
+[0.049s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/erum/solarbot_ws/src/solarbot_msgs -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/erum/solarbot_ws/install/solarbot_msgs
+[0.151s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.939s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.992s] -- Found ament_lint_auto: 0.17.3 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[1.295s] -- Added test 'lint_cmake' to check CMake code style
+[1.308s] -- Added test 'xmllint' to check XML markup files
+[1.326s] -- Configuring done (1.2s)
+[1.395s] -- Generating done (0.1s)
+[1.426s] -- Build files have been written to: /home/erum/solarbot_ws/build/solarbot_msgs
+[1.443s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/erum/solarbot_ws/src/solarbot_msgs -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/erum/solarbot_ws/install/solarbot_msgs
+[1.445s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_msgs -- -j2 -l2
+[1.643s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_msgs -- -j2 -l2
+[1.648s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_msgs
+[1.726s] -- Install configuration: ""
+[1.734s] -- Execute custom install script
+[1.737s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/ament_index/resource_index/package_run_dependencies/solarbot_msgs
+[1.784s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/ament_index/resource_index/parent_prefix_path/solarbot_msgs
+[1.857s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/environment/ament_prefix_path.sh
+[1.919s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/environment/ament_prefix_path.dsv
+[1.968s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/environment/path.sh
+[2.057s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/environment/path.dsv
+[2.145s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/local_setup.bash
+[2.180s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/local_setup.sh
+[2.232s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/local_setup.zsh
+[2.281s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/local_setup.dsv
+[2.350s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/package.dsv
+[2.393s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/ament_index/resource_index/packages/solarbot_msgs
+[2.460s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/cmake/solarbot_msgsConfig.cmake
+[2.530s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/cmake/solarbot_msgsConfig-version.cmake
+[2.582s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_msgs/share/solarbot_msgs/package.xml
+[2.663s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_msgs

@@ -1,0 +1,1 @@
+/home/erum/solarbot_ws/build/solarbot_cleaning/ament_cmake_core/solarbot_cleaningConfig-version.cmake

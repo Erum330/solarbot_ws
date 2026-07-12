@@ -1,0 +1,1 @@
+/home/erum/solarbot_ws/build/solarbot_bringup/ament_cmake_core/solarbot_bringupConfig-version.cmake

@@ -1,0 +1,4 @@
+source;share/solarbot_cleaning/local_setup.bash
+source;share/solarbot_cleaning/local_setup.dsv
+source;share/solarbot_cleaning/local_setup.sh
+source;share/solarbot_cleaning/local_setup.zsh

@@ -1,0 +1,31 @@
+[0.145s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_bringup': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/erum/solarbot_ws/src/solarbot_bringup -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/erum/solarbot_ws/install/solarbot_bringup
+[0.973s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[2.427s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[2.470s] -- Found ament_lint_auto: 0.17.3 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[2.850s] -- Added test 'lint_cmake' to check CMake code style
+[2.857s] -- Added test 'xmllint' to check XML markup files
+[2.873s] -- Configuring done (2.0s)
+[2.954s] -- Generating done (0.1s)
+[2.997s] -- Build files have been written to: /home/erum/solarbot_ws/build/solarbot_bringup
+[3.023s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_bringup' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/erum/solarbot_ws/src/solarbot_bringup -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/erum/solarbot_ws/install/solarbot_bringup
+[3.026s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_bringup': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_bringup -- -j2 -l2
+[3.277s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_bringup' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_bringup -- -j2 -l2
+[3.343s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_bringup': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_bringup
+[3.383s] -- Install configuration: ""
+[3.385s] -- Execute custom install script
+[3.386s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/ament_index/resource_index/package_run_dependencies/solarbot_bringup
+[3.459s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/ament_index/resource_index/parent_prefix_path/solarbot_bringup
+[3.515s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/environment/ament_prefix_path.sh
+[3.557s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/environment/ament_prefix_path.dsv
+[3.610s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/environment/path.sh
+[3.659s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/environment/path.dsv
+[3.705s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/local_setup.bash
+[3.757s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/local_setup.sh
+[3.795s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/local_setup.zsh
+[3.842s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/local_setup.dsv
+[3.887s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/package.dsv
+[3.979s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/ament_index/resource_index/packages/solarbot_bringup
+[4.038s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/cmake/solarbot_bringupConfig.cmake
+[4.075s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/cmake/solarbot_bringupConfig-version.cmake
+[4.121s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_bringup/share/solarbot_bringup/package.xml
+[4.164s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_bringup' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_bringup

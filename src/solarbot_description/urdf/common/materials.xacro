@@ -1,41 +1,41 @@
 <?xml version="1.0"?>
-
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- ============================= -->
-  <!-- Materials                     -->
-  <!-- ============================= -->
+  <!--
+    materials.xacro
+    All colour definitions. Reference by name everywhere else.
+  -->
+
+  <material name="silver">
+    <color rgba="0.75 0.75 0.72 1.0"/>
+  </material>
 
   <material name="black">
-    <color rgba="0.10 0.10 0.10 1.0"/>
+    <color rgba="0.05 0.05 0.05 1.0"/>
   </material>
 
   <material name="dark_gray">
-    <color rgba="0.25 0.25 0.25 1.0"/>
+    <color rgba="0.15 0.15 0.15 1.0"/>
   </material>
 
-  <material name="light_gray">
-    <color rgba="0.75 0.75 0.75 1.0"/>
-  </material>
-
-  <material name="silver">
-    <color rgba="0.82 0.82 0.82 1.0"/>
-  </material>
-
+  <!-- Sensor boards (IMU, ToF) -->
   <material name="blue">
-    <color rgba="0.10 0.30 0.90 1.0"/>
+    <color rgba="0.0 0.25 0.8 1.0"/>
   </material>
 
+  <!-- Camera module -->
+  <material name="camera_gray">
+    <color rgba="0.20 0.20 0.20 1.0"/>
+  </material>
+
+  <!-- Raspberry Pi board -->
   <material name="green">
-    <color rgba="0.10 0.80 0.20 1.0"/>
+    <color rgba="0.05 0.45 0.10 1.0"/>
   </material>
 
+  <!-- STM32 safety controller -->
   <material name="red">
-    <color rgba="0.90 0.10 0.10 1.0"/>
-  </material>
-
-  <material name="yellow">
-    <color rgba="1.00 0.90 0.10 1.0"/>
+    <color rgba="0.80 0.05 0.05 1.0"/>
   </material>
 
 </robot>

@@ -1,0 +1,15 @@
+/home/erum/solarbot_ws/install/solarbot_sim/share/ament_index/resource_index/package_run_dependencies/solarbot_sim
+/home/erum/solarbot_ws/install/solarbot_sim/share/ament_index/resource_index/parent_prefix_path/solarbot_sim
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/ament_prefix_path.sh
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/ament_prefix_path.dsv
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/path.sh
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/path.dsv
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.bash
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.sh
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.zsh
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.dsv
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/package.dsv
+/home/erum/solarbot_ws/install/solarbot_sim/share/ament_index/resource_index/packages/solarbot_sim
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/cmake/solarbot_simConfig.cmake
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/cmake/solarbot_simConfig-version.cmake
+/home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/package.xml

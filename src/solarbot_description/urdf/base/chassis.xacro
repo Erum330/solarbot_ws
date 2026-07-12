@@ -1,52 +1,152 @@
 <?xml version="1.0"?>
-
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- ============================= -->
-  <!-- Base Footprint                -->
-  <!-- ============================= -->
+  <!--
+    chassis.xacro
+    ─────────────────────────────────────────────────────────────────
+    Main chassis body: base_footprint, base_link.
+    Visuals represent the aluminium frame as seen on the real chassis:
+      • Central spine rail
+      • Front and rear top mounting plates
+      • Left and right side rails
+    Depends on: common/properties.xacro, common/materials.xacro
+  ─────────────────────────────────────────────────────────────────
+  -->
 
+  <!-- ── Inertia helper macros ─────────────────────────────── -->
+
+  <!-- Solid box: m=mass, lx/ly/lz=dimensions along each axis -->
+  <xacro:macro name="box_inertia" params="m lx ly lz">
+    <inertia
+      ixx="${m*(ly*ly + lz*lz)/12.0}"
+      ixy="0.0" ixz="0.0"
+      iyy="${m*(lx*lx + lz*lz)/12.0}"
+      iyz="0.0"
+      izz="${m*(lx*lx + ly*ly)/12.0}"/>
+  </xacro:macro>
+
+  <!-- Solid cylinder: m=mass, r=radius, h=height along spin axis -->
+  <xacro:macro name="cylinder_inertia" params="m r h">
+    <inertia
+      ixx="${m*(3.0*r*r + h*h)/12.0}"
+      ixy="0.0" ixz="0.0"
+      iyy="${m*(3.0*r*r + h*h)/12.0}"
+      iyz="0.0"
+      izz="${m*r*r/2.0}"/>
+  </xacro:macro>
+
+  <!-- ── base_footprint ────────────────────────────────────── -->
+  <!--
+    Projection of the robot onto the ground plane.
+    Nav2 and the localisation stack use this frame as the
+    reference for 2D pose (x, y, yaw).
+  -->
   <link name="base_footprint"/>
 
-  <!-- ============================= -->
-  <!-- Base Link                     -->
-  <!-- ============================= -->
-
-  <joint name="base_joint" type="fixed">
+  <joint name="base_footprint_joint" type="fixed">
     <parent link="base_footprint"/>
-    <child link="base_link"/>
-    <origin xyz="0 0 ${chassis_height/2}" rpy="0 0 0"/>
+    <child  link="base_link"/>
+    <!-- Raise base_link so the track bottoms sit at z=0 in the world -->
+    <origin xyz="0 0 ${base_z_above_ground}" rpy="0 0 0"/>
   </joint>
 
+  <!-- ── base_link ─────────────────────────────────────────── -->
+  <!--
+    Rigid chassis body.  The inertial block approximates the full
+    chassis as a solid box — good enough for simulation dynamics.
+    Visuals are broken into sub-boxes to resemble the real aluminium
+    frame visible in the chassis photo.
+  -->
   <link name="base_link">
 
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${chassis_mass}"/>
+      <xacro:box_inertia
+        m="${chassis_mass}"
+        lx="${track_full_length}"
+        ly="${motor_shaft_length}"
+        lz="${track_pod_height}"/>
+    </inertial>
+
+    <!-- ── Visual: central spine rail ── -->
     <visual>
-      <origin xyz="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+        <box size="${chassis_rail_length}
+                   ${chassis_rail_width}
+                   ${chassis_rail_height}"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_rail_length}
+                   ${chassis_rail_width}
+                   ${chassis_rail_height}"/>
+      </geometry>
+    </collision>
+
+    <!-- ── Visual: front top plate ── -->
+    <visual>
+      <origin xyz="${plate_length} 0 ${plate_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${plate_length}
+                   ${plate_width}
+                   ${plate_thickness}"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin xyz="${plate_length} 0 ${plate_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${plate_length}
+                   ${plate_width}
+                   ${plate_thickness}"/>
+      </geometry>
+    </collision>
+
+    <!-- ── Visual: rear top plate ── -->
+    <visual>
+      <origin xyz="${-plate_length} 0 ${plate_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${plate_length}
+                   ${plate_width}
+                   ${plate_thickness}"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin xyz="${-plate_length} 0 ${plate_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${plate_length}
+                   ${plate_width}
+                   ${plate_thickness}"/>
+      </geometry>
+    </collision>
+
+    <!-- ── Visual: left side rail ── -->
+    <visual>
+      <origin xyz="0 ${side_rail_y} ${side_rail_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${side_rail_length}
+                   ${side_rail_width}
+                   ${side_rail_height}"/>
       </geometry>
       <material name="silver"/>
     </visual>
 
-    <collision>
-      <origin xyz="0 0 0"/>
+    <!-- ── Visual: right side rail ── -->
+    <visual>
+      <origin xyz="0 ${-side_rail_y} ${side_rail_z}" rpy="0 0 0"/>
       <geometry>
-        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+        <box size="${side_rail_length}
+                   ${side_rail_width}
+                   ${side_rail_height}"/>
       </geometry>
-    </collision>
-
-    <inertial>
-      <origin xyz="0 0 0"/>
-      <mass value="${robot_mass}"/>
-
-      <inertia
-        ixx="0.05"
-        ixy="0.0"
-        ixz="0.0"
-        iyy="0.05"
-        iyz="0.0"
-        izz="0.08"/>
-    </inertial>
+      <material name="silver"/>
+    </visual>
 
   </link>
 

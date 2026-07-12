@@ -1,0 +1,21 @@
+[0.086s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_hardware': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_hardware -- -j2 -l2
+[0.321s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_hardware' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_hardware -- -j2 -l2
+[0.325s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_hardware': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_hardware
+[0.347s] -- Install configuration: ""
+[0.347s] -- Execute custom install script
+[0.348s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/ament_index/resource_index/package_run_dependencies/solarbot_hardware
+[0.349s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/ament_index/resource_index/parent_prefix_path/solarbot_hardware
+[0.351s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/environment/ament_prefix_path.sh
+[0.352s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/environment/ament_prefix_path.dsv
+[0.352s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/environment/path.sh
+[0.352s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/environment/path.dsv
+[0.354s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/local_setup.bash
+[0.355s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/local_setup.sh
+[0.356s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/local_setup.zsh
+[0.361s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/local_setup.dsv
+[0.361s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/package.dsv
+[0.411s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/ament_index/resource_index/packages/solarbot_hardware
+[0.412s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/cmake/solarbot_hardwareConfig.cmake
+[0.412s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/cmake/solarbot_hardwareConfig-version.cmake
+[0.413s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_hardware/share/solarbot_hardware/package.xml
+[0.425s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_hardware' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_hardware

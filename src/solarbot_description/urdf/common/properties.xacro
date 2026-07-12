@@ -1,60 +1,128 @@
 <?xml version="1.0"?>
-
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- ========================================================= -->
-  <!-- CHASSIS DIMENSIONS (meters)                               -->
-  <!-- ========================================================= -->
+  <!--
+    properties.xacro
+    Single source of truth for ALL dimensions, masses and positions.
+    Edit numbers here — every other file picks them up automatically.
 
-  <xacro:property name="chassis_length" value="0.393"/>
-  <xacro:property name="chassis_width"  value="0.206"/>
-  <xacro:property name="chassis_height" value="0.084"/>
+    Real chassis measurements:
+      Total length : 393 mm
+      Total width  : 206 mm
+      Total height :  84 mm (tracks included)
+  -->
 
-  <!-- ========================================================= -->
-  <!-- TRACK MODULES                                              -->
-  <!-- ========================================================= -->
+  <!-- ── Chassis body ──────────────────────────────────────── -->
+  <xacro:property name="chassis_rail_length"  value="0.270"/>
+  <xacro:property name="chassis_rail_width"   value="0.055"/>
+  <xacro:property name="chassis_rail_height"  value="0.022"/>
 
-  <xacro:property name="track_length" value="0.115"/>
-  <xacro:property name="track_width"  value="0.050"/>
-  <xacro:property name="track_height" value="0.052"/>
+  <xacro:property name="plate_length"         value="0.105"/>
+  <xacro:property name="plate_width"          value="0.145"/>
+  <xacro:property name="plate_thickness"      value="0.008"/>
+  <xacro:property name="plate_z"              value="0.034"/>
 
-  <!-- Track module positions -->
+  <xacro:property name="side_rail_length"     value="0.295"/>
+  <xacro:property name="side_rail_width"      value="0.014"/>
+  <xacro:property name="side_rail_height"     value="0.018"/>
+  <xacro:property name="side_rail_z"          value="-0.006"/>
+  <xacro:property name="side_rail_y"          value="0.070"/>
 
-  <xacro:property name="front_track_x" value="0.125"/>
-  <xacro:property name="rear_track_x"  value="-0.125"/>
+  <!-- ── Track geometry ───────────────────────────────────── -->
+  <xacro:property name="track_pod_length"     value="0.115"/>
+  <xacro:property name="track_pod_width"      value="0.050"/>
+  <xacro:property name="track_pod_height"     value="0.052"/>
+  <xacro:property name="track_full_length"    value="0.393"/>
+  <xacro:property name="track_front_x"        value="0.135"/>
+  <xacro:property name="track_rear_x"         value="-0.135"/>
+  <xacro:property name="track_y_offset"       value="0.078"/>
+  <xacro:property name="track_z_offset"       value="-0.016"/>
 
-  <xacro:property name="left_track_y"  value="0.128"/>
-  <xacro:property name="right_track_y" value="-0.128"/>
+  <!-- ── Virtual wheel (control) ──────────────────────────── -->
+  <xacro:property name="wheel_radius"         value="0.026"/>
+  <xacro:property name="wheel_width"          value="0.050"/>
 
-  <!-- ========================================================= -->
-  <!-- ROBOT MASS                                                 -->
-  <!-- ========================================================= -->
+  <!-- ── Motors ───────────────────────────────────────────── -->
+  <xacro:property name="motor_radius"         value="0.018"/>
+  <xacro:property name="motor_shaft_length"   value="0.155"/>
+  <xacro:property name="motor_front_x"        value="0.155"/>
+  <xacro:property name="motor_z"              value="-0.006"/>
 
-  <!-- Initial estimate -->
-  <xacro:property name="robot_mass" value="5.5"/>
+  <!-- ── Base heights ─────────────────────────────────────── -->
+  <xacro:property name="base_z_above_ground"  value="${wheel_radius}"/>
 
-  <!-- ========================================================= -->
-  <!-- SENSOR POSITIONS                                           -->
-  <!-- ========================================================= -->
+  <!-- ── Masses ────────────────────────────────────────────── -->
+  <xacro:property name="chassis_mass"         value="2.20"/>
+  <xacro:property name="track_pod_mass"       value="0.45"/>
+  <xacro:property name="virtual_wheel_mass"   value="0.001"/>
 
-  <!-- IMU -->
-  <xacro:property name="imu_x" value="0.0"/>
-  <xacro:property name="imu_y" value="0.0"/>
-  <xacro:property name="imu_z" value="0.020"/>
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- ELECTRONICS POSITIONS                                 -->
+  <!-- All xyz relative to base_link origin.                 -->
+  <!-- Adjust once physical mounting is measured.            -->
+  <!-- ══════════════════════════════════════════════════════ -->
 
-  <!-- Downward Camera -->
-  <xacro:property name="camera_x" value="0.0"/>
-  <xacro:property name="camera_y" value="0.0"/>
-  <xacro:property name="camera_z" value="-0.030"/>
+  <!-- Battery pack (LiFePO4, centre-rear for balance) -->
+  <xacro:property name="battery_x"            value="-0.060"/>
+  <xacro:property name="battery_y"            value="0.000"/>
+  <xacro:property name="battery_z"            value="0.055"/>
 
-  <!-- Forward ToF -->
-  <xacro:property name="front_tof_x" value="0.185"/>
-  <xacro:property name="front_tof_y" value="0.000"/>
-  <xacro:property name="front_tof_z" value="0.020"/>
+  <!-- Raspberry Pi 5 (rear top plate) -->
+  <xacro:property name="rpi_x"                value="-0.090"/>
+  <xacro:property name="rpi_y"                value="0.000"/>
+  <xacro:property name="rpi_z"                value="0.050"/>
 
-  <!-- Corner ToFs -->
-  <xacro:property name="corner_tof_x" value="0.160"/>
-  <xacro:property name="corner_tof_y" value="0.085"/>
-  <xacro:property name="corner_tof_z" value="-0.040"/>
+  <!-- ESP32 motor controller (front area, near motor driver) -->
+  <xacro:property name="esp32_x"              value="0.080"/>
+  <xacro:property name="esp32_y"              value="0.020"/>
+  <xacro:property name="esp32_z"              value="0.048"/>
+
+  <!-- STM32 safety controller (front top plate) -->
+  <xacro:property name="stm32_x"              value="0.080"/>
+  <xacro:property name="stm32_y"              value="-0.020"/>
+  <xacro:property name="stm32_z"              value="0.048"/>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!-- SENSOR POSITIONS                                      -->
+  <!-- All xyz relative to base_link origin.                 -->
+  <!-- ══════════════════════════════════════════════════════ -->
+
+  <!-- IMU (GY-91 / MPU9250 — centred on chassis) -->
+  <xacro:property name="imu_x"                value="0.000"/>
+  <xacro:property name="imu_y"                value="0.000"/>
+  <xacro:property name="imu_z"                value="0.045"/>
+
+  <!-- Downward camera (OV9732 — centre of chassis, looking down at panel) -->
+  <xacro:property name="camera_x"             value="0.000"/>
+  <xacro:property name="camera_y"             value="0.000"/>
+  <xacro:property name="camera_z"             value="-0.020"/>
+
+  <!-- Front obstacle ToF (forward-facing, above front edge) -->
+  <xacro:property name="front_tof_x"          value="0.200"/>
+  <xacro:property name="front_tof_y"          value="0.000"/>
+  <xacro:property name="front_tof_z"          value="0.010"/>
+
+  <!--
+    Corner cliff ToF sensors (downward-facing, detect panel edges).
+    Positioned just inboard of each track corner so they see the
+    panel surface drop-off before the wheels reach the edge.
+    rpy "0 0 0" = pointing straight down (sensor board faces -z).
+    Adjust x/y offsets once physically mounted and tested.
+  -->
+  <xacro:property name="front_left_tof_x"     value="0.170"/>
+  <xacro:property name="front_left_tof_y"     value="0.065"/>
+  <xacro:property name="front_left_tof_z"     value="-0.010"/>
+
+  <xacro:property name="front_right_tof_x"    value="0.170"/>
+  <xacro:property name="front_right_tof_y"    value="-0.065"/>
+  <xacro:property name="front_right_tof_z"    value="-0.010"/>
+
+  <xacro:property name="rear_left_tof_x"      value="-0.170"/>
+  <xacro:property name="rear_left_tof_y"      value="0.065"/>
+  <xacro:property name="rear_left_tof_z"      value="-0.010"/>
+
+  <xacro:property name="rear_right_tof_x"     value="-0.170"/>
+  <xacro:property name="rear_right_tof_y"     value="-0.065"/>
+  <xacro:property name="rear_right_tof_z"     value="-0.010"/>
 
 </robot>

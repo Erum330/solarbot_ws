@@ -1,0 +1,1 @@
+/home/erum/solarbot_ws/build/solarbot_navigation/ament_cmake_core/solarbot_navigationConfig.cmake
