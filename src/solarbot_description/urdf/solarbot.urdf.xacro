@@ -2,40 +2,37 @@
 <robot name="solarbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!--
-    solarbot.urdf.xacro
+    solarbot.urdf.xacro  —  top-level include file
     ─────────────────────────────────────────────────────────────────
-    Top-level robot description.  This file only includes sub-files —
-    no geometry, no joints, no properties are defined here.
-
     Include order matters:
-      1. common/  — properties and materials must come first because
-                    every other file references their xacro:property values
-      2. base/    — structural links and joints
-      3. sensors/ — sensor frames (depends on base links existing)
-      4. electronics/ — board visuals (depends on base links existing)
-      5. control/ — ros2_control block (references joint names from base/)
-
-    Launch args forwarded to sub-files:
-      use_real_hardware  (default: false)  — selects hardware plugin
-      serial_port        (default: /dev/ttyACM0)
+      1. common/   — properties + materials first (everything else references them)
+      2. base/     — chassis body + track joints
+      3. sensors/  — sensor frames (depends on base links existing)
+      4. electronics/ — board visuals
+      5. control/  — ros2_control block (references joint names from base/)
+      6. gazebo/   — Gazebo Harmonic plugins + sensor definitions
+                     (simulation only, harmless on real hardware)
   ─────────────────────────────────────────────────────────────────
   -->
 
-  <!-- ── 1. Common: properties and materials ─────────────────── -->
+  <!-- ── 1. Common ─────────────────────────────────────────────── -->
   <xacro:include filename="$(find solarbot_description)/urdf/common/properties.xacro"/>
   <xacro:include filename="$(find solarbot_description)/urdf/common/materials.xacro"/>
 
-  <!-- ── 2. Base: chassis body and tracks ────────────────────── -->
+  <!-- ── 2. Base ───────────────────────────────────────────────── -->
   <xacro:include filename="$(find solarbot_description)/urdf/base/chassis.xacro"/>
   <xacro:include filename="$(find solarbot_description)/urdf/base/tracks.xacro"/>
 
-  <!-- ── 3. Sensors ───────────────────────────────────────────── -->
+  <!-- ── 3. Sensors ────────────────────────────────────────────── -->
   <xacro:include filename="$(find solarbot_description)/urdf/sensors/sensors.xacro"/>
 
-  <!-- ── 4. Electronics ───────────────────────────────────────── -->
+  <!-- ── 4. Electronics ────────────────────────────────────────── -->
   <xacro:include filename="$(find solarbot_description)/urdf/electronics/electronics.xacro"/>
 
-  <!-- ── 5. ros2_control ──────────────────────────────────────── -->
+  <!-- ── 5. ros2_control ───────────────────────────────────────── -->
   <xacro:include filename="$(find solarbot_description)/urdf/control/ros2_control.xacro"/>
+
+  <!-- ── 6. Gazebo plugins + sensors ──────────────────────────── -->
+  <xacro:include filename="$(find solarbot_description)/urdf/gazebo/gazebo.xacro"/>
 
 </robot>

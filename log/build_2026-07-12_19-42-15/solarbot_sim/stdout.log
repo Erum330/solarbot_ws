@@ -1,0 +1,20 @@
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/launch/gazebo.launch.py
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/launch/simulation.launch.py
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/worlds/rooftop.world.sdf
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/ament_index/resource_index/package_run_dependencies/solarbot_sim
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/ament_index/resource_index/parent_prefix_path/solarbot_sim
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/ament_prefix_path.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/ament_prefix_path.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/path.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/environment/path.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.bash
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.zsh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/local_setup.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/package.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/ament_index/resource_index/packages/solarbot_sim
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/cmake/solarbot_simConfig.cmake
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/cmake/solarbot_simConfig-version.cmake
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_sim/share/solarbot_sim/package.xml

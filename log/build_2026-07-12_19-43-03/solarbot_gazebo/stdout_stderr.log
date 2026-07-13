@@ -1,0 +1,36 @@
+-- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+-- Override CMake install command with custom implementation using symlinks instead of copying resources
+-- Configuring done (0.7s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/erum/solarbot_ws/build/solarbot_gazebo
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/launch/gazebo.launch.py
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/worlds/solar_panels.sdf
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_01_dust.png
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_02_dust.png
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_03_dust.png
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_04_dust.png
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_05_dust.png
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_06_dust.png
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_07_dust.png
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_08_dust.png
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_09_dust.png
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_10_dust.png
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/scripts/make_texture.py
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/config/controllers.yaml
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/ament_index/resource_index/package_run_dependencies/solarbot_gazebo
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/ament_index/resource_index/parent_prefix_path/solarbot_gazebo
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/environment/ament_prefix_path.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/environment/ament_prefix_path.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/environment/path.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/environment/path.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/local_setup.bash
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/local_setup.sh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/local_setup.zsh
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/local_setup.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/package.dsv
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/ament_index/resource_index/packages/solarbot_gazebo
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/cmake/solarbot_gazeboConfig.cmake
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/cmake/solarbot_gazeboConfig-version.cmake
+-- Symlinking: /home/erum/solarbot_ws/install/solarbot_gazebo/share/solarbot_gazebo/package.xml

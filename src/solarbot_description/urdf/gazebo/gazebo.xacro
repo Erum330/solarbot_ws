@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    gazebo.xacro
+    ─────────────────────────────────────────────────────────────────
+    Gazebo Harmonic (gz-sim) plugin and sensor definitions.
+
+    This file is ONLY relevant when running in simulation.
+    It has no effect on real-hardware launches.
+
+    Contents:
+      1. gz_ros2_control plugin  — connects ros2_control controllers
+                                   to Gazebo joint physics
+      2. IMU sensor              — publishes /imu
+      3. Downward camera         — publishes /camera/image_raw
+      4. Cliff ToF sensors × 4  — /front_left_tof etc. (edge detection)
+      5. Front obstacle ToF      — /front_tof (forward range)
+      6. Gazebo material colours — so links render correctly in Gazebo
+                                   (Gazebo ignores URDF <material> tags)
+
+    Topic names here MUST match the ros_gz_bridge entries in gazebo.launch.py.
+
+    Depends on: common/properties.xacro (for wheel_radius, sensor positions)
+  ─────────────────────────────────────────────────────────────────
+  -->
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 1. gz_ros2_control plugin                                 -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!--
+    This is the Gazebo Harmonic equivalent of the old
+    libgazebo_ros2_control.so plugin.  It reads the <ros2_control>
+    block from the URDF, loads the hardware plugin declared there
+    (mock_components/GenericSystem for simulation), and connects
+    it to Gazebo's joint state/command interface so that
+    diff_drive_controller actually moves the simulated robot.
+
+    The parameters file path tells it where to find controllers.yaml.
+    This must match the path passed to the controller spawner in
+    gazebo.launch.py.
+  -->
+  
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 2. IMU sensor (GY-91 / MPU9250)                          -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!--
+    Attached to imu_link (defined in sensors/sensors.xacro).
+    Noise values approximate MPU9250 datasheet figures.
+    update_rate: 100 Hz matches real sensor capability.
+    Topic: /imu  →  bridged to ROS2 by ros_gz_bridge.
+  -->
+  <gazebo reference="imu_link">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <topic>/imu</topic>
+      <gz_frame_id>imu_link</gz_frame_id>
+      <imu>
+        <angular_velocity>
+          <x><noise type="gaussian"><mean>0.0</mean><stddev>0.009</stddev><bias_mean>0.0</bias_mean><bias_stddev>0.001</bias_stddev></noise></x>
+          <y><noise type="gaussian"><mean>0.0</mean><stddev>0.009</stddev><bias_mean>0.0</bias_mean><bias_stddev>0.001</bias_stddev></noise></y>
+          <z><noise type="gaussian"><mean>0.0</mean><stddev>0.009</stddev><bias_mean>0.0</bias_mean><bias_stddev>0.001</bias_stddev></noise></z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x><noise type="gaussian"><mean>0.0</mean><stddev>0.021</stddev><bias_mean>0.1</bias_mean><bias_stddev>0.001</bias_stddev></noise></x>
+          <y><noise type="gaussian"><mean>0.0</mean><stddev>0.021</stddev><bias_mean>0.1</bias_mean><bias_stddev>0.001</bias_stddev></noise></y>
+          <z><noise type="gaussian"><mean>0.0</mean><stddev>0.021</stddev><bias_mean>0.1</bias_mean><bias_stddev>0.001</bias_stddev></noise></z>
+        </linear_acceleration>
+      </imu>
+    </sensor>
+  </gazebo>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 3. Downward camera (OV9732, 720p)                        -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!--
+    Mounted under the chassis (downward_camera_link, defined in
+    sensors/sensors.xacro).  Looking straight down at the panel surface.
+
+    FOV: 78° horizontal (OV9732 spec, wide enough to see panel texture).
+    Resolution: 640×480 — sufficient for ECC visual odometry without
+    overloading the Pi's CPU.
+    Near clip: 0.01 m — camera is ~6 mm above panel surface, so keep
+    near clip well below that.
+    Far clip: 0.5 m — only need to see the panel surface below.
+
+    Topics (bridged via ros_gz_bridge):
+      /camera/image_raw       sensor_msgs/Image
+      /camera/camera_info     sensor_msgs/CameraInfo
+  -->
+  <gazebo reference="downward_camera_link">
+    <sensor name="downward_camera" type="camera">
+      <always_on>true</always_on>
+      <update_rate>30</update_rate>
+      <topic>/camera/image_raw</topic>
+      <gz_frame_id>downward_camera_optical_frame</gz_frame_id>
+      <camera name="downward_camera">
+        <!-- OV9732: 78° HFOV -->
+        <horizontal_fov>1.3614</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.005</near>
+          <far>0.50</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.005</stddev>
+        </noise>
+        <distortion>
+          <k1>0.0</k1>
+          <k2>0.0</k2>
+          <k3>0.0</k3>
+          <p1>0.0</p1>
+          <p2>0.0</p2>
+        </distortion>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 4. Cliff ToF sensors (downward, edge detection)          -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!--
+    Modelled as single-beam GPU lidars (best ToF approximation in
+    Gazebo Harmonic).  Each sensor fires a narrow beam straight down
+    (-z in sensor frame, which is -z in base_link for these sensors).
+
+    Range spec (approximates VL53L0X / VL53L1X):
+      min: 0.01 m   max: 1.20 m   resolution: 0.001 m
+
+    When the robot is on a panel (z=0.04) and the sensor is at
+    z=-0.010 from base_link (base_link at z=0.066 from ground):
+      expected reading = 0.066 - 0.010 - 0.040 = 0.016 m (on panel)
+    When the robot reaches a panel edge (gap, z=0):
+      expected reading = 0.066 - 0.010 - 0.000 = 0.056 m (deeper)
+    edge_guard_node threshold sits between these two values.
+
+    Topics bridged: /front_left_tof, /front_right_tof,
+                    /rear_left_tof,  /rear_right_tof
+  -->
+  <xacro:macro name="cliff_tof_gazebo" params="link_name topic">
+    <gazebo reference="${link_name}">
+      <sensor name="${link_name}_sensor" type="gpu_lidar">
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+        <topic>${topic}</topic>
+        <gz_frame_id>${link_name}</gz_frame_id>
+        <lidar>
+          <scan>
+            <!-- Single beam: 1 horizontal × 1 vertical ray -->
+            <horizontal>
+              <samples>1</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>0</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>1</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>0</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.010</min>
+            <max>1.200</max>
+            <resolution>0.001</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.002</stddev>
+          </noise>
+        </lidar>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:cliff_tof_gazebo link_name="front_left_tof_link"  topic="/front_left_tof"/>
+  <xacro:cliff_tof_gazebo link_name="front_right_tof_link" topic="/front_right_tof"/>
+  <xacro:cliff_tof_gazebo link_name="rear_left_tof_link"   topic="/rear_left_tof"/>
+  <xacro:cliff_tof_gazebo link_name="rear_right_tof_link"  topic="/rear_right_tof"/>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 5. Front obstacle ToF (forward-facing)                   -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!--
+    Faces +x (forward).  Same single-beam lidar approach.
+    Used by drive_node / safety layer to detect obstacles ahead
+    on the panel surface (e.g. panel frame lip, foreign object).
+    Topic: /front_tof
+  -->
+  <gazebo reference="front_tof_link">
+    <sensor name="front_tof_sensor" type="gpu_lidar">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <topic>/front_tof</topic>
+      <gz_frame_id>front_tof_link</gz_frame_id>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.010</min>
+          <max>2.000</max>
+          <resolution>0.001</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.003</stddev>
+        </noise>
+      </lidar>
+    </sensor>
+  </gazebo>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- 6. Gazebo material colours                                -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!--
+    Gazebo Harmonic ignores the <material> tags inside URDF <visual>
+    elements.  These <gazebo reference="..."> blocks set the actual
+    rendered colours in Gazebo.
+    Omitting these makes everything grey in the simulator.
+  -->
+
+  <!-- Chassis body — aluminium silver -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Silver</material>
+  </gazebo>
+
+  <!-- Track pods — rubber black -->
+  <gazebo reference="front_left_track_link">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="rear_left_track_link">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="front_right_track_link">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="rear_right_track_link">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+
+  <!-- Motor shafts — silver -->
+  <gazebo reference="front_motor_link">
+    <material>Gazebo/Silver</material>
+  </gazebo>
+  <gazebo reference="rear_motor_link">
+    <material>Gazebo/Silver</material>
+  </gazebo>
+
+  <!-- Electronics -->
+  <gazebo reference="raspberry_pi_link">
+    <material>Gazebo/Green</material>
+  </gazebo>
+  <gazebo reference="arduino_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="battery_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="esp32_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="stm32_link">
+    <material>Gazebo/Red</material>
+  </gazebo>
+
+  <!-- Sensors -->
+  <gazebo reference="imu_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="downward_camera_link">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="front_tof_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="front_left_tof_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="front_right_tof_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="rear_left_tof_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="rear_right_tof_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+</robot>

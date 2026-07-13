@@ -1,0 +1,41 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+diff_drive_controller:
+  ros__parameters:
+    left_wheel_names:  ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+
+    wheel_radius: 0.026        # matches common/properties.xacro
+    wheel_separation: 0.156    # 2 × track_y_offset (0.078 m × 2)
+
+    open_loop: true            # no encoders yet
+
+    odom_frame_id: odom
+    base_frame_id: base_footprint
+    enable_odom_tf: true
+    publish_rate: 30.0
+
+    # Conservative limits for on-panel driving
+    linear.x.max_velocity:     0.15
+    linear.x.min_velocity:    -0.15
+    linear.x.max_acceleration: 0.5
+    linear.x.min_acceleration: -0.5
+
+    angular.z.max_velocity:    0.6
+    angular.z.min_velocity:   -0.6
+    angular.z.max_acceleration: 1.0
+    angular.z.min_acceleration: -1.0
+
+    cmd_vel_timeout: 0.5
+    use_stamped_vel: false
+
+    pose_covariance_diagonal:  [0.001, 0.001, 0.0, 0.0, 0.0, 0.01]
+    twist_covariance_diagonal: [0.001, 0.0,   0.0, 0.0, 0.0, 0.01]

@@ -1,78 +1,99 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!--
-    ros2_control.xacro
-    ─────────────────────────────────────────────────────────────────
-    Declares the ros2_control hardware block and exposes the two
-    virtual wheel joints to diff_drive_controller.
+  <!-- ==========================================================
+       ROS2 Control Configuration
+       ========================================================== -->
 
-    Two modes (set via xacro arg when launching):
-      use_real_hardware:=false  →  mock_components/GenericSystem
-        No Arduino needed. Echoes commands back as state.
-        Use this for all software/nav stack development on your laptop.
-
-      use_real_hardware:=true   →  panelbot_hardware/SkidSteerHardware
-        Opens serial port to Arduino, sends "V <left> <right>\n".
-        Use this only when the robot is physically connected.
-
-    The joint names here MUST match:
-      • tracks.xacro   (virtual_wheel macro → ${name}_wheel_joint)
-      • controller_manager.yaml  (left/right_wheel_names)
-    They are: left_wheel_joint and right_wheel_joint.
-
-    Depends on: common/properties.xacro
-  ─────────────────────────────────────────────────────────────────
-  -->
-
-  <!-- Args are declared here so they can be passed from the top-level
-       solarbot.urdf.xacro without re-declaring in every file. -->
   <xacro:arg name="use_real_hardware" default="false"/>
-  <xacro:arg name="serial_port"       default="/dev/ttyACM0"/>
+  <xacro:arg name="serial_port" default="/dev/ttyACM0"/>
+  <xacro:arg name="baud_rate" default="115200"/>
 
-  <ros2_control name="SolarbotHardware" type="system">
+  <ros2_control name="SolarbotSystem" type="system">
+
+    <!-- ===================================================== -->
+    <!-- Hardware Plugin                                       -->
+    <!-- ===================================================== -->
 
     <hardware>
-      <xacro:if value="$(arg use_real_hardware)">
-        <!--
-          Real hardware: serial bridge to Arduino motor driver.
-          max_wheel_rad_s is the linear rad/s → PWM scaling factor.
-          Tune it once the robot is driving:
-            1. Command a fixed /cmd_vel linear.x
-            2. Measure actual speed over a 1m run
-            3. Adjust until commanded and real speed match
-        -->
-        <plugin>panelbot_hardware/SkidSteerHardware</plugin>
-        <param name="serial_port">$(arg serial_port)</param>
-        <param name="baud_rate">115200</param>
-        <param name="wheel_radius">${wheel_radius}</param>
-        <param name="max_wheel_rad_s">6.0</param>
-      </xacro:if>
+
+      <!-- Simulation -->
       <xacro:unless value="$(arg use_real_hardware)">
-        <!--
-          Mock system: no hardware required.
-          calculate_dynamics:=true means the mock integrates velocity
-          commands into position, giving realistic /joint_states output.
-        -->
-        <plugin>mock_components/GenericSystem</plugin>
-        <param name="calculate_dynamics">true</param>
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
       </xacro:unless>
+
+      <!-- Real Robot -->
+      <xacro:if value="$(arg use_real_hardware)">
+        <plugin>panelbot_hardware/SkidSteerHardware</plugin>
+
+        <param name="serial_port">
+          $(arg serial_port)
+        </param>
+
+        <param name="baud_rate">
+          $(arg baud_rate)
+        </param>
+
+        <param name="wheel_radius">
+          ${wheel_radius}
+        </param>
+
+        <param name="wheel_separation">
+          ${2.0 * track_y_offset}
+        </param>
+
+        <param name="max_wheel_rad_s">
+          6.0
+        </param>
+
+      </xacro:if>
+
     </hardware>
 
-    <!-- Left track: commanded through left_virtual_wheel_link -->
+    <!-- ===================================================== -->
+    <!-- Left Drive Joint                                      -->
+    <!-- ===================================================== -->
+
     <joint name="left_wheel_joint">
+
       <command_interface name="velocity"/>
-      <state_interface   name="velocity"/>
-      <state_interface   name="position"/>
+
+      <state_interface name="position"/>
+
+      <state_interface name="velocity"/>
+
     </joint>
 
-    <!-- Right track: commanded through right_virtual_wheel_link -->
+    <!-- ===================================================== -->
+    <!-- Right Drive Joint                                     -->
+    <!-- ===================================================== -->
+
     <joint name="right_wheel_joint">
+
       <command_interface name="velocity"/>
-      <state_interface   name="velocity"/>
-      <state_interface   name="position"/>
+
+      <state_interface name="position"/>
+
+      <state_interface name="velocity"/>
+
     </joint>
 
   </ros2_control>
+
+  <!-- ==========================================================
+       Gazebo Plugin
+       ========================================================== -->
+
+  <gazebo>
+
+    <plugin
+      filename="gz_ros2_control-system"
+      name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+
+      <parameters>$(find solarbot_description)/config/controllers.yaml</parameters>
+
+    </plugin>
+
+  </gazebo>
 
 </robot>

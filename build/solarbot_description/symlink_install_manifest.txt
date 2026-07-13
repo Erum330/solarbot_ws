@@ -6,6 +6,7 @@
 /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/common/properties.xacro
 /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/control/ros2_control.xacro
 /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/electronics/electronics.xacro
+/home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/gazebo/gazebo.xacro
 /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/sensors/sensors.xacro
 /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/urdf/solarbot.urdf.xacro
 /home/erum/solarbot_ws/install/solarbot_description/share/solarbot_description/config/ros2_controllers.yaml

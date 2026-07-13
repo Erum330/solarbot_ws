@@ -1,0 +1,21 @@
+[0.110s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_cleaning': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_cleaning -- -j2 -l2
+[1.011s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_cleaning' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/erum/solarbot_ws/build/solarbot_cleaning -- -j2 -l2
+[1.026s] Invoking command in '/home/erum/solarbot_ws/build/solarbot_cleaning': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_cleaning
+[1.162s] -- Install configuration: ""
+[1.188s] -- Execute custom install script
+[1.202s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/ament_index/resource_index/package_run_dependencies/solarbot_cleaning
+[1.205s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/ament_index/resource_index/parent_prefix_path/solarbot_cleaning
+[1.209s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/ament_prefix_path.sh
+[1.220s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/ament_prefix_path.dsv
+[1.228s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/path.sh
+[1.237s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/environment/path.dsv
+[1.237s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.bash
+[1.243s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.sh
+[1.253s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.zsh
+[1.253s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.dsv
+[1.253s] -- Symlinking: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/package.dsv
+[1.538s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/ament_index/resource_index/packages/solarbot_cleaning
+[1.550s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/cmake/solarbot_cleaningConfig.cmake
+[1.557s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/cmake/solarbot_cleaningConfig-version.cmake
+[1.557s] -- Up-to-date symlink: /home/erum/solarbot_ws/install/solarbot_cleaning/share/solarbot_cleaning/package.xml
+[1.575s] Invoked command in '/home/erum/solarbot_ws/build/solarbot_cleaning' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/erum/solarbot_ws/build/solarbot_cleaning
