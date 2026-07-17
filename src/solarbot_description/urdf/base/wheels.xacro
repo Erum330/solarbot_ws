@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!--
+wheels.xacro
+____________________________________________________________________
+
+Four driven wheels – one at each corner of the chassis.
+
+Each wheel is a cylinder with:
+    • Visual   : rubber-coloured cylinder (visible in RViz/Gazebo)
+    • Collision: same cylinder (physics contact with ground/panels)
+    • Inertia  : solid cylinder
+
+Driven as two left/right pairs by DiffDrive:
+    LEFT  : front_left_wheel_joint + rear_left_wheel_joint
+    RIGHT : front_right_wheel_joint + rear_right_wheel_joint
+
+Wheel positions (matching old track pod corners):
+    Front: x = +0.135 m
+    Rear:  x = -0.135 m
+    Left:  y = +wheel_y_offset
+    Right: y = -wheel_y_offset
+
+Turning: mu2 (lateral friction) is kept lower than mu1 (forward
+friction) in gazebo.xacro to allow skid-steer turning.
+
+Depends on: common/properties.xacro, common/materials.xacro
+____________________________________________________________________
+-->
+
+<xacro:macro name="cylinder_inertia" params="m r h">
+    <inertia
+        ixx="${m*(3.0*r*r + h*h)/12.0}" ixy="0" ixz="0"
+        iyy="${m*(3.0*r*r + h*h)/12.0}" iyz="0"
+        izz="${m*r*r/2.0}"/>
+</xacro:macro>
+
+<!-- ========================================================== -->
+<!-- Wheel macro                                                -->
+<!-- ========================================================== -->
+<xacro:macro name="wheel" params="name x y">
+
+    <link name="${name}_wheel_link">
+    
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="${wheel_mass}"/>
+            <xacro:cylinder_inertia
+                m="${wheel_mass}"
+                r="${wheel_radius}"
+                h="${wheel_width}"/>
+        </inertial>
+        
+        <!-- Visual: rubber tyre cylinder -->
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        
+        <!-- Collision: same cylinder geometry -->
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <geometry>
+                <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+            </geometry>
+        </collision>
+        
+    </link>
+    
+    <!--
+        Continuous joint – DiffDrive commands velocity on this.
+        Wheel centre sits at wheel_radius above ground so its
+        bottom touches z=0.
+        axis="0 1 0" -> wheel rolls forward when joint spins.
+    -->
+    
+    <joint name="${name}_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child  link="${name}_wheel_link"/>
+        <origin xyz="${x} ${y} ${-wheel_radius}" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <dynamics damping="0.01" friction="0.1"/>
+    </joint>
+    
+</xacro:macro>
+
+<!-- ========================================================== -->
+<!-- Instantiate all four wheels                                -->
+<!-- ========================================================== -->
+
+<xacro:wheel name="front_left"  x="0.135"  y="${wheel_y_offset}"/>
+<xacro:wheel name="rear_left"   x="-0.135" y="${wheel_y_offset}"/>
+<xacro:wheel name="front_right" x="0.135"  y="${-wheel_y_offset}"/>
+<xacro:wheel name="rear_right"  x="-0.135" y="${-wheel_y_offset}"/>
+
+</robot>

@@ -21,7 +21,7 @@
 
   <!-- ── 2. Base ───────────────────────────────────────────────── -->
   <xacro:include filename="$(find solarbot_description)/urdf/base/chassis.xacro"/>
-  <xacro:include filename="$(find solarbot_description)/urdf/base/tracks.xacro"/>
+  <xacro:include filename="$(find solarbot_description)/urdf/base/wheels.xacro"/>
 
   <!-- ── 3. Sensors ────────────────────────────────────────────── -->
   <xacro:include filename="$(find solarbot_description)/urdf/sensors/sensors.xacro"/>

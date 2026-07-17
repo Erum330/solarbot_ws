@@ -18,7 +18,7 @@
       <right_joint>rear_right_wheel_joint</right_joint>
 
       <wheel_separation>0.156</wheel_separation>
-      <wheel_radius>0.026</wheel_radius>
+      <wheel_radius>0.04</wheel_radius>
 
       <odom_publish_frequency>30</odom_publish_frequency>
       <topic>cmd_vel</topic>
@@ -27,10 +27,10 @@
       <frame_id>odom</frame_id>
       <child_frame_id>base_footprint</child_frame_id>
 
-      <max_linear_acceleration>0.5</max_linear_acceleration>
-      <max_angular_acceleration>1.0</max_angular_acceleration>
-      <min_velocity>-0.15</min_velocity>
-      <max_velocity>0.15</max_velocity>
+      <max_linear_acceleration>5.0</max_linear_acceleration>
+      <max_angular_acceleration>5.0</max_angular_acceleration>
+      <min_velocity>-1.0</min_velocity>
+      <max_velocity>1.0</max_velocity>
     </plugin>
   </gazebo>
 
@@ -158,16 +158,17 @@
     </sensor>
   </gazebo>
 
-  <!-- ══ 6. Track pod friction (all four pods) ════════════════ -->
-  <!--
-    mu1/mu2 = 0.8 : rubber-track-on-concrete friction.
-    kp      = stiff contact (hard surface).
-    kd      = damping prevents bouncing at contact.
-    minDepth: small allowed interpenetration stabilises low-speed contact.
-  -->
-  <xacro:macro name="track_friction" params="link_name">
+  <!-- ══ 6. Wheel friction ════════════════════════════════════ -->
+<!--
+  mu1 = 0.9  : longitudinal (forward/back grip)
+
+  mu2 = 0.3  : lateral (lower = allows skid-steer turning)
+
+  kp/kd      : stiff hard-surface contact
+-->
+  <xacro:macro name="wheel_friction" params="link_name">
     <gazebo reference="${link_name}">
-      <mu1>0.8</mu1>  <!-- longitudinal: grip for forward/back -->
+      <mu1>0.9</mu1>  <!-- longitudinal: grip for forward/back -->
       <mu2>0.3</mu2>  <!-- lateral: LOW so tracks can skid-steer and TURN -->
       <kp>1000000.0</kp>
       <kd>100.0</kd>
@@ -176,17 +177,17 @@
     </gazebo>
   </xacro:macro>
 
-  <xacro:track_friction link_name="front_left_track_link"/>
-  <xacro:track_friction link_name="rear_left_track_link"/>
-  <xacro:track_friction link_name="front_right_track_link"/>
-  <xacro:track_friction link_name="rear_right_track_link"/>
+  <xacro:wheel_friction link_name="front_left_wheel_link"/>
+  <xacro:wheel_friction link_name="rear_left_wheel_link"/>
+  <xacro:wheel_friction link_name="front_right_wheel_link"/>
+  <xacro:wheel_friction link_name="rear_right_wheel_link"/>
 
   <!-- ══ 7. Gazebo material colours ═══════════════════════════ -->
   <gazebo reference="base_link">        <material>Gazebo/Silver</material>    </gazebo>
-  <gazebo reference="front_left_track_link">  <material>Gazebo/DarkGrey</material> </gazebo>
-  <gazebo reference="rear_left_track_link">   <material>Gazebo/DarkGrey</material> </gazebo>
-  <gazebo reference="front_right_track_link"> <material>Gazebo/DarkGrey</material> </gazebo>
-  <gazebo reference="rear_right_track_link">  <material>Gazebo/DarkGrey</material> </gazebo>
+  <gazebo reference="front_left_wheel_link">  <material>Gazebo/DarkGrey</material> </gazebo>
+  <gazebo reference="rear_left_wheel_link">   <material>Gazebo/DarkGrey</material> </gazebo>
+  <gazebo reference="front_right_wheel_link"> <material>Gazebo/DarkGrey</material> </gazebo>
+  <gazebo reference="rear_right_wheel_link">  <material>Gazebo/DarkGrey</material> </gazebo>
   <gazebo reference="raspberry_pi_link"> <material>Gazebo/Green</material>    </gazebo>
   <gazebo reference="arduino_link">      <material>Gazebo/Blue</material>     </gazebo>
   <gazebo reference="battery_link">      <material>Gazebo/Black</material>    </gazebo>

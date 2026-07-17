@@ -2,12 +2,11 @@
 <!--
   warehouse_rooftop.sdf  -  Gazebo Harmonic / SDF 1.9
   ──────────────────────────────────────────────────────────────────
-  Panel thickness: 0.02 m (2 cm)
+  Panel thickness: 0.01 m (1 cm) [UPDATED]
   Wheel radius:    0.026 m (2.6 cm)
   Step < Wheel radius → robot CAN climb panels ✓
 
   Robot spawn: x=-3.20 y=4.20 z=0.05 yaw=0
-  (On ground between dock and panels — drops 2.4 cm onto ground plane)
   ──────────────────────────────────────────────────────────────────
 -->
 <sdf version="1.9">
@@ -75,14 +74,13 @@
     </link>
   </model>
 
-
     <!-- ── panel_1 ── -->
     <model name="panel_1">
       <static>true</static>
-      <pose>0.0000 0.0000 0.0100 0 0 0</pose>
+      <pose>0.0000 0.0000 0.0050 0 0 0</pose>
       <link name="link">
         <visual name="frame_visual">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <material>
             <ambient>0.62 0.62 0.60 1</ambient>
             <diffuse>0.65 0.65 0.63 1</diffuse>
@@ -90,7 +88,7 @@
           </material>
         </visual>
         <visual name="cell_visual">
-          <pose>0 0 0.0110 0 0 0</pose>
+          <pose>0 0 0.0060 0 0 0</pose>
           <geometry><box><size>3.90 1.70 0.002</size></box></geometry>
           <material>
             <ambient>1 1 1 1</ambient>
@@ -106,7 +104,7 @@
           </material>
         </visual>
         <collision name="collision">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <surface>
             <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
           </surface>
@@ -126,13 +124,14 @@
         </collision>
       </link>
     </model>
+
     <!-- ── panel_2 ── -->
     <model name="panel_2">
       <static>true</static>
-      <pose>0.0000 2.1000 0.0100 0 0 0</pose>
+      <pose>0.0000 2.1000 0.0050 0 0 0</pose>
       <link name="link">
         <visual name="frame_visual">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <material>
             <ambient>0.62 0.62 0.60 1</ambient>
             <diffuse>0.65 0.65 0.63 1</diffuse>
@@ -140,7 +139,7 @@
           </material>
         </visual>
         <visual name="cell_visual">
-          <pose>0 0 0.0110 0 0 0</pose>
+          <pose>0 0 0.0060 0 0 0</pose>
           <geometry><box><size>3.90 1.70 0.002</size></box></geometry>
           <material>
             <ambient>1 1 1 1</ambient>
@@ -156,7 +155,7 @@
           </material>
         </visual>
         <collision name="collision">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <surface>
             <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
           </surface>
@@ -176,13 +175,14 @@
         </collision>
       </link>
     </model>
+
     <!-- ── panel_3 ── -->
     <model name="panel_3">
       <static>true</static>
-      <pose>0.0000 4.2000 0.0100 0 0 0</pose>
+      <pose>0.0000 4.2000 0.0050 0 0 0</pose>
       <link name="link">
         <visual name="frame_visual">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <material>
             <ambient>0.62 0.62 0.60 1</ambient>
             <diffuse>0.65 0.65 0.63 1</diffuse>
@@ -190,7 +190,7 @@
           </material>
         </visual>
         <visual name="cell_visual">
-          <pose>0 0 0.0110 0 0 0</pose>
+          <pose>0 0 0.0060 0 0 0</pose>
           <geometry><box><size>3.90 1.70 0.002</size></box></geometry>
           <material>
             <ambient>1 1 1 1</ambient>
@@ -206,7 +206,7 @@
           </material>
         </visual>
         <collision name="collision">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <surface>
             <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
           </surface>
@@ -226,13 +226,14 @@
         </collision>
       </link>
     </model>
+
     <!-- ── panel_4 ── -->
     <model name="panel_4">
       <static>true</static>
-      <pose>0.0000 6.3000 0.0100 0 0 0</pose>
+      <pose>0.0000 6.3000 0.0050 0 0 0</pose>
       <link name="link">
         <visual name="frame_visual">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <material>
             <ambient>0.62 0.62 0.60 1</ambient>
             <diffuse>0.65 0.65 0.63 1</diffuse>
@@ -240,7 +241,7 @@
           </material>
         </visual>
         <visual name="cell_visual">
-          <pose>0 0 0.0110 0 0 0</pose>
+          <pose>0 0 0.0060 0 0 0</pose>
           <geometry><box><size>3.90 1.70 0.002</size></box></geometry>
           <material>
             <ambient>1 1 1 1</ambient>
@@ -256,7 +257,7 @@
           </material>
         </visual>
         <collision name="collision">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <surface>
             <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
           </surface>
@@ -276,13 +277,14 @@
         </collision>
       </link>
     </model>
+
     <!-- ── panel_5 ── -->
     <model name="panel_5">
       <static>true</static>
-      <pose>0.0000 8.4000 0.0100 0 0 0</pose>
+      <pose>0.0000 8.4000 0.0050 0 0 0</pose>
       <link name="link">
         <visual name="frame_visual">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <material>
             <ambient>0.62 0.62 0.60 1</ambient>
             <diffuse>0.65 0.65 0.63 1</diffuse>
@@ -290,7 +292,7 @@
           </material>
         </visual>
         <visual name="cell_visual">
-          <pose>0 0 0.0110 0 0 0</pose>
+          <pose>0 0 0.0060 0 0 0</pose>
           <geometry><box><size>3.90 1.70 0.002</size></box></geometry>
           <material>
             <ambient>1 1 1 1</ambient>
@@ -306,20 +308,21 @@
           </material>
         </visual>
         <collision name="collision">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <surface>
             <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
           </surface>
         </collision>
       </link>
     </model>
+
     <!-- ── panel_6 ── -->
     <model name="panel_6">
       <static>true</static>
-      <pose>4.5000 0.0000 0.0100 0 0 0</pose>
+      <pose>4.5000 0.0000 0.0050 0 0 0</pose>
       <link name="link">
         <visual name="frame_visual">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <material>
             <ambient>0.62 0.62 0.60 1</ambient>
             <diffuse>0.65 0.65 0.63 1</diffuse>
@@ -327,7 +330,7 @@
           </material>
         </visual>
         <visual name="cell_visual">
-          <pose>0 0 0.0110 0 0 0</pose>
+          <pose>0 0 0.0060 0 0 0</pose>
           <geometry><box><size>3.90 1.70 0.002</size></box></geometry>
           <material>
             <ambient>1 1 1 1</ambient>
@@ -343,7 +346,7 @@
           </material>
         </visual>
         <collision name="collision">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <surface>
             <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
           </surface>
@@ -363,13 +366,14 @@
         </collision>
       </link>
     </model>
+
     <!-- ── panel_7 ── -->
     <model name="panel_7">
       <static>true</static>
-      <pose>4.5000 2.1000 0.0100 0 0 0</pose>
+      <pose>4.5000 2.1000 0.0050 0 0 0</pose>
       <link name="link">
         <visual name="frame_visual">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <material>
             <ambient>0.62 0.62 0.60 1</ambient>
             <diffuse>0.65 0.65 0.63 1</diffuse>
@@ -377,7 +381,7 @@
           </material>
         </visual>
         <visual name="cell_visual">
-          <pose>0 0 0.0110 0 0 0</pose>
+          <pose>0 0 0.0060 0 0 0</pose>
           <geometry><box><size>3.90 1.70 0.002</size></box></geometry>
           <material>
             <ambient>1 1 1 1</ambient>
@@ -393,7 +397,7 @@
           </material>
         </visual>
         <collision name="collision">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <surface>
             <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
           </surface>
@@ -413,13 +417,14 @@
         </collision>
       </link>
     </model>
+
     <!-- ── panel_8 ── -->
     <model name="panel_8">
       <static>true</static>
-      <pose>4.5000 4.2000 0.0100 0 0 0</pose>
+      <pose>4.5000 4.2000 0.0050 0 0 0</pose>
       <link name="link">
         <visual name="frame_visual">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <material>
             <ambient>0.62 0.62 0.60 1</ambient>
             <diffuse>0.65 0.65 0.63 1</diffuse>
@@ -427,7 +432,7 @@
           </material>
         </visual>
         <visual name="cell_visual">
-          <pose>0 0 0.0110 0 0 0</pose>
+          <pose>0 0 0.0060 0 0 0</pose>
           <geometry><box><size>3.90 1.70 0.002</size></box></geometry>
           <material>
             <ambient>1 1 1 1</ambient>
@@ -443,7 +448,7 @@
           </material>
         </visual>
         <collision name="collision">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <surface>
             <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
           </surface>
@@ -463,13 +468,14 @@
         </collision>
       </link>
     </model>
+
     <!-- ── panel_9 ── -->
     <model name="panel_9">
       <static>true</static>
-      <pose>4.5000 6.3000 0.0100 0 0 0</pose>
+      <pose>4.5000 6.3000 0.0050 0 0 0</pose>
       <link name="link">
         <visual name="frame_visual">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <material>
             <ambient>0.62 0.62 0.60 1</ambient>
             <diffuse>0.65 0.65 0.63 1</diffuse>
@@ -477,7 +483,7 @@
           </material>
         </visual>
         <visual name="cell_visual">
-          <pose>0 0 0.0110 0 0 0</pose>
+          <pose>0 0 0.0060 0 0 0</pose>
           <geometry><box><size>3.90 1.70 0.002</size></box></geometry>
           <material>
             <ambient>1 1 1 1</ambient>
@@ -493,7 +499,7 @@
           </material>
         </visual>
         <collision name="collision">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <surface>
             <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
           </surface>
@@ -513,13 +519,14 @@
         </collision>
       </link>
     </model>
+
     <!-- ── panel_10 ── -->
     <model name="panel_10">
       <static>true</static>
-      <pose>4.5000 8.4000 0.0100 0 0 0</pose>
+      <pose>4.5000 8.4000 0.0050 0 0 0</pose>
       <link name="link">
         <visual name="frame_visual">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <material>
             <ambient>0.62 0.62 0.60 1</ambient>
             <diffuse>0.65 0.65 0.63 1</diffuse>
@@ -527,7 +534,7 @@
           </material>
         </visual>
         <visual name="cell_visual">
-          <pose>0 0 0.0110 0 0 0</pose>
+          <pose>0 0 0.0060 0 0 0</pose>
           <geometry><box><size>3.90 1.70 0.002</size></box></geometry>
           <material>
             <ambient>1 1 1 1</ambient>
@@ -543,13 +550,14 @@
           </material>
         </visual>
         <collision name="collision">
-          <geometry><box><size>4.0 1.8 0.02</size></box></geometry>
+          <geometry><box><size>4.0 1.8 0.01</size></box></geometry>
           <surface>
             <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
           </surface>
         </collision>
       </link>
     </model>
+
     <model name="col_gap">
       <static>true</static>
       <pose>2.2500 4.2000 0.003 0 0 0</pose>
@@ -563,7 +571,6 @@
         </collision>
       </link>
     </model>
-
 
     <model name="docking_station">
       <static>true</static>
