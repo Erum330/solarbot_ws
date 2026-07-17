@@ -2,61 +2,30 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!--
-    chassis.xacro
-    ─────────────────────────────────────────────────────────────────
-    Main chassis body: base_footprint, base_link.
-    Visuals represent the aluminium frame as seen on the real chassis:
-      • Central spine rail
-      • Front and rear top mounting plates
-      • Left and right side rails
-    Depends on: common/properties.xacro, common/materials.xacro
-  ─────────────────────────────────────────────────────────────────
+    chassis.xacro  —  base_footprint + base_link frame only.
+
+    Track pods moved back to tracks.xacro (they are now real physics
+    objects). Motor shaft visuals remain inline here since they are
+    purely cosmetic with no physics role.
   -->
 
-  <!-- ── Inertia helper macros ─────────────────────────────── -->
-
-  <!-- Solid box: m=mass, lx/ly/lz=dimensions along each axis -->
   <xacro:macro name="box_inertia" params="m lx ly lz">
     <inertia
-      ixx="${m*(ly*ly + lz*lz)/12.0}"
-      ixy="0.0" ixz="0.0"
-      iyy="${m*(lx*lx + lz*lz)/12.0}"
-      iyz="0.0"
+      ixx="${m*(ly*ly + lz*lz)/12.0}" ixy="0" ixz="0"
+      iyy="${m*(lx*lx + lz*lz)/12.0}" iyz="0"
       izz="${m*(lx*lx + ly*ly)/12.0}"/>
   </xacro:macro>
 
-  <!-- Solid cylinder: m=mass, r=radius, h=height along spin axis -->
-  <xacro:macro name="cylinder_inertia" params="m r h">
-    <inertia
-      ixx="${m*(3.0*r*r + h*h)/12.0}"
-      ixy="0.0" ixz="0.0"
-      iyy="${m*(3.0*r*r + h*h)/12.0}"
-      iyz="0.0"
-      izz="${m*r*r/2.0}"/>
-  </xacro:macro>
-
-  <!-- ── base_footprint ────────────────────────────────────── -->
-  <!--
-    Projection of the robot onto the ground plane.
-    Nav2 and the localisation stack use this frame as the
-    reference for 2D pose (x, y, yaw).
-  -->
+  <!-- base_footprint — ground-plane projection, used by Nav2 -->
   <link name="base_footprint"/>
 
   <joint name="base_footprint_joint" type="fixed">
     <parent link="base_footprint"/>
     <child  link="base_link"/>
-    <!-- Raise base_link so the track bottoms sit at z=0 in the world -->
     <origin xyz="0 0 ${base_z_above_ground}" rpy="0 0 0"/>
   </joint>
 
-  <!-- ── base_link ─────────────────────────────────────────── -->
-  <!--
-    Rigid chassis body.  The inertial block approximates the full
-    chassis as a solid box — good enough for simulation dynamics.
-    Visuals are broken into sub-boxes to resemble the real aluminium
-    frame visible in the chassis photo.
-  -->
+  <!-- base_link — rigid chassis body -->
   <link name="base_link">
 
     <inertial>
@@ -69,81 +38,83 @@
         lz="${track_pod_height}"/>
     </inertial>
 
-    <!-- ── Visual: central spine rail ── -->
+    <!-- Central spine rail -->
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size="${chassis_rail_length}
-                   ${chassis_rail_width}
-                   ${chassis_rail_height}"/>
+        <box size="${chassis_rail_length} ${chassis_rail_width} ${chassis_rail_height}"/>
       </geometry>
       <material name="silver"/>
     </visual>
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <box size="${chassis_rail_length}
-                   ${chassis_rail_width}
-                   ${chassis_rail_height}"/>
+        <box size="${chassis_rail_length} ${chassis_rail_width} ${chassis_rail_height}"/>
       </geometry>
     </collision>
 
-    <!-- ── Visual: front top plate ── -->
+    <!-- Front top plate -->
     <visual>
       <origin xyz="${plate_length} 0 ${plate_z}" rpy="0 0 0"/>
       <geometry>
-        <box size="${plate_length}
-                   ${plate_width}
-                   ${plate_thickness}"/>
+        <box size="${plate_length} ${plate_width} ${plate_thickness}"/>
       </geometry>
       <material name="silver"/>
     </visual>
     <collision>
       <origin xyz="${plate_length} 0 ${plate_z}" rpy="0 0 0"/>
       <geometry>
-        <box size="${plate_length}
-                   ${plate_width}
-                   ${plate_thickness}"/>
+        <box size="${plate_length} ${plate_width} ${plate_thickness}"/>
       </geometry>
     </collision>
 
-    <!-- ── Visual: rear top plate ── -->
+    <!-- Rear top plate -->
     <visual>
       <origin xyz="${-plate_length} 0 ${plate_z}" rpy="0 0 0"/>
       <geometry>
-        <box size="${plate_length}
-                   ${plate_width}
-                   ${plate_thickness}"/>
+        <box size="${plate_length} ${plate_width} ${plate_thickness}"/>
       </geometry>
       <material name="silver"/>
     </visual>
     <collision>
       <origin xyz="${-plate_length} 0 ${plate_z}" rpy="0 0 0"/>
       <geometry>
-        <box size="${plate_length}
-                   ${plate_width}
-                   ${plate_thickness}"/>
+        <box size="${plate_length} ${plate_width} ${plate_thickness}"/>
       </geometry>
     </collision>
 
-    <!-- ── Visual: left side rail ── -->
+    <!-- Left side rail (visual only) -->
     <visual>
       <origin xyz="0 ${side_rail_y} ${side_rail_z}" rpy="0 0 0"/>
       <geometry>
-        <box size="${side_rail_length}
-                   ${side_rail_width}
-                   ${side_rail_height}"/>
+        <box size="${side_rail_length} ${side_rail_width} ${side_rail_height}"/>
       </geometry>
       <material name="silver"/>
     </visual>
 
-    <!-- ── Visual: right side rail ── -->
+    <!-- Right side rail (visual only) -->
     <visual>
       <origin xyz="0 ${-side_rail_y} ${side_rail_z}" rpy="0 0 0"/>
       <geometry>
-        <box size="${side_rail_length}
-                   ${side_rail_width}
-                   ${side_rail_height}"/>
+        <box size="${side_rail_length} ${side_rail_width} ${side_rail_height}"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+
+    <!-- Front motor shaft (visual only) -->
+    <visual>
+      <origin xyz="${motor_front_x} 0 ${motor_z}" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${motor_radius}" length="${motor_shaft_length}"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+
+    <!-- Rear motor shaft (visual only) -->
+    <visual>
+      <origin xyz="${-motor_front_x} 0 ${motor_z}" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="${motor_radius}" length="${motor_shaft_length}"/>
       </geometry>
       <material name="silver"/>
     </visual>

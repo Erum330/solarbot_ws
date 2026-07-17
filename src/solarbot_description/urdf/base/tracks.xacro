@@ -4,170 +4,119 @@
   <!--
     tracks.xacro
     ─────────────────────────────────────────────────────────────────
-    Track pods (4 × fixed visual boxes), motor shaft visuals (2),
-    and virtual wheel joints (2) for diff_drive_controller.
+    Four track pod links — each is a real physics object.
 
-    Why virtual wheels?
-      diff_drive_controller requires continuous revolute joints to
-      send velocity commands to.  The 4 track pod joints are fixed
-      (they are rigid visual elements — tracks don't steer or pivot).
-      We therefore add two invisible virtual wheel links — one at
-      the lateral centre of each track side — that the controller
-      can command.  The Arduino firmware then mirrors each side's
-      command to both physical motors on that side.
+    No virtual wheel links. Each track pod IS the wheel:
 
-    Joint names used here MUST match diff_drive_controller config:
-      left_wheel_joint   ← left track
-      right_wheel_joint  ← right track
+        ┌──────────────────┐   ← box VISUAL  (track appearance)
+        │                  │
+        │      ╔════╗      │   ← cylinder COLLISION  (rolls on ground)
+        │      ║ O  ║      │     radius = wheel_radius = 0.026 m
+        │      ╚════╝      │     length = track_pod_width  = 0.050 m
+        │                  │
+        └──────────────────┘
+
+    Why cylinder collision, box visual?
+      • The cylinder is what Gazebo's ODE solver rolls on the ground —
+        it produces a clean, stable single contact line per pod.
+      • The box visual is the appearance of the rubber track.
+      • A box collision would have 4 contact points that fight each
+        other and make the robot jitter.
+
+    DiffDrive drives all 4 joints as two pairs:
+      LEFT  pair: front_left_wheel_joint + rear_left_wheel_joint
+      RIGHT pair: front_right_wheel_joint + rear_right_wheel_joint
+
+    Joint naming convention: ${name}_wheel_joint
+      This is what gazebo.xacro DiffDrive plugin and
+      ros2_control.xacro both reference.
 
     Depends on: common/properties.xacro, common/materials.xacro
   ─────────────────────────────────────────────────────────────────
   -->
 
+  <xacro:macro name="cylinder_inertia" params="m r h">
+    <inertia
+      ixx="${m*(3.0*r*r + h*h)/12.0}" ixy="0" ixz="0"
+      iyy="${m*(3.0*r*r + h*h)/12.0}" iyz="0"
+      izz="${m*r*r/2.0}"/>
+  </xacro:macro>
+
   <!-- ══════════════════════════════════════════════════════════ -->
-  <!-- Macro: single track pod (box visual, fixed joint)        -->
+  <!-- track_pod macro                                           -->
   <!-- ══════════════════════════════════════════════════════════ -->
   <xacro:macro name="track_pod" params="name x y">
 
     <link name="${name}_track_link">
+
+      <!--
+        Inertia: modelled as a solid cylinder (not box) to match the
+        cylinder collision shape. mass = 0.45 kg per pod.
+      -->
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <mass value="${track_pod_mass}"/>
-        <inertia
-          ixx="${track_pod_mass*(track_pod_width*track_pod_width  + track_pod_height*track_pod_height)/12.0}"
-          ixy="0" ixz="0"
-          iyy="${track_pod_mass*(track_pod_length*track_pod_length + track_pod_height*track_pod_height)/12.0}"
-          iyz="0"
-          izz="${track_pod_mass*(track_pod_length*track_pod_length + track_pod_width*track_pod_width)/12.0}"/>
+        <xacro:cylinder_inertia
+          m="${track_pod_mass}"
+          r="${wheel_radius}"
+          h="${track_pod_width}"/>
       </inertial>
 
+      <!-- VISUAL: box → the rubber track appearance -->
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <box size="${track_pod_length}
-                     ${track_pod_width}
-                     ${track_pod_height}"/>
+          <box size="${track_pod_length} ${track_pod_width} ${track_pod_height}"/>
         </geometry>
         <material name="black"/>
       </visual>
 
+      <!--
+        COLLISION: cylinder → the rolling contact surface.
+
+        rpy="1.5708 0 0" rotates the cylinder from its default
+        z-axis orientation to the y-axis so it rolls when the
+        joint spins around y (axis xyz="0 1 0" in the joint below).
+
+        Radius = wheel_radius = 0.026 m.
+        The joint origin places the cylinder centre exactly at
+        ground contact height.
+      -->
       <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
         <geometry>
-          <box size="${track_pod_length}
-                     ${track_pod_width}
-                     ${track_pod_height}"/>
+          <cylinder radius="${wheel_radius}" length="${track_pod_width}"/>
         </geometry>
       </collision>
+
     </link>
-
-    <!-- Fixed joint: track pod is rigidly attached to chassis -->
-    <joint name="${name}_track_joint" type="fixed">
-      <parent link="base_link"/>
-      <child  link="${name}_track_link"/>
-      <origin xyz="${x} ${y} ${track_z_offset}" rpy="0 0 0"/>
-    </joint>
-
-  </xacro:macro>
-
-  <!-- ══════════════════════════════════════════════════════════ -->
-  <!-- Macro: virtual wheel link + continuous joint              -->
-  <!-- ══════════════════════════════════════════════════════════ -->
-  <xacro:macro name="virtual_wheel" params="name y_offset">
 
     <!--
-      No visual or collision — purely a control artifact.
-      Placed at the lateral centre of each track at ground-contact
-      height (z = -wheel_radius from base_link = ground level).
-    -->
-    <link name="${name}_virtual_wheel_link">
-      <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="${virtual_wheel_mass}"/>
-        <inertia
-          ixx="${virtual_wheel_mass*(3.0*wheel_radius*wheel_radius + wheel_width*wheel_width)/12.0}"
-          ixy="0" ixz="0"
-          iyy="${virtual_wheel_mass*(3.0*wheel_radius*wheel_radius + wheel_width*wheel_width)/12.0}"
-          iyz="0"
-          izz="${virtual_wheel_mass*wheel_radius*wheel_radius/2.0}"/>
-      </inertial>
-    </link>
+      Continuous joint — DiffDrive can command velocity on this.
 
+      Joint origin z = -wheel_radius from base_link.
+      base_link is at z = wheel_radius above ground (base_z_above_ground).
+      Therefore wheel centre in world frame = wheel_radius - wheel_radius = 0,
+      i.e. at ground level. Gazebo contact dynamics with minDepth handle
+      the small cylinder–ground overlap.
+    -->
     <joint name="${name}_wheel_joint" type="continuous">
       <parent link="base_link"/>
-      <child  link="${name}_virtual_wheel_link"/>
-      <!-- Centred longitudinally (x=0), at track y, at contact height -->
-      <origin xyz="0 ${y_offset} ${-wheel_radius}" rpy="0 0 0"/>
-      <!-- Standard diff-drive: wheel spins around the lateral (y) axis -->
+      <child  link="${name}_track_link"/>
+      <origin xyz="${x} ${y} ${-wheel_radius}" rpy="0 0 0"/>
       <axis xyz="0 1 0"/>
-      <dynamics damping="0.01" friction="0.1"/>
+      <dynamics damping="0.05" friction="0.1"/>
     </joint>
 
   </xacro:macro>
 
   <!-- ══════════════════════════════════════════════════════════ -->
-  <!-- Instantiate four track pods                              -->
+  <!-- Instantiate all four track pods                          -->
   <!-- ══════════════════════════════════════════════════════════ -->
 
-  <xacro:track_pod name="front_left"
-                   x="${track_front_x}"
-                   y="${track_y_offset}"/>
-
-  <xacro:track_pod name="rear_left"
-                   x="${track_rear_x}"
-                   y="${track_y_offset}"/>
-
-  <xacro:track_pod name="front_right"
-                   x="${track_front_x}"
-                   y="${-track_y_offset}"/>
-
-  <xacro:track_pod name="rear_right"
-                   x="${track_rear_x}"
-                   y="${-track_y_offset}"/>
-
-  <!-- ══════════════════════════════════════════════════════════ -->
-  <!-- Motor shaft visuals (fixed, cosmetic only)               -->
-  <!-- ══════════════════════════════════════════════════════════ -->
-
-  <link name="front_motor_link">
-    <visual>
-      <!-- rpy rotates the cylinder to lie along the y-axis (lateral) -->
-      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
-      <geometry>
-        <cylinder radius="${motor_radius}" length="${motor_shaft_length}"/>
-      </geometry>
-      <material name="silver"/>
-    </visual>
-  </link>
-
-  <joint name="front_motor_joint" type="fixed">
-    <parent link="base_link"/>
-    <child  link="front_motor_link"/>
-    <origin xyz="${motor_front_x} 0 ${motor_z}" rpy="0 0 0"/>
-  </joint>
-
-  <link name="rear_motor_link">
-    <visual>
-      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
-      <geometry>
-        <cylinder radius="${motor_radius}" length="${motor_shaft_length}"/>
-      </geometry>
-      <material name="silver"/>
-    </visual>
-  </link>
-
-  <joint name="rear_motor_joint" type="fixed">
-    <parent link="base_link"/>
-    <child  link="rear_motor_link"/>
-    <origin xyz="${-motor_front_x} 0 ${motor_z}" rpy="0 0 0"/>
-  </joint>
-
-  <!-- ══════════════════════════════════════════════════════════ -->
-  <!-- Two virtual wheel joints (one per track side)            -->
-  <!-- These are what diff_drive_controller actually commands.  -->
-  <!-- ══════════════════════════════════════════════════════════ -->
-
-  <xacro:virtual_wheel name="left"  y_offset="${track_y_offset}"/>
-  <xacro:virtual_wheel name="right" y_offset="${-track_y_offset}"/>
+  <xacro:track_pod name="front_left"  x="${track_front_x}" y="${track_y_offset}"/>
+  <xacro:track_pod name="rear_left"   x="${track_rear_x}"  y="${track_y_offset}"/>
+  <xacro:track_pod name="front_right" x="${track_front_x}" y="${-track_y_offset}"/>
+  <xacro:track_pod name="rear_right"  x="${track_rear_x}"  y="${-track_y_offset}"/>
 
 </robot>

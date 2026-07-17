@@ -1,9 +1,0 @@
-/home/erum/solarbot_ws/build/solarbot_bringup/CMakeFiles/uninstall.dir
-/home/erum/solarbot_ws/build/solarbot_bringup/CMakeFiles/solarbot_bringup_uninstall.dir
-/home/erum/solarbot_ws/build/solarbot_bringup/CMakeFiles/test.dir
-/home/erum/solarbot_ws/build/solarbot_bringup/CMakeFiles/edit_cache.dir
-/home/erum/solarbot_ws/build/solarbot_bringup/CMakeFiles/rebuild_cache.dir
-/home/erum/solarbot_ws/build/solarbot_bringup/CMakeFiles/list_install_components.dir
-/home/erum/solarbot_ws/build/solarbot_bringup/CMakeFiles/install.dir
-/home/erum/solarbot_ws/build/solarbot_bringup/CMakeFiles/install/local.dir
-/home/erum/solarbot_ws/build/solarbot_bringup/CMakeFiles/install/strip.dir

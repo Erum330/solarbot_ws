@@ -1,0 +1,61 @@
+[0.031s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo -DCMAKE_INSTALL_PREFIX=/home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo
+[0.830s] -- The C compiler identification is GNU 13.3.0
+[3.868s] -- The CXX compiler identification is GNU 13.3.0
+[7.244s] -- Detecting C compiler ABI info
+[8.539s] -- Detecting C compiler ABI info - done
+[8.556s] -- Check for working C compiler: /usr/bin/cc - skipped
+[8.558s] -- Detecting C compile features
+[8.559s] -- Detecting C compile features - done
+[9.064s] -- Detecting CXX compiler ABI info
+[10.187s] -- Detecting CXX compiler ABI info - done
+[10.204s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[10.204s] -- Detecting CXX compile features
+[10.205s] -- Detecting CXX compile features - done
+[10.260s] -- Found ament_cmake: 2.5.6 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[10.582s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[10.998s] -- Configuring done (11.0s)
+[11.007s] -- Generating done (0.0s)
+[11.011s] -- Build files have been written to: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo
+[11.021s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo -DCMAKE_INSTALL_PREFIX=/home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo
+[11.022s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake --build /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo -- -j16 -l16
+[11.091s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake --build /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo -- -j16 -l16
+[11.112s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake --install /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo
+[11.128s] -- Install configuration: ""
+[11.128s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/launch
+[11.129s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/launch/gazebo.launch.py
+[11.129s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/worlds
+[11.130s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/worlds/solar_panels.sdf
+[11.133s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/worlds/warehouse_rooftop.sdf
+[11.136s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials
+[11.136s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures
+[11.137s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_04_dust.png
+[11.147s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_09_dust.png
+[11.156s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_07_dust.png
+[11.161s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_00_dust.png
+[11.161s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_05_dust.png
+[11.168s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_10_dust.png
+[11.174s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_02_dust.png
+[11.183s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_01_dust.png
+[11.186s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_06_dust.png
+[11.198s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_08_dust.png
+[11.203s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/materials/textures/solar_panel_03_dust.png
+[11.207s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/scripts
+[11.208s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/scripts/make_texture.py
+[11.209s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/config
+[11.209s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/config/controllers.yaml
+[11.210s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/ament_index/resource_index/package_run_dependencies/solarbot_gazebo
+[11.211s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/ament_index/resource_index/parent_prefix_path/solarbot_gazebo
+[11.211s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/environment/ament_prefix_path.sh
+[11.212s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/environment/ament_prefix_path.dsv
+[11.212s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/environment/path.sh
+[11.212s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/environment/path.dsv
+[11.213s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/local_setup.bash
+[11.213s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/local_setup.sh
+[11.213s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/local_setup.zsh
+[11.213s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/local_setup.dsv
+[11.213s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/package.dsv
+[11.213s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/ament_index/resource_index/packages/solarbot_gazebo
+[11.214s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/cmake/solarbot_gazeboConfig.cmake
+[11.215s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/cmake/solarbot_gazeboConfig-version.cmake
+[11.215s] -- Installing: /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/install/solarbot_gazebo/share/solarbot_gazebo/package.xml
+[11.221s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy /usr/bin/cmake --install /home/erum_ifti/solarbot_ws-1/src/solarbot_gazebo/build/solarbot_gazebo

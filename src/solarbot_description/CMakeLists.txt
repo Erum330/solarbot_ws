@@ -8,7 +8,6 @@ install(
     launch
     rviz
     urdf
-    meshes
     config
   DESTINATION share/${PROJECT_NAME}
 )

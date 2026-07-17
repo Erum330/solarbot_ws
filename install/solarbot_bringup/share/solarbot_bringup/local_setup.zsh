@@ -1,1 +1,0 @@
-/home/erum/solarbot_ws/build/solarbot_bringup/ament_cmake_environment_hooks/local_setup.zsh

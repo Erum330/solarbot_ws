@@ -1,1 +1,0 @@
-/home/erum/solarbot_ws/build/solarbot_description/ament_cmake_core/solarbot_descriptionConfig.cmake

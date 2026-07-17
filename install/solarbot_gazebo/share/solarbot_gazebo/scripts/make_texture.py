@@ -1,1 +1,0 @@
-/home/erum/solarbot_ws/src/solarbot_gazebo/scripts/make_texture.py

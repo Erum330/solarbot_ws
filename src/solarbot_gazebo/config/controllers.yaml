@@ -10,20 +10,20 @@ controller_manager:
 
 diff_drive_controller:
   ros__parameters:
-    left_wheel_names:  ["left_wheel_joint"]
-    right_wheel_names: ["right_wheel_joint"]
+    # All 4 track joints driven as two left/right pairs
+    left_wheel_names:  ["front_left_wheel_joint", "rear_left_wheel_joint"]
+    right_wheel_names: ["front_right_wheel_joint", "rear_right_wheel_joint"]
 
-    wheel_radius: 0.026        # matches common/properties.xacro
-    wheel_separation: 0.156    # 2 × track_y_offset (0.078 m × 2)
+    wheel_radius: 0.026
+    wheel_separation: 0.156   # 2 x track_y_offset (0.078 m x 2)
 
-    open_loop: true            # no encoders yet
+    open_loop: true
 
     odom_frame_id: odom
     base_frame_id: base_footprint
     enable_odom_tf: true
     publish_rate: 30.0
 
-    # Conservative limits for on-panel driving
     linear.x.max_velocity:     0.15
     linear.x.min_velocity:    -0.15
     linear.x.max_acceleration: 0.5
