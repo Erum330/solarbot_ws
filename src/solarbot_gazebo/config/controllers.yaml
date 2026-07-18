@@ -1,41 +1,60 @@
+# ──────────────────────────────────────────────────────────────────
+# solarbot_controllers.yaml
+# Authoritative ros2_control controller configuration.
+# Used by both simulation (sim_control.launch.py)
+# and real hardware (real_bringup.launch.py).
+# ──────────────────────────────────────────────────────────────────
+
 controller_manager:
   ros__parameters:
-    update_rate: 50
+    update_rate: 50  # Hz — control loop frequency
+    use_sim_time: true
+
+    # Controllers to load at startup (matching launch file names)
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
 
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    diff_drive_controller:
-      type: diff_drive_controller/DiffDriveController
-
+# ── diff_drive_controller ─────────────────────────────────────────
 diff_drive_controller:
   ros__parameters:
-    # All 4 track joints driven as two left/right pairs
-    left_wheel_names:  ["front_left_wheel_joint", "rear_left_wheel_joint"]
-    right_wheel_names: ["front_right_wheel_joint", "rear_right_wheel_joint"]
-
-    wheel_radius: 0.04
-    wheel_separation: 0.156   # 2 x track_y_offset (0.078 m x 2)
-
-    open_loop: true
-
-    odom_frame_id: odom
+    use_sim_time: true
+    publish_rate: 50.0  # Hz
     base_frame_id: base_footprint
+
+    # 4-wheel configuration — two left/right pairs (Fixed spacing syntax error)
+    left_wheel_names: ['front_left_wheel_joint', 'rear_left_wheel_joint']
+    right_wheel_names: ['front_right_wheel_joint', 'rear_right_wheel_joint']
+
+    # Physical parameters — must match properties.xacro
+    wheel_radius: 0.040      # metres
+    wheel_separation: 0.156  # metres (2 × wheel_y_offset 0.078)
+
+    # Odometry settings
+    odom_frame_id: odom
     enable_odom_tf: true
-    publish_rate: 30.0
 
-    linear.x.max_velocity:     0.20
-    linear.x.min_velocity:    -0.20
-    linear.x.max_acceleration: 0.5
-    linear.x.min_acceleration: -0.5
+    # Teleoperation Velocity Mode
+    # Set to true because our adapter node provides geometry_msgs/msg/TwistStamped
+    use_stamped_vel: true
 
-    angular.z.max_velocity:    0.8
-    angular.z.min_velocity:   -0.8
-    angular.z.max_acceleration: 1.0
-    angular.z.min_acceleration: -1.0
+    # Velocity and acceleration limits
+    # Conservative for on-panel driving — panels are 4 m long
+    linear.x.max_velocity: 0.20   # m/s
+    linear.x.min_velocity: -0.20
+    linear.x.max_acceleration: 0.50   # m/s²
+    linear.x.min_acceleration: -0.50
 
+    angular.z.max_velocity: 0.80   # rad/s
+    angular.z.min_velocity: -0.80
+    angular.z.max_acceleration: 1.00   # rad/s²
+    angular.z.min_acceleration: -1.00
+
+    # Safety: stop if no /cmd_vel received for this many seconds
     cmd_vel_timeout: 0.5
-    use_stamped_vel: false
 
-    pose_covariance_diagonal:  [0.001, 0.001, 0.0, 0.0, 0.0, 0.01]
-    twist_covariance_diagonal: [0.001, 0.0,   0.0, 0.0, 0.0, 0.01]
+    # Covariance for odometry message
+    pose_covariance_diagonal: [0.001, 0.001, 0.0, 0.0, 0.0, 0.010]
+    twist_covariance_diagonal: [0.001, 0.0,   0.0, 0.0, 0.0, 0.010]

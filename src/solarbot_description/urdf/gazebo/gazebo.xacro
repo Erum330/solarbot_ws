@@ -3,38 +3,11 @@
 
   <!--
     gazebo.xacro — Gazebo Harmonic plugin and sensor definitions.
-    Updated: DiffDrive drives all 4 track joints, friction on all 4 pods.
+    Updated: High-fidelity sensor configurations and skid-steer friction values.
   -->
 
-  <!-- ══ 1. DiffDrive plugin (replaces gz_ros2_control) ══════ -->
-  <gazebo>
-    <plugin filename="gz-sim-diff-drive-system"
-            name="gz::sim::systems::DiffDrive">
-      <!-- LEFT pair -->
-      <left_joint>front_left_wheel_joint</left_joint>
-      <left_joint>rear_left_wheel_joint</left_joint>
-      <!-- RIGHT pair -->
-      <right_joint>front_right_wheel_joint</right_joint>
-      <right_joint>rear_right_wheel_joint</right_joint>
-
-      <wheel_separation>0.156</wheel_separation>
-      <wheel_radius>0.040</wheel_radius>
-
-      <odom_publish_frequency>30</odom_publish_frequency>
-      <topic>cmd_vel</topic>
-      <odom_topic>odometry</odom_topic>
-      <tf_topic>tf</tf_topic>
-      <frame_id>odom</frame_id>
-      <child_frame_id>base_footprint</child_frame_id>
-
-      <max_linear_acceleration>0.5</max_linear_acceleration>
-      <max_angular_acceleration>1.0</max_angular_acceleration>
-      <min_velocity>-0.20</min_velocity>
-      <max_velocity>0.20</max_velocity>
-    </plugin>
-  </gazebo>
-
-  <!-- Joint state publisher — publishes all 4 wheel joint states -->
+  <!-- ══ 1. Joint State Publisher ═════════════════════════════ -->
+  <!-- Publishes inside the Gazebo environment for core simulation mechanics -->
   <gazebo>
     <plugin filename="gz-sim-joint-state-publisher-system"
             name="gz::sim::systems::JointStatePublisher">
@@ -125,10 +98,10 @@
     </gazebo>
   </xacro:macro>
 
-  <xacro:cliff_tof_gazebo link_name="front_left_tof_link"  topic="/front_left_tof"/>
+  <xacro:cliff_tof_gazebo link_name="front_left_tof_link"   topic="/front_left_tof"/>
   <xacro:cliff_tof_gazebo link_name="front_right_tof_link" topic="/front_right_tof"/>
-  <xacro:cliff_tof_gazebo link_name="rear_left_tof_link"   topic="/rear_left_tof"/>
-  <xacro:cliff_tof_gazebo link_name="rear_right_tof_link"  topic="/rear_right_tof"/>
+  <xacro:cliff_tof_gazebo link_name="rear_left_tof_link"    topic="/rear_left_tof"/>
+  <xacro:cliff_tof_gazebo link_name="rear_right_tof_link"   topic="/rear_right_tof"/>
 
   <!-- ══ 5. Front obstacle ToF ════════════════════════════════ -->
   <gazebo reference="front_tof_link">
@@ -159,13 +132,6 @@
   </gazebo>
 
   <!-- ══ 6. Wheel friction ════════════════════════════════════ -->
-<!--
-  mu1 = 0.9  : longitudinal (forward/back grip)
-
-  mu2 = 0.3  : lateral (lower = allows skid-steer turning)
-
-  kp/kd      : stiff hard-surface contact
--->
   <xacro:macro name="wheel_friction" params="link_name">
     <gazebo reference="${link_name}">
       <mu1>0.9</mu1>  <!-- longitudinal: grip for forward/back -->
