@@ -38,11 +38,11 @@
   <xacro:property name="track_y_offset"       value="0.078"/>
   <xacro:property name="track_z_offset"       value="-0.016"/>
 
-  <!-- ──  wheel (control) ──────────────────────────── -->
-  <xacro:property name="wheel_radius"         value="0.04"/>
+  <!-- ── Virtual wheel (control) ──────────────────────────── -->
+  <xacro:property name="wheel_radius"         value="0.040"/>
   <xacro:property name="wheel_width"          value="0.050"/>
   <xacro:property name="wheel_y_offset"       value="0.078"/>
-  <xacro:property name="wheel_mass"           value="0.0015"/>
+  <xacro:property name="wheel_mass"           value="0.01"/>
 
   <!-- ── Motors ───────────────────────────────────────────── -->
   <xacro:property name="motor_radius"         value="0.018"/>

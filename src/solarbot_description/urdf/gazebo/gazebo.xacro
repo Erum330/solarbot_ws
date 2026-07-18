@@ -18,7 +18,7 @@
       <right_joint>rear_right_wheel_joint</right_joint>
 
       <wheel_separation>0.156</wheel_separation>
-      <wheel_radius>0.04</wheel_radius>
+      <wheel_radius>0.040</wheel_radius>
 
       <odom_publish_frequency>30</odom_publish_frequency>
       <topic>cmd_vel</topic>
@@ -27,10 +27,10 @@
       <frame_id>odom</frame_id>
       <child_frame_id>base_footprint</child_frame_id>
 
-      <max_linear_acceleration>5.0</max_linear_acceleration>
-      <max_angular_acceleration>5.0</max_angular_acceleration>
-      <min_velocity>-1.0</min_velocity>
-      <max_velocity>1.0</max_velocity>
+      <max_linear_acceleration>0.5</max_linear_acceleration>
+      <max_angular_acceleration>1.0</max_angular_acceleration>
+      <min_velocity>-0.20</min_velocity>
+      <max_velocity>0.20</max_velocity>
     </plugin>
   </gazebo>
 

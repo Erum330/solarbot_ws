@@ -24,8 +24,8 @@ diff_drive_controller:
     enable_odom_tf: true
     publish_rate: 30.0
 
-    linear.x.max_velocity:     0.2
-    linear.x.min_velocity:    -0.2
+    linear.x.max_velocity:     0.20
+    linear.x.min_velocity:    -0.20
     linear.x.max_acceleration: 0.5
     linear.x.min_acceleration: -0.5
 
