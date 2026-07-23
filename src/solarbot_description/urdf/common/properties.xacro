@@ -42,7 +42,7 @@
   <xacro:property name="wheel_radius"         value="0.040"/>
   <xacro:property name="wheel_width"          value="0.050"/>
   <xacro:property name="wheel_y_offset"       value="0.078"/>
-  <xacro:property name="wheel_mass"           value="0.01"/>
+  <xacro:property name="wheel_mass"           value="0.1"/>
 
   <!-- ── Motors ───────────────────────────────────────────── -->
   <xacro:property name="motor_radius"         value="0.018"/>
@@ -108,23 +108,23 @@
     Corner cliff ToF sensors (downward-facing, detect panel edges).
     Positioned just inboard of each track corner so they see the
     panel surface drop-off before the wheels reach the edge.
-    rpy "0 0 0" = pointing straight down (sensor board faces -z).
+    rpy "0 1.5708 0" = pointing straight down (sensor board faces -z).
     Adjust x/y offsets once physically mounted and tested.
   -->
-  <xacro:property name="front_left_tof_x"     value="0.170"/>
-  <xacro:property name="front_left_tof_y"     value="0.065"/>
+  <xacro:property name="front_left_tof_x"     value="0.200"/>
+  <xacro:property name="front_left_tof_y"     value="0.075"/>
   <xacro:property name="front_left_tof_z"     value="-0.010"/>
 
-  <xacro:property name="front_right_tof_x"    value="0.170"/>
-  <xacro:property name="front_right_tof_y"    value="-0.065"/>
+  <xacro:property name="front_right_tof_x"    value="0.200"/>
+  <xacro:property name="front_right_tof_y"    value="-0.075"/>
   <xacro:property name="front_right_tof_z"    value="-0.010"/>
 
-  <xacro:property name="rear_left_tof_x"      value="-0.170"/>
-  <xacro:property name="rear_left_tof_y"      value="0.065"/>
+  <xacro:property name="rear_left_tof_x"      value="-0.200"/>
+  <xacro:property name="rear_left_tof_y"      value="0.075"/>
   <xacro:property name="rear_left_tof_z"      value="-0.010"/>
 
-  <xacro:property name="rear_right_tof_x"     value="-0.170"/>
-  <xacro:property name="rear_right_tof_y"     value="-0.065"/>
+  <xacro:property name="rear_right_tof_x"     value="-0.200"/>
+  <xacro:property name="rear_right_tof_y"     value="-0.075"/>
   <xacro:property name="rear_right_tof_z"     value="-0.010"/>
 
 </robot>

@@ -42,13 +42,13 @@ diff_drive_controller:
 
     # Velocity and acceleration limits
     # Conservative for on-panel driving — panels are 4 m long
-    linear.x.max_velocity: 0.20   # m/s
-    linear.x.min_velocity: -0.20
+    linear.x.max_velocity: 1.00   # m/s
+    linear.x.min_velocity: -1.00
     linear.x.max_acceleration: 0.50   # m/s²
     linear.x.min_acceleration: -0.50
 
-    angular.z.max_velocity: 0.80   # rad/s
-    angular.z.min_velocity: -0.80
+    angular.z.max_velocity: 2.00   # rad/s
+    angular.z.min_velocity: -2.00
     angular.z.max_acceleration: 1.00   # rad/s²
     angular.z.min_acceleration: -1.00
 

@@ -93,7 +93,7 @@
   <joint name="downward_camera_joint" type="fixed">
     <parent link="base_link"/>
     <child  link="downward_camera_link"/>
-    <origin xyz="${camera_x} ${camera_y} ${camera_z}" rpy="0 0 0"/>
+    <origin xyz="${camera_x} ${camera_y} ${camera_z}" rpy="0 1.5708 0"/>
   </joint>
 
   <!--
@@ -107,12 +107,12 @@
   <joint name="downward_camera_optical_joint" type="fixed">
     <parent link="downward_camera_link"/>
     <child  link="downward_camera_optical_frame"/>
-    <origin xyz="0 0 -0.020" rpy="-1.5708 0 -1.5708"/>
+    <origin xyz="0 0 0" rpy="-1.5708 0 0"/>
   </joint>
 
   <!-- ── Front obstacle ToF (forward-facing) ───────────────── -->
   <!--
-    rpy="0 1.5708 0" tilts the sensor to face forward (+X direction).
+    rpy="0 0 0" tilts the sensor to face forward (+X direction).
     Detects obstacles ahead of the robot on the panel surface.
   -->
   <xacro:tof_sensor
@@ -120,11 +120,11 @@
     x="${front_tof_x}"
     y="${front_tof_y}"
     z="${front_tof_z}"
-    rpy="0 1.5708 0"/>
+    rpy="0 0 0"/>
 
   <!-- ── Corner cliff ToF sensors (downward-facing) ────────── -->
   <!--
-    rpy="0 0 0" — sensor faces straight down (-Z in base_link frame).
+    rpy="0 1.5708 0" — sensor faces straight down (-Z in base_link frame).
     Placed at the four corners just inboard of the tracks so they
     detect the panel edge drop-off before wheels reach it.
     These feed edge_guard_node to trigger the safety stop + turn.
@@ -134,27 +134,27 @@
     x="${front_left_tof_x}"
     y="${front_left_tof_y}"
     z="${front_left_tof_z}"
-    rpy="0 0 0"/>
+    rpy="0 1.5708 0"/>
 
   <xacro:tof_sensor
     name="front_right_tof"
     x="${front_right_tof_x}"
     y="${front_right_tof_y}"
     z="${front_right_tof_z}"
-    rpy="0 0 0"/>
+    rpy="0 1.5708 0"/>
 
   <xacro:tof_sensor
     name="rear_left_tof"
     x="${rear_left_tof_x}"
     y="${rear_left_tof_y}"
     z="${rear_left_tof_z}"
-    rpy="0 0 0"/>
+    rpy="0 1.5708 0"/>
 
   <xacro:tof_sensor
     name="rear_right_tof"
     x="${rear_right_tof_x}"
     y="${rear_right_tof_y}"
     z="${rear_right_tof_z}"
-    rpy="0 0 0"/>
+    rpy="0 1.5708 0"/>
 
 </robot>
