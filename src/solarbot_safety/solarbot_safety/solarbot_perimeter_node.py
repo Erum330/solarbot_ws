@@ -43,7 +43,7 @@ class SolarbotPerimeterNode(Node):
         self.declare_parameter('turn_tolerance_deg',   1.5)   # Tighter tolerance
 
         self.declare_parameter('init_backup_dist_m',    0.10)
-        self.declare_parameter('corner_backup_dist_m',  0.12)
+        self.declare_parameter('corner_backup_dist_m',  0.08)
         self.declare_parameter('align_backup_dist_m',   0.08)
         self.declare_parameter('adjust_dist_m',         0.05)
 

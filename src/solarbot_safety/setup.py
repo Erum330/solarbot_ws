@@ -24,8 +24,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'dynamic_edge_following_node = solarbot_safety.dynamic_edge_following_node:main',
-            'test_forward_node = solarbot_safety.test_forward_node:main',
             'solarbot_perimeter_node = solarbot_safety.solarbot_perimeter_node:main',
         
         ],

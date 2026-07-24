@@ -57,8 +57,8 @@ def generate_launch_description():
         arguments=[
             "-topic", "robot_description",
             "-entity", "solarbot",
-            "-x", "-1.70",
-            "-y", "3.50",
+            "-x", "-1.75",
+            "-y", "3.45",
             "-z", "0.05",
         ],
         output="screen",
