@@ -2,8 +2,8 @@
 """
 solarbot_perimeter_node.py
 
-Perimeter-following FSM with grid-snapped target math and dynamic deceleration
-to eliminate turn overshoot.
+Perimeter-following FSM with grid-snapped target math, dynamic turn deceleration,
+and dynamic edge-realignment after every corner turn for uniform 4-side clearance.
 """
 
 import math
@@ -27,6 +27,7 @@ class Stage(Enum):
     TURN_CORNER   = auto()
     PANEL_ADJUST  = auto()
     ALIGN_BACKUP  = auto()
+    ALIGN_TO_EDGE = auto()  # Edge-finding routine for Sides 2, 3, 4
     SETTLE        = auto()
     DONE          = auto()
 
@@ -36,20 +37,22 @@ class SolarbotPerimeterNode(Node):
         super().__init__('solarbot_perimeter_node')
 
         # ---------------- Configurable Parameters ----------------
-        self.declare_parameter('forward_speed',        0.12)
-        self.declare_parameter('backup_speed',        -0.10)
-        self.declare_parameter('turn_speed',           0.45)   # Reduced from 0.75 for fine stopping
+        self.declare_parameter('forward_speed',         0.12)   # Reduced for higher ToF sampling density
+        self.declare_parameter('backup_speed',        -0.08)
+        self.declare_parameter('turn_speed',           0.40)   # Controlled turn speed
         self.declare_parameter('turn_angle_deg',       90.0)
-        self.declare_parameter('turn_tolerance_deg',   1.5)   # Tighter tolerance
+        self.declare_parameter('turn_tolerance_deg',   1.2)   # Tighter tolerance
 
-        self.declare_parameter('init_backup_dist_m',    0.10)
-        self.declare_parameter('corner_backup_dist_m',  0.08)
-        self.declare_parameter('align_backup_dist_m',   0.08)
-        self.declare_parameter('adjust_dist_m',         0.05)
+        # Distances
+        self.declare_parameter('init_backup_dist_m',    0.06)
+        self.declare_parameter('corner_backup_dist_m',  0.04)   # Reduced so pivot stays closer to edge
+        self.declare_parameter('align_backup_dist_m',   0.04)   # Reduced
+        self.declare_parameter('edge_find_cap_m',       0.15)   # Safety search distance
+        self.declare_parameter('adjust_dist_m',         0.04)
 
-        self.declare_parameter('settle_sec',            0.40)   # Increased settle time for IMU stabilization
+        self.declare_parameter('settle_sec',            0.40)   # IMU stabilization pause
         self.declare_parameter('straight_kp',           2.5)
-        self.declare_parameter('straight_max_wz',       0.35)
+        self.declare_parameter('straight_max_wz',       0.30)
         self.declare_parameter('num_sides',             4)
 
         # Sensor filtering / calibration
@@ -62,6 +65,20 @@ class SolarbotPerimeterNode(Node):
         self.declare_parameter('odom_topic',     '/diff_drive_controller/odom')
         self.declare_parameter('cmd_vel_topic',  '/cmd_vel')
 
+        # ToF sensor mounting offsets relative to base_link origin - MUST
+        # match common/properties.xacro. Used to compute the TRUE physical
+        # edge location when a sensor trips (the sensor is not at the
+        # robot's center, so the edge is at base_link position + this
+        # offset rotated into the world frame, not at base_link itself).
+        self.declare_parameter('front_left_tof_x',   0.200)
+        self.declare_parameter('front_left_tof_y',   0.075)
+        self.declare_parameter('front_right_tof_x',  0.200)
+        self.declare_parameter('front_right_tof_y', -0.075)
+        self.declare_parameter('rear_left_tof_x',   -0.200)
+        self.declare_parameter('rear_left_tof_y',    0.075)
+        self.declare_parameter('rear_right_tof_x',  -0.200)
+        self.declare_parameter('rear_right_tof_y',  -0.075)
+
         p = self.get_parameter
         self.fwd_spd          = float(p('forward_speed').value)
         self.bkp_spd          = float(p('backup_speed').value)
@@ -69,10 +86,11 @@ class SolarbotPerimeterNode(Node):
         self.turn_angle       = math.radians(float(p('turn_angle_deg').value))
         self.turn_tol         = math.radians(float(p('turn_tolerance_deg').value))
 
-        self.init_backup_dist    = float(p('init_backup_dist_m').value)
-        self.corner_backup_dist  = float(p('corner_backup_dist_m').value)
-        self.align_backup_dist   = float(p('align_backup_dist_m').value)
-        self.adjust_dist         = float(p('adjust_dist_m').value)
+        self.init_backup_dist   = float(p('init_backup_dist_m').value)
+        self.corner_backup_dist = float(p('corner_backup_dist_m').value)
+        self.align_backup_dist  = float(p('align_backup_dist_m').value)
+        self.edge_find_cap      = float(p('edge_find_cap_m').value)
+        self.adjust_dist        = float(p('adjust_dist_m').value)
 
         self.settle_sec       = float(p('settle_sec').value)
         self.straight_kp      = float(p('straight_kp').value)
@@ -86,6 +104,13 @@ class SolarbotPerimeterNode(Node):
 
         self.odom_topic          = str(p('odom_topic').value)
         self.cmd_vel_topic       = str(p('cmd_vel_topic').value)
+
+        self.sensor_offsets = {
+            'fl': (float(p('front_left_tof_x').value), float(p('front_left_tof_y').value)),
+            'fr': (float(p('front_right_tof_x').value), float(p('front_right_tof_y').value)),
+            'rl': (float(p('rear_left_tof_x').value), float(p('rear_left_tof_y').value)),
+            'rr': (float(p('rear_right_tof_x').value), float(p('rear_right_tof_y').value)),
+        }
 
         # Buffers
         self.fl_buf = deque(maxlen=self.filter_window)
@@ -119,6 +144,10 @@ class SolarbotPerimeterNode(Node):
         # ROS 2 Communications
         self.cmd_pub          = self.create_publisher(Twist, self.cmd_vel_topic, 10)
         self.panel_corner_pub = self.create_publisher(Point, '/panel_corner', 10)
+        # Every individual ToF edge-trip event (not just the 4 corners) -
+        # builds a full physical-sensor-based boundary trace, independent
+        # of camera odometry drift.
+        self.edge_point_pub   = self.create_publisher(Point, '/panel_edge_points', 10)
 
         self.create_subscription(LaserScan, '/front_left_tof',  self._fl_cb, 10)
         self.create_subscription(LaserScan, '/front_right_tof', self._fr_cb, 10)
@@ -128,7 +157,7 @@ class SolarbotPerimeterNode(Node):
         self.create_subscription(Imu,       '/imu',             self._imu_cb, 10)
 
         self.create_timer(0.05, self._loop)
-        self.get_logger().info('🚀 Perimeter Controller Active (Grid-Snapped Precision Turning)')
+        self.get_logger().info('🚀 SolarBot Uniform Perimeter Controller Active')
 
     def _scan_min(self, msg):
         vals = [r for r in msg.ranges if math.isfinite(r) and msg.range_min <= r <= msg.range_max]
@@ -192,6 +221,25 @@ class SolarbotPerimeterNode(Node):
 
     def _heading(self):
         return self.imu_yaw if self.have_imu else self.odom_yaw
+
+    def _sensor_world_xy(self, key):
+        """Transform a tripped sensor's local mounting offset into the
+        world frame using the robot's current pose - this is the TRUE
+        physical location of the detected edge, not the robot's center."""
+        lx, ly = self.sensor_offsets[key]
+        h = self._heading()
+        wx = self.x + lx * math.cos(h) - ly * math.sin(h)
+        wy = self.y + lx * math.sin(h) + ly * math.cos(h)
+        return wx, wy
+
+    def _publish_edge_point(self, key):
+        wx, wy = self._sensor_world_xy(key)
+        pt = Point()
+        pt.x = wx
+        pt.y = wy
+        pt.z = 0.0
+        self.edge_point_pub.publish(pt)
+        self.get_logger().info(f'📍 Edge point marked via [{key}]: ({wx:.3f}, {wy:.3f})')
 
     def _pub(self, vx=0.0, wz=0.0):
         cmd = Twist()
@@ -257,7 +305,10 @@ class SolarbotPerimeterNode(Node):
             if not self.init_snap_set:
                 self._snap_xy()
                 self.init_snap_set = True
-            if self._get_tripped_sensor(('rl', 'rr')) or self._dist_from_snap() >= self.init_backup_dist:
+            tripped = self._get_tripped_sensor(('rl', 'rr'))
+            if tripped or self._dist_from_snap() >= self.init_backup_dist:
+                if tripped:
+                    self._publish_edge_point(tripped)
                 self._stop()
                 self._enter_settle(Stage.FOLLOW_SIDE)
                 return
@@ -266,7 +317,9 @@ class SolarbotPerimeterNode(Node):
 
         # ---- FOLLOW_SIDE ----
         if self.stage == Stage.FOLLOW_SIDE:
-            if self._get_tripped_sensor(('fl', 'fr')):
+            tripped = self._get_tripped_sensor(('fl', 'fr'))
+            if tripped:
+                self._publish_edge_point(tripped)
                 self._stop()
                 self._snap_xy()
                 self.get_logger().info(f'⚠️ Edge reached on Side {self.completed_sides + 1} — backing up for turn...')
@@ -284,16 +337,18 @@ class SolarbotPerimeterNode(Node):
             backup_done = self._dist_from_snap() >= self.corner_backup_dist
 
             if rear_tripped or backup_done:
+                if rear_tripped:
+                    self._publish_edge_point(rear_tripped)
                 self._stop()
                 current_heading = self._heading()
-                
-                # GRID-SNAPPED TARGET: Snap current heading to nearest 90° increment, then add 90°
+
+                # Snap heading to nearest 90° cardinal grid
                 grid_cardinal = round(current_heading / (math.pi / 2.0)) * (math.pi / 2.0)
                 self.turn_target_yaw = self._norm_angle(grid_cardinal + self.turn_angle)
-                
+
                 self.get_logger().info(
                     f'🔄 Corner Backup complete. Turning 90° '
-                    f'(Current: {math.degrees(current_heading):.1f}°, Snapped Target: {math.degrees(self.turn_target_yaw):.1f}°)...'
+                    f'(Current: {math.degrees(current_heading):.1f}°, Target: {math.degrees(self.turn_target_yaw):.1f}°)...'
                 )
                 self.stage = Stage.TURN_CORNER
                 return
@@ -303,11 +358,17 @@ class SolarbotPerimeterNode(Node):
 
         # ---- TURN_CORNER ----
         if self.stage == Stage.TURN_CORNER:
-            # Check REAR sensors during Turn 1, FRONT sensors during Turn 2+
             sensors_to_check = ('rl', 'rr') if self.completed_sides == 0 else ('fl', 'fr')
             tripped_key = self._get_tripped_sensor(sensors_to_check)
 
             if tripped_key is not None:
+                # NOTE: deliberately NOT calling _publish_edge_point here.
+                # The robot is pivoting in place during this stage, so a
+                # trip means the sensor swept OVER the edge mid-rotation -
+                # that's a safety-correction trigger for PANEL_ADJUST, not
+                # a genuine "found the boundary by driving into it" event
+                # like the ones in FOLLOW_SIDE/ALIGN_TO_EDGE. Including
+                # these polluted the edge trace with pivot-arc artifacts.
                 self._stop()
                 self._snap_xy()
                 if tripped_key in ('rl', 'rr'):
@@ -324,12 +385,18 @@ class SolarbotPerimeterNode(Node):
             if abs(err) <= self.turn_tol:
                 self._stop()
                 self._snap_xy()
-                self.get_logger().info('✅ Turn complete. Aligning for next side...')
+                # This is a true 90-degree corner of the panel - mark it
+                # distinctly on /panel_corner (separate from the continuous
+                # /panel_edge_points trace).
+                corner_pt = Point()
+                corner_pt.x, corner_pt.y, corner_pt.z = self.x, self.y, 0.0
+                self.panel_corner_pub.publish(corner_pt)
+                self.get_logger().info('✅ Turn complete. Aligning frame...')
                 self.stage = Stage.ALIGN_BACKUP
                 return
 
-            # Proportional angular speed deceleration to prevent overshoot
-            p_turn_spd = max(0.20, min(self.turn_spd, 1.2 * abs(err)))
+            # Dynamic deceleration to prevent turn overshoot
+            p_turn_spd = max(0.18, min(self.turn_spd, 1.2 * abs(err)))
             self._pub(0.0, math.copysign(p_turn_spd, err))
             return
 
@@ -345,16 +412,43 @@ class SolarbotPerimeterNode(Node):
 
         # ---- ALIGN_BACKUP ----
         if self.stage == Stage.ALIGN_BACKUP:
-            if self._get_tripped_sensor(('rl', 'rr')) or self._dist_from_snap() >= self.align_backup_dist:
+            tripped = self._get_tripped_sensor(('rl', 'rr'))
+            if tripped or self._dist_from_snap() >= self.align_backup_dist:
+                if tripped:
+                    self._publish_edge_point(tripped)
                 self._stop()
                 self.completed_sides += 1
                 if self.completed_sides >= self.num_sides:
                     self.stage = Stage.DONE
                     self.get_logger().info('✅ FULL PERIMETER COMPLETED!')
                     return
-                self._enter_settle(Stage.FOLLOW_SIDE)
+
+                # Transition to Edge Finding
+                self._snap_xy()
+                self.get_logger().info(f'🔍 Nudging outward to locate edge for Side {self.completed_sides + 1}...')
+                self.stage = Stage.ALIGN_TO_EDGE
                 return
             self._pub(self.bkp_spd, 0.0)
+            return
+
+        # ---- ALIGN_TO_EDGE ----
+        if self.stage == Stage.ALIGN_TO_EDGE:
+            tripped = self._get_tripped_sensor(('fl', 'fr'))
+
+            # Creep forward until front sensor finds the edge or safety limit is reached
+            if tripped or self._dist_from_snap() >= self.edge_find_cap:
+                if tripped:
+                    self._publish_edge_point(tripped)
+                self._stop()
+                self._snap_xy()
+                self.get_logger().info(f'📍 Edge located for Side {self.completed_sides + 1}! Starting side follow...')
+
+                # Enter settle before beginning straight flight
+                self._enter_settle(Stage.FOLLOW_SIDE)
+                return
+
+            # Slow forward creep
+            self._pub(self.fwd_spd * 0.5, 0.0)
             return
 
         # ---- SETTLE ----

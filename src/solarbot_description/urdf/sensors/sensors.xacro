@@ -84,10 +84,15 @@
   <link name="downward_camera_link">
     <visual>
       <geometry>
-        <box size="0.030 0.030 0.020"/>
+        <box size="0.032 0.032 0.022"/>
       </geometry>
       <material name="dark_gray"/>
     </visual>
+    <collision>
+      <geometry>
+        <box size="0.032 0.032 0.022"/>
+      </geometry>
+    </collision>
   </link>
 
   <joint name="downward_camera_joint" type="fixed">
@@ -102,13 +107,13 @@
     (X forward, Z up) to the camera optical convention
     (Z forward = down into the panel, X right).
   -->
-  <link name="downward_camera_optical_frame"/>
+  <!-- <link name="downward_camera_optical_frame"/>
 
   <joint name="downward_camera_optical_joint" type="fixed">
     <parent link="downward_camera_link"/>
     <child  link="downward_camera_optical_frame"/>
-    <origin xyz="0 0 0" rpy="-1.5708 0 0"/>
-  </joint>
+    <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
+  </joint> -->
 
   <!-- ── Front obstacle ToF (forward-facing) ───────────────── -->
   <!--
@@ -156,5 +161,21 @@
     y="${rear_right_tof_y}"
     z="${rear_right_tof_z}"
     rpy="0 1.5708 0"/>
+
+    <!-- ── GPS (UBX M8030 M8N) ───────────────────────────────── -->
+  <link name="gps_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.015" length="0.010"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>
+
+  <joint name="gps_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="gps_link"/>
+    <origin xyz="${gps_x} ${gps_y} ${gps_z}" rpy="0 0 0"/>
+  </joint>
 
 </robot>

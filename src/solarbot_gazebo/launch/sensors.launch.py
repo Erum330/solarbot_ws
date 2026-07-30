@@ -88,6 +88,7 @@ def generate_launch_description():
             "/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image",
             "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
 
+            "/gps/fix@sensor_msgs/msg/NavSatFix[gz.msgs.NavSat",
             # Front obstacle ToF
             "/front_tof@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
 

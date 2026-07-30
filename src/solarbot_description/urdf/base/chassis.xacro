@@ -2,11 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!--
-    chassis.xacro  —  base_footprint + base_link frame only.
-
-    Track pods moved back to tracks.xacro (they are now real physics
-    objects). Motor shaft visuals remain inline here since they are
-    purely cosmetic with no physics role.
+    chassis.xacro — Fully enclosed, light-tight chassis body with original silver material
   -->
 
   <xacro:macro name="box_inertia" params="m lx ly lz">
@@ -14,6 +10,60 @@
       ixx="${m*(ly*ly + lz*lz)/12.0}" ixy="0" ixz="0"
       iyy="${m*(lx*lx + lz*lz)/12.0}" iyz="0"
       izz="${m*(lx*lx + ly*ly)/12.0}"/>
+  </xacro:macro>
+
+  <!-- Skirt wheel-cutout macro: splits what was a single continuous
+       skirt panel into 3 segments (front sliver / large middle piece /
+       rear sliver), leaving a gap at each wheel's X-position instead of
+       moving the skirt's Y-position outward. wheel_clearance gives a
+       small safety margin beyond the wheel's physical radius. -->
+  <xacro:property name="wheel_clearance" value="0.006"/>
+
+  <xacro:macro name="skirt_side" params="y_pos">
+    <!-- Front sliver: between front wheel's cutout and the chassis front edge -->
+    <visual>
+      <origin xyz="${(track_full_length/2 + track_front_x + wheel_radius + wheel_clearance)/2} ${y_pos} -0.010" rpy="0 0 0"/>
+      <geometry>
+        <box size="${track_full_length/2 - (track_front_x + wheel_radius + wheel_clearance)} 0.004 0.050"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin xyz="${(track_full_length/2 + track_front_x + wheel_radius + wheel_clearance)/2} ${y_pos} -0.010" rpy="0 0 0"/>
+      <geometry>
+        <box size="${track_full_length/2 - (track_front_x + wheel_radius + wheel_clearance)} 0.004 0.050"/>
+      </geometry>
+    </collision>
+
+    <!-- Middle: between the front and rear wheel cutouts -->
+    <visual>
+      <origin xyz="0 ${y_pos} -0.010" rpy="0 0 0"/>
+      <geometry>
+        <box size="${2*(track_front_x - wheel_radius - wheel_clearance)} 0.004 0.050"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin xyz="0 ${y_pos} -0.010" rpy="0 0 0"/>
+      <geometry>
+        <box size="${2*(track_front_x - wheel_radius - wheel_clearance)} 0.004 0.050"/>
+      </geometry>
+    </collision>
+
+    <!-- Rear sliver: mirror of the front sliver -->
+    <visual>
+      <origin xyz="${-(track_full_length/2 + track_front_x + wheel_radius + wheel_clearance)/2} ${y_pos} -0.010" rpy="0 0 0"/>
+      <geometry>
+        <box size="${track_full_length/2 - (track_front_x + wheel_radius + wheel_clearance)} 0.004 0.050"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin xyz="${-(track_full_length/2 + track_front_x + wheel_radius + wheel_clearance)/2} ${y_pos} -0.010" rpy="0 0 0"/>
+      <geometry>
+        <box size="${track_full_length/2 - (track_front_x + wheel_radius + wheel_clearance)} 0.004 0.050"/>
+      </geometry>
+    </collision>
   </xacro:macro>
 
   <!-- base_footprint — ground-plane projection, used by Nav2 -->
@@ -34,72 +84,47 @@
       <xacro:box_inertia
         m="${chassis_mass}"
         lx="${track_full_length}"
-        ly="${motor_shaft_length}"
+        ly="0.180"
         lz="0.084"/>
     </inertial>
 
-    <!-- Central spine rail -->
+    <!-- 1. MAIN SOLID CHASSIS ENCLOSURE (Fills space from bottom to top deck plate, 0 gaps) -->
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0.010" rpy="0 0 0"/>
       <geometry>
-        <box size="${chassis_rail_length} ${chassis_rail_width} ${chassis_rail_height}"/>
+        <box size="${track_full_length} 0.170 0.052"/>
       </geometry>
       <material name="silver"/>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0.010" rpy="0 0 0"/>
       <geometry>
-        <box size="${chassis_rail_length} ${chassis_rail_width} ${chassis_rail_height}"/>
+        <box size="${track_full_length} 0.170 0.052"/>
       </geometry>
     </collision>
 
-    <!-- Front top plate -->
+    <!-- 2. FULL TOP LID DECK PLATE (Seals the top surface under electronics) -->
     <visual>
-      <origin xyz="${plate_length} 0 ${plate_z}" rpy="0 0 0"/>
+      <origin xyz="0 0 0.037" rpy="0 0 0"/>
       <geometry>
-        <box size="${plate_length} ${plate_width} ${plate_thickness}"/>
+        <box size="${track_full_length} 0.180 0.004"/>
       </geometry>
       <material name="silver"/>
     </visual>
     <collision>
-      <origin xyz="${plate_length} 0 ${plate_z}" rpy="0 0 0"/>
+      <origin xyz="0 0 0.037" rpy="0 0 0"/>
       <geometry>
-        <box size="${plate_length} ${plate_width} ${plate_thickness}"/>
+        <box size="${track_full_length} 0.180 0.004"/>
       </geometry>
     </collision>
 
-    <!-- Rear top plate -->
-    <visual>
-      <origin xyz="${-plate_length} 0 ${plate_z}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${plate_length} ${plate_width} ${plate_thickness}"/>
-      </geometry>
-      <material name="silver"/>
-    </visual>
-    <collision>
-      <origin xyz="${-plate_length} 0 ${plate_z}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${plate_length} ${plate_width} ${plate_thickness}"/>
-      </geometry>
-    </collision>
-
-    <!-- Left side rail (visual only) -->
-    <visual>
-      <origin xyz="0 ${side_rail_y} ${side_rail_z}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${side_rail_length} ${side_rail_width} ${side_rail_height}"/>
-      </geometry>
-      <material name="silver"/>
-    </visual>
-
-    <!-- Right side rail (visual only) -->
-    <visual>
-      <origin xyz="0 ${-side_rail_y} ${side_rail_z}" rpy="0 0 0"/>
-      <geometry>
-        <box size="${side_rail_length} ${side_rail_width} ${side_rail_height}"/>
-      </geometry>
-      <material name="silver"/>
-    </visual>
+    <!-- 3. SIDE SKIRTING (Extends down along wheels to block side glare
+         into bottom camera) - Y position kept at 0.088 as originally
+         specified. Wheel interference resolved via cutouts (3 segments
+         per side, see skirt_side macro above) rather than moving the
+         skirt outward. -->
+    <xacro:skirt_side y_pos="0.088"/>
+    <xacro:skirt_side y_pos="-0.088"/>
 
     <!-- Front motor shaft (visual only) -->
     <visual>

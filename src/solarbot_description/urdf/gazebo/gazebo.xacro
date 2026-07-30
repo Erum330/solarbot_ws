@@ -19,6 +19,23 @@
     </plugin>
   </gazebo>
 
+  <!-- ══ 1b. Ground-truth odometry (SIM ONLY, for validation) ═══ -->
+  <!-- Publishes the model's actual world pose, unaffected by wheel
+       slip — this is the ground truth /odom_cam should be compared
+       against, matching the paper's evaluation method. Do NOT feed
+       this into any controller or EKF; it does not exist on real
+       hardware. -->
+  <gazebo>
+    <plugin filename="gz-sim-odometry-publisher-system"
+            name="gz::sim::systems::OdometryPublisher">
+      <odom_frame>ground_truth_odom</odom_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+      <dimensions>3</dimensions>
+      <odom_publish_frequency>30</odom_publish_frequency>
+      <odom_topic>/ground_truth/odom</odom_topic>
+    </plugin>
+  </gazebo>
+
   <!-- ══ 2. IMU sensor ════════════════════════════════════════ -->
   <gazebo reference="imu_link">
     <sensor name="imu_sensor" type="imu">
@@ -41,29 +58,52 @@
     </sensor>
   </gazebo>
 
+<!-- ══ GPS (NavSat) sensor ══════════════════════════════════ -->
+  <gazebo reference="gps_link">
+    <sensor name="gps_sensor" type="navsat">
+      <always_on>true</always_on>
+      <update_rate>10</update_rate>
+      <topic>/gps/fix</topic>
+      <gz_frame_id>gps_link</gz_frame_id>
+      <navsat>
+        <position_sensing>
+          <horizontal>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.00001</stddev>  <!-- ~1.1 meter realistic GNSS noise -->
+            </noise>
+          </horizontal>
+          <vertical>
+            <noise type="gaussian">
+              <mean>0.0</mean>
+              <stddev>0.00002</stddev>  <!-- ~2.2 meter altitude noise -->
+            </noise>
+          </vertical>
+        </position_sensing>
+      </navsat>
+    </sensor>
+  </gazebo>
+
   <!-- ══ 3. Downward camera ═══════════════════════════════════ -->
   <gazebo reference="downward_camera_link">
     <sensor name="downward_camera" type="camera">
       <always_on>true</always_on>
-      <update_rate>30</update_rate>
+      <update_rate>40</update_rate>
+      <visualize>false</visualize>
       <topic>/camera/image_raw</topic>
-      <gz_frame_id>downward_camera_optical_frame</gz_frame_id>
-      <camera name="downward_camera">
-        <horizontal_fov>1.3614</horizontal_fov>
+      <camera>
+        <!-- OV9732 datasheet: 100 deg horizontal FOV = 1.74533 rad -->
+        <horizontal_fov>2.20</horizontal_fov>
         <image>
+           <!-- Native OV9732 resolution/aspect (16:9), matches USB listing -->
           <width>640</width>
           <height>480</height>
           <format>R8G8B8</format>
         </image>
         <clip>
-          <near>0.005</near>
-          <far>0.50</far>
+          <near>0.02</near>
+          <far>5.0</far>
         </clip>
-        <noise>
-          <type>gaussian</type>
-          <mean>0.0</mean>
-          <stddev>0.005</stddev>
-        </noise>
       </camera>
     </sensor>
   </gazebo>
