@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: solarbot-localization
+Version: 0.0.0
+Summary: SolarBot camera-based (ECC) visual odometry, mapping, and ground-truth validation package
+Maintainer: Erum Iftikhar
+Maintainer-email: erum8000@gmail.com
+License: Apache-2.0

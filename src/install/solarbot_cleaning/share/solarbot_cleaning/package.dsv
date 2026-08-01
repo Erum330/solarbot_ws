@@ -1,0 +1,8 @@
+source;share/solarbot_cleaning/hook/cmake_prefix_path.ps1
+source;share/solarbot_cleaning/hook/cmake_prefix_path.dsv
+source;share/solarbot_cleaning/hook/cmake_prefix_path.sh
+source;share/solarbot_cleaning/local_setup.bash
+source;share/solarbot_cleaning/local_setup.dsv
+source;share/solarbot_cleaning/local_setup.ps1
+source;share/solarbot_cleaning/local_setup.sh
+source;share/solarbot_cleaning/local_setup.zsh

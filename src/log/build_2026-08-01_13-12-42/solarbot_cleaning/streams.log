@@ -1,0 +1,21 @@
+[0.052s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_cleaning': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --build /home/erum_ifti/solarbot_ws-1/src/build/solarbot_cleaning -- -j16 -l16
+[0.438s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_cleaning' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --build /home/erum_ifti/solarbot_ws-1/src/build/solarbot_cleaning -- -j16 -l16
+[0.439s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_cleaning': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --install /home/erum_ifti/solarbot_ws-1/src/build/solarbot_cleaning
+[0.466s] -- Install configuration: ""
+[0.466s] -- Execute custom install script
+[0.466s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/ament_index/resource_index/package_run_dependencies/solarbot_cleaning
+[0.466s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/ament_index/resource_index/parent_prefix_path/solarbot_cleaning
+[0.466s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/environment/ament_prefix_path.sh
+[0.467s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/environment/ament_prefix_path.dsv
+[0.468s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/environment/path.sh
+[0.469s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/environment/path.dsv
+[0.469s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.bash
+[0.470s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.sh
+[0.470s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.zsh
+[0.470s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/local_setup.dsv
+[0.471s] -- Symlinking: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/package.dsv
+[0.487s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/ament_index/resource_index/packages/solarbot_cleaning
+[0.487s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/cmake/solarbot_cleaningConfig.cmake
+[0.487s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/cmake/solarbot_cleaningConfig-version.cmake
+[0.487s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_cleaning/share/solarbot_cleaning/package.xml
+[0.528s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_cleaning' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --install /home/erum_ifti/solarbot_ws-1/src/build/solarbot_cleaning

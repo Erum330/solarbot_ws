@@ -1,0 +1,34 @@
+[0.050s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --build /home/erum_ifti/solarbot_ws-1/src/build/solarbot_description -- -j16 -l16
+[0.263s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --build /home/erum_ifti/solarbot_ws-1/src/build/solarbot_description -- -j16 -l16
+[0.273s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --install /home/erum_ifti/solarbot_ws-1/src/build/solarbot_description
+[0.441s] -- Install configuration: ""
+[0.441s] -- Execute custom install script
+[0.441s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/launch/display.launch.py
+[0.442s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/rviz/display.rviz
+[0.442s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/urdf/base/chassis.xacro
+[0.442s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/urdf/base/tracks.xacro
+[0.442s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/urdf/base/wheels.xacro
+[0.442s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/urdf/common/materials.xacro
+[0.442s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/urdf/common/properties.xacro
+[0.442s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/urdf/control/ros2_control.xacro
+[0.443s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/urdf/electronics/electronics.xacro
+[0.443s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/urdf/gazebo/gazebo.xacro
+[0.443s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/urdf/sensors/sensors.xacro
+[0.443s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/urdf/solarbot.urdf.xacro
+[0.443s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/scripts/twistToStamped.py
+[0.443s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/ament_index/resource_index/package_run_dependencies/solarbot_description
+[0.443s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/ament_index/resource_index/parent_prefix_path/solarbot_description
+[0.443s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/environment/ament_prefix_path.sh
+[0.443s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/environment/ament_prefix_path.dsv
+[0.444s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/environment/path.sh
+[0.444s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/environment/path.dsv
+[0.444s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/local_setup.bash
+[0.444s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/local_setup.sh
+[0.444s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/local_setup.zsh
+[0.444s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/local_setup.dsv
+[0.444s] -- Symlinking: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/package.dsv
+[0.444s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/ament_index/resource_index/packages/solarbot_description
+[0.444s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/cmake/solarbot_descriptionConfig.cmake
+[0.444s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/cmake/solarbot_descriptionConfig-version.cmake
+[0.445s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_description/share/solarbot_description/package.xml
+[0.506s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --install /home/erum_ifti/solarbot_ws-1/src/build/solarbot_description

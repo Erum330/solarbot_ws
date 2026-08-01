@@ -1,0 +1,21 @@
+[0.242s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --build /home/erum_ifti/solarbot_ws-1/src/build/solarbot_msgs -- -j16 -l16
+[0.472s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --build /home/erum_ifti/solarbot_ws-1/src/build/solarbot_msgs -- -j16 -l16
+[0.475s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --install /home/erum_ifti/solarbot_ws-1/src/build/solarbot_msgs
+[0.484s] -- Install configuration: ""
+[0.485s] -- Execute custom install script
+[0.486s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/ament_index/resource_index/package_run_dependencies/solarbot_msgs
+[0.487s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/ament_index/resource_index/parent_prefix_path/solarbot_msgs
+[0.487s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/environment/ament_prefix_path.sh
+[0.488s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/environment/ament_prefix_path.dsv
+[0.488s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/environment/path.sh
+[0.489s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/environment/path.dsv
+[0.489s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/local_setup.bash
+[0.489s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/local_setup.sh
+[0.490s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/local_setup.zsh
+[0.490s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/local_setup.dsv
+[0.490s] -- Symlinking: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/package.dsv
+[0.497s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/ament_index/resource_index/packages/solarbot_msgs
+[0.497s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/cmake/solarbot_msgsConfig.cmake
+[0.497s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/cmake/solarbot_msgsConfig-version.cmake
+[0.497s] -- Up-to-date symlink: /home/erum_ifti/solarbot_ws-1/src/install/solarbot_msgs/share/solarbot_msgs/package.xml
+[0.582s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization:/home/erum_ifti/solarbot_ws-1/install/solarbot_safety:/home/erum_ifti/solarbot_ws-1/install/solarbot_mapping:/home/erum_ifti/solarbot_ws-1/install/solarbot_localization:/opt/ros/jazzy /usr/bin/cmake --install /home/erum_ifti/solarbot_ws-1/src/build/solarbot_msgs

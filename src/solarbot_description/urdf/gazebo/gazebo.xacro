@@ -35,6 +35,7 @@
       <odom_topic>/ground_truth/odom</odom_topic>
     </plugin>
   </gazebo>
+  
 
   <!-- ══ 2. IMU sensor ════════════════════════════════════════ -->
   <gazebo reference="imu_link">

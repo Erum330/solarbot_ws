@@ -1,0 +1,18 @@
+running develop
+running egg_info
+writing solarbot_localization.egg-info/PKG-INFO
+writing dependency_links to solarbot_localization.egg-info/dependency_links.txt
+writing entry points to solarbot_localization.egg-info/entry_points.txt
+writing requirements to solarbot_localization.egg-info/requires.txt
+writing top-level names to solarbot_localization.egg-info/top_level.txt
+reading manifest file 'solarbot_localization.egg-info/SOURCES.txt'
+writing manifest file 'solarbot_localization.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/python3.12/site-packages/solarbot-localization.egg-link (link to .)
+Installing odom_logger script to /home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/solarbot_localization
+Installing odom_mapper script to /home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/solarbot_localization
+Installing real_odo script to /home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/solarbot_localization
+Installing transform_detector script to /home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/solarbot_localization
+
+Installed /home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization
+running symlink_data

@@ -1,0 +1,5 @@
+[console_scripts]
+odom_logger = solarbot_localization.odom_logger:main
+odom_mapper = solarbot_localization.odom_mapper:main
+real_odo = solarbot_localization.real_odo:main
+transform_detector = solarbot_localization.transform_detector:main

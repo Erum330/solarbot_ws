@@ -16,95 +16,93 @@
   <xacro:property name="lid_width"              value="0.180"/>
   <xacro:property name="lid_thickness"          value="0.004"/>
 
-  <xacro:property name="skirt_length"           value="0.380"/>
-  <xacro:property name="skirt_width"            value="0.170"/>
-  <xacro:property name="skirt_height"           value="0.030"/>
-  <xacro:property name="skirt_thickness"        value="0.003"/>
-  <xacro:property name="skirt_z_offset"         value="-0.020"/>
-
-  <xacro:property name="side_rail_length"      value="0.295"/>
-  <xacro:property name="side_rail_width"       value="0.014"/>
-  <xacro:property name="side_rail_height"      value="0.018"/>
-  <xacro:property name="side_rail_z"           value="-0.006"/>
-  <xacro:property name="side_rail_y"           value="0.070"/>
+  <xacro:property name="side_rail_length"       value="0.295"/>
+  <xacro:property name="side_rail_width"        value="0.014"/>
+  <xacro:property name="side_rail_height"       value="0.018"/>
+  <xacro:property name="side_rail_z"            value="-0.006"/>
+  <xacro:property name="side_rail_y"            value="0.070"/>
 
   <!-- ── Track geometry ───────────────────────────────────── -->
-  <xacro:property name="track_pod_length"      value="0.115"/>
-  <xacro:property name="track_pod_width"       value="0.050"/>
-  <xacro:property name="track_pod_height"      value="0.052"/>
-  <xacro:property name="track_full_length"     value="0.393"/>
-  <xacro:property name="track_front_x"         value="0.135"/>
-  <xacro:property name="track_rear_x"          value="-0.135"/>
-  <xacro:property name="track_y_offset"        value="0.078"/>
-  <xacro:property name="track_z_offset"        value="-0.016"/>
+  <xacro:property name="track_pod_length"       value="0.115"/>
+  <xacro:property name="track_pod_width"        value="0.050"/>
+  <xacro:property name="track_pod_height"       value="0.052"/>
+  <xacro:property name="track_full_length"      value="0.393"/>
+  <xacro:property name="track_front_x"          value="0.135"/>
+  <xacro:property name="track_rear_x"           value="-0.135"/>
+  <xacro:property name="track_y_offset"         value="0.078"/>
+  <xacro:property name="track_z_offset"         value="-0.016"/>
 
   <!-- ── Wheel ────────────────────────────────────────────── -->
-  <xacro:property name="wheel_radius"          value="0.040"/>
-  <xacro:property name="wheel_width"           value="0.050"/>
-  <xacro:property name="wheel_y_offset"        value="0.078"/>
-  <xacro:property name="wheel_mass"            value="0.1"/>
+  <xacro:property name="wheel_radius"           value="0.040"/>
+  <xacro:property name="wheel_width"            value="0.050"/>
+  <xacro:property name="wheel_y_offset"         value="0.078"/>
+  <xacro:property name="wheel_mass"             value="0.1"/>
+
+  <!-- ── Inboard Skirting Calculation ────────────────────── -->
+  <!-- Inner boundary for central camera shroud (~0.051m) -->
+  <xacro:property name="skirt_inboard_y"       value="${wheel_y_offset - (wheel_width/2) - 0.002}"/>
 
   <!-- ── Motors ───────────────────────────────────────────── -->
-  <xacro:property name="motor_radius"          value="0.018"/>
-  <xacro:property name="motor_shaft_length"    value="0.155"/>
-  <xacro:property name="motor_front_x"         value="0.155"/>
-  <xacro:property name="motor_z"               value="-0.006"/>
+  <xacro:property name="motor_radius"           value="0.018"/>
+  <xacro:property name="motor_shaft_length"     value="0.155"/>
+  <xacro:property name="motor_front_x"          value="0.155"/>
+  <xacro:property name="motor_z"                value="-0.006"/>
 
   <!-- ── Base heights ─────────────────────────────────────── -->
-  <xacro:property name="base_z_above_ground"   value="${wheel_radius}"/>
+  <xacro:property name="base_z_above_ground"    value="${wheel_radius}"/>
 
   <!-- ── Masses ────────────────────────────────────────────── -->
-  <xacro:property name="chassis_mass"          value="2.20"/>
-  <xacro:property name="track_pod_mass"        value="0.45"/>
-  <xacro:property name="virtual_wheel_mass"    value="0.001"/>
+  <xacro:property name="chassis_mass"           value="2.20"/>
+  <xacro:property name="track_pod_mass"         value="0.45"/>
+  <xacro:property name="virtual_wheel_mass"     value="0.001"/>
 
   <!-- ── Electronics & Sensor Positions ─────────────────────── -->
-  <xacro:property name="battery_x"             value="-0.060"/>
-  <xacro:property name="battery_y"             value="0.000"/>
-  <xacro:property name="battery_z"             value="0.055"/>
+  <xacro:property name="battery_x"              value="-0.060"/>
+  <xacro:property name="battery_y"              value="0.000"/>
+  <xacro:property name="battery_z"              value="0.055"/>
 
-  <xacro:property name="rpi_x"                 value="-0.090"/>
-  <xacro:property name="rpi_y"                 value="0.000"/>
-  <xacro:property name="rpi_z"                 value="0.050"/>
+  <xacro:property name="rpi_x"                  value="-0.090"/>
+  <xacro:property name="rpi_y"                  value="0.000"/>
+  <xacro:property name="rpi_z"                  value="0.050"/>
 
-  <xacro:property name="esp32_x"               value="0.080"/>
-  <xacro:property name="esp32_y"               value="0.020"/>
-  <xacro:property name="esp32_z"               value="0.048"/>
+  <xacro:property name="esp32_x"                value="0.080"/>
+  <xacro:property name="esp32_y"                value="0.020"/>
+  <xacro:property name="esp32_z"                value="0.048"/>
 
-  <xacro:property name="stm32_x"               value="0.080"/>
-  <xacro:property name="stm32_y"               value="-0.020"/>
-  <xacro:property name="stm32_z"               value="0.048"/>
+  <xacro:property name="stm32_x"                value="0.080"/>
+  <xacro:property name="stm32_y"                value="-0.020"/>
+  <xacro:property name="stm32_z"                value="0.048"/>
 
-  <xacro:property name="imu_x"                 value="0.000"/>
-  <xacro:property name="imu_y"                 value="0.000"/>
-  <xacro:property name="imu_z"                 value="0.045"/>
+  <xacro:property name="imu_x"                  value="0.000"/>
+  <xacro:property name="imu_y"                  value="0.000"/>
+  <xacro:property name="imu_z"                  value="0.045"/>
 
-  <xacro:property name="camera_x"              value="0.000"/>
-  <xacro:property name="camera_y"              value="0.000"/>
-  <xacro:property name="camera_z"              value="-0.020"/>
+  <xacro:property name="camera_x"               value="0.000"/>
+  <xacro:property name="camera_y"               value="0.000"/>
+  <xacro:property name="camera_z"               value="-0.020"/>
 
-  <xacro:property name="front_tof_x"           value="0.200"/>
-  <xacro:property name="front_tof_y"           value="0.000"/>
-  <xacro:property name="front_tof_z"           value="0.010"/>
+  <xacro:property name="front_tof_x"            value="0.200"/>
+  <xacro:property name="front_tof_y"            value="0.000"/>
+  <xacro:property name="front_tof_z"            value="0.010"/>
 
-  <xacro:property name="front_left_tof_x"      value="0.200"/>
-  <xacro:property name="front_left_tof_y"      value="0.075"/>
-  <xacro:property name="front_left_tof_z"      value="-0.010"/>
+  <xacro:property name="front_left_tof_x"       value="0.200"/>
+  <xacro:property name="front_left_tof_y"       value="0.075"/>
+  <xacro:property name="front_left_tof_z"       value="-0.010"/>
 
-  <xacro:property name="front_right_tof_x"     value="0.200"/>
-  <xacro:property name="front_right_tof_y"     value="-0.075"/>
-  <xacro:property name="front_right_tof_z"     value="-0.010"/>
+  <xacro:property name="front_right_tof_x"      value="0.200"/>
+  <xacro:property name="front_right_tof_y"      value="-0.075"/>
+  <xacro:property name="front_right_tof_z"      value="-0.010"/>
 
-  <xacro:property name="rear_left_tof_x"       value="-0.200"/>
-  <xacro:property name="rear_left_tof_y"       value="0.075"/>
-  <xacro:property name="rear_left_tof_z"       value="-0.010"/>
+  <xacro:property name="rear_left_tof_x"        value="-0.200"/>
+  <xacro:property name="rear_left_tof_y"        value="0.075"/>
+  <xacro:property name="rear_left_tof_z"        value="-0.010"/>
 
-  <xacro:property name="rear_right_tof_x"      value="-0.200"/>
-  <xacro:property name="rear_right_tof_y"      value="-0.075"/>
-  <xacro:property name="rear_right_tof_z"      value="-0.010"/>
+  <xacro:property name="rear_right_tof_x"       value="-0.200"/>
+  <xacro:property name="rear_right_tof_y"       value="-0.075"/>
+  <xacro:property name="rear_right_tof_z"       value="-0.010"/>
 
-  <xacro:property name="gps_x"                 value="-0.090"/>
-  <xacro:property name="gps_y"                 value="0.000"/>
-  <xacro:property name="gps_z"                 value="0.055"/>
+  <xacro:property name="gps_x"                  value="-0.090"/>
+  <xacro:property name="gps_y"                  value="0.000"/>
+  <xacro:property name="gps_z"                  value="0.055"/>
 
 </robot>

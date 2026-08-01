@@ -1,0 +1,20 @@
+[1.462s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization': PYTHONPATH=/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/build --no-deps symlink_data
+[1.729s] running develop
+[1.879s] running egg_info
+[1.891s] writing solarbot_localization.egg-info/PKG-INFO
+[1.891s] writing dependency_links to solarbot_localization.egg-info/dependency_links.txt
+[1.892s] writing entry points to solarbot_localization.egg-info/entry_points.txt
+[1.892s] writing requirements to solarbot_localization.egg-info/requires.txt
+[1.892s] writing top-level names to solarbot_localization.egg-info/top_level.txt
+[1.926s] reading manifest file 'solarbot_localization.egg-info/SOURCES.txt'
+[1.928s] writing manifest file 'solarbot_localization.egg-info/SOURCES.txt'
+[1.944s] running build_ext
+[1.944s] Creating /home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/python3.12/site-packages/solarbot-localization.egg-link (link to .)
+[1.945s] Installing odom_logger script to /home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/solarbot_localization
+[1.946s] Installing odom_mapper script to /home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/solarbot_localization
+[1.947s] Installing real_odo script to /home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/solarbot_localization
+[1.947s] Installing transform_detector script to /home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/solarbot_localization
+[1.947s] 
+[1.947s] Installed /home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization
+[1.947s] running symlink_data
+[2.058s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization' returned '0': PYTHONPATH=/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/build --no-deps symlink_data

@@ -34,7 +34,8 @@ diff_drive_controller:
 
     # Odometry settings
     odom_frame_id: odom
-    enable_odom_tf: true
+    enable_odom_tf: false
+    
 
     # Teleoperation Velocity Mode
     # Set to true because our adapter node provides geometry_msgs/msg/TwistStamped

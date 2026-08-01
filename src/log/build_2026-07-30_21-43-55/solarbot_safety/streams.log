@@ -1,0 +1,17 @@
+[0.915s] Invoking command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety': PYTHONPATH=/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/build --no-deps symlink_data
+[1.141s] running develop
+[1.267s] running egg_info
+[1.282s] writing solarbot_safety.egg-info/PKG-INFO
+[1.282s] writing dependency_links to solarbot_safety.egg-info/dependency_links.txt
+[1.282s] writing entry points to solarbot_safety.egg-info/entry_points.txt
+[1.282s] writing requirements to solarbot_safety.egg-info/requires.txt
+[1.283s] writing top-level names to solarbot_safety.egg-info/top_level.txt
+[1.309s] reading manifest file 'solarbot_safety.egg-info/SOURCES.txt'
+[1.309s] writing manifest file 'solarbot_safety.egg-info/SOURCES.txt'
+[1.325s] running build_ext
+[1.325s] Creating /home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib/python3.12/site-packages/solarbot-safety.egg-link (link to .)
+[1.326s] Installing solarbot_perimeter_node script to /home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib/solarbot_safety
+[1.326s] 
+[1.326s] Installed /home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety
+[1.326s] running symlink_data
+[1.376s] Invoked command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety' returned '0': PYTHONPATH=/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/build --no-deps symlink_data

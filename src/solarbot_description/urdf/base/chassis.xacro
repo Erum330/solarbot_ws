@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!--
-    chassis.xacro — Fully enclosed, light-tight chassis body with original silver material
+    chassis.xacro — Fully enclosed chassis body with side skirting and central camera shroud
   -->
 
   <xacro:macro name="box_inertia" params="m lx ly lz">
@@ -12,15 +12,11 @@
       izz="${m*(lx*lx + ly*ly)/12.0}"/>
   </xacro:macro>
 
-  <!-- Skirt wheel-cutout macro: splits what was a single continuous
-       skirt panel into 3 segments (front sliver / large middle piece /
-       rear sliver), leaving a gap at each wheel's X-position instead of
-       moving the skirt's Y-position outward. wheel_clearance gives a
-       small safety margin beyond the wheel's physical radius. -->
+  <!-- Skirt wheel-cutout macro: splits continuous skirt panel into 3 segments -->
   <xacro:property name="wheel_clearance" value="0.006"/>
 
   <xacro:macro name="skirt_side" params="y_pos">
-    <!-- Front sliver: between front wheel's cutout and the chassis front edge -->
+    <!-- Front sliver -->
     <visual>
       <origin xyz="${(track_full_length/2 + track_front_x + wheel_radius + wheel_clearance)/2} ${y_pos} -0.010" rpy="0 0 0"/>
       <geometry>
@@ -35,7 +31,7 @@
       </geometry>
     </collision>
 
-    <!-- Middle: between the front and rear wheel cutouts -->
+    <!-- Middle piece -->
     <visual>
       <origin xyz="0 ${y_pos} -0.010" rpy="0 0 0"/>
       <geometry>
@@ -50,7 +46,7 @@
       </geometry>
     </collision>
 
-    <!-- Rear sliver: mirror of the front sliver -->
+    <!-- Rear sliver -->
     <visual>
       <origin xyz="${-(track_full_length/2 + track_front_x + wheel_radius + wheel_clearance)/2} ${y_pos} -0.010" rpy="0 0 0"/>
       <geometry>
@@ -88,7 +84,7 @@
         lz="0.084"/>
     </inertial>
 
-    <!-- 1. MAIN SOLID CHASSIS ENCLOSURE (Fills space from bottom to top deck plate, 0 gaps) -->
+    <!-- 1. MAIN SOLID CHASSIS ENCLOSURE -->
     <visual>
       <origin xyz="0 0 0.010" rpy="0 0 0"/>
       <geometry>
@@ -103,7 +99,7 @@
       </geometry>
     </collision>
 
-    <!-- 2. FULL TOP LID DECK PLATE (Seals the top surface under electronics) -->
+    <!-- 2. FULL TOP LID DECK PLATE -->
     <visual>
       <origin xyz="0 0 0.037" rpy="0 0 0"/>
       <geometry>
@@ -118,13 +114,78 @@
       </geometry>
     </collision>
 
-    <!-- 3. SIDE SKIRTING (Extends down along wheels to block side glare
-         into bottom camera) - Y position kept at 0.088 as originally
-         specified. Wheel interference resolved via cutouts (3 segments
-         per side, see skirt_side macro above) rather than moving the
-         skirt outward. -->
+    <!-- 3. SIDE SKIRTING -->
     <xacro:skirt_side y_pos="0.088"/>
     <xacro:skirt_side y_pos="-0.088"/>
+
+    <!-- 4. CAMERA SHROUD (Rectangular hood around the downward camera) -->
+    <xacro:property name="shroud_half_x" value="0.093"/>
+    <xacro:property name="shroud_half_y" value="0.036"/>
+    <xacro:property name="shroud_wall_t" value="0.003"/>
+    <xacro:property name="shroud_top_z" value="-0.005"/>
+    <xacro:property name="shroud_bottom_z" value="-0.038"/>
+    <xacro:property name="shroud_height" value="${shroud_top_z - shroud_bottom_z}"/>
+    <xacro:property name="shroud_center_z" value="${(shroud_top_z + shroud_bottom_z) / 2}"/>
+
+    <!-- Front wall -->
+    <visual>
+      <origin xyz="${camera_x + shroud_half_x} ${camera_y} ${shroud_center_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${shroud_wall_t} ${shroud_half_y*2} ${shroud_height}"/>
+      </geometry>
+      <material name="dark_gray"/>
+    </visual>
+    <collision>
+      <origin xyz="${camera_x + shroud_half_x} ${camera_y} ${shroud_center_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${shroud_wall_t} ${shroud_half_y*2} ${shroud_height}"/>
+      </geometry>
+    </collision>
+
+    <!-- Rear wall -->
+    <visual>
+      <origin xyz="${camera_x - shroud_half_x} ${camera_y} ${shroud_center_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${shroud_wall_t} ${shroud_half_y*2} ${shroud_height}"/>
+      </geometry>
+      <material name="dark_gray"/>
+    </visual>
+    <collision>
+      <origin xyz="${camera_x - shroud_half_x} ${camera_y} ${shroud_center_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${shroud_wall_t} ${shroud_half_y*2} ${shroud_height}"/>
+      </geometry>
+    </collision>
+
+    <!-- Left wall -->
+    <visual>
+      <origin xyz="${camera_x} ${camera_y + shroud_half_y} ${shroud_center_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${shroud_half_x*2} ${shroud_wall_t} ${shroud_height}"/>
+      </geometry>
+      <material name="dark_gray"/>
+    </visual>
+    <collision>
+      <origin xyz="${camera_x} ${camera_y + shroud_half_y} ${shroud_center_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${shroud_half_x*2} ${shroud_wall_t} ${shroud_height}"/>
+      </geometry>
+    </collision>
+
+    <!-- Right wall -->
+    <visual>
+      <origin xyz="${camera_x} ${camera_y - shroud_half_y} ${shroud_center_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${shroud_half_x*2} ${shroud_wall_t} ${shroud_height}"/>
+      </geometry>
+      <material name="dark_gray"/>
+    </visual>
+    <collision>
+      <origin xyz="${camera_x} ${camera_y - shroud_half_y} ${shroud_center_z}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${shroud_half_x*2} ${shroud_wall_t} ${shroud_height}"/>
+      </geometry>
+    </collision>
 
     <!-- Front motor shaft (visual only) -->
     <visual>

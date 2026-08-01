@@ -1,0 +1,251 @@
+[0.541s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--packages-select', 'solarbot_localization', 'solarbot_safety', '--symlink-install']
+[0.541s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=True, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=16, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=['solarbot_localization', 'solarbot_safety'], packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x72ea0e56d8b0>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x72ea0e56d820>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x72ea0e56d820>>)
+[0.594s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.594s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.594s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.594s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.594s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.595s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.595s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/erum_ifti/solarbot_ws-1/src'
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.595s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.623s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_bringup) by extensions ['ignore', 'ignore_ament_install']
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_bringup) by extension 'ignore'
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_bringup) by extension 'ignore_ament_install'
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_bringup) by extensions ['colcon_pkg']
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_bringup) by extension 'colcon_pkg'
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_bringup) by extensions ['colcon_meta']
+[0.624s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_bringup) by extension 'colcon_meta'
+[0.625s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_bringup) by extensions ['ros']
+[0.625s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_bringup) by extension 'ros'
+[0.627s] DEBUG:colcon.colcon_core.package_identification:Package 'solarbot_bringup' with type 'ros.ament_cmake' and name 'solarbot_bringup'
+[0.627s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_cleaning) by extensions ['ignore', 'ignore_ament_install']
+[0.627s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_cleaning) by extension 'ignore'
+[0.627s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_cleaning) by extension 'ignore_ament_install'
+[0.627s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_cleaning) by extensions ['colcon_pkg']
+[0.627s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_cleaning) by extension 'colcon_pkg'
+[0.627s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_cleaning) by extensions ['colcon_meta']
+[0.627s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_cleaning) by extension 'colcon_meta'
+[0.627s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_cleaning) by extensions ['ros']
+[0.627s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_cleaning) by extension 'ros'
+[0.628s] DEBUG:colcon.colcon_core.package_identification:Package 'solarbot_cleaning' with type 'ros.ament_cmake' and name 'solarbot_cleaning'
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_description) by extensions ['ignore', 'ignore_ament_install']
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_description) by extension 'ignore'
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_description) by extension 'ignore_ament_install'
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_description) by extensions ['colcon_pkg']
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_description) by extension 'colcon_pkg'
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_description) by extensions ['colcon_meta']
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_description) by extension 'colcon_meta'
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_description) by extensions ['ros']
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_description) by extension 'ros'
+[0.628s] DEBUG:colcon.colcon_core.package_identification:Package 'solarbot_description' with type 'ros.ament_cmake' and name 'solarbot_description'
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_gazebo) by extensions ['ignore', 'ignore_ament_install']
+[0.628s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_gazebo) by extension 'ignore'
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_gazebo) by extension 'ignore_ament_install'
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_gazebo) by extensions ['colcon_pkg']
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_gazebo) by extension 'colcon_pkg'
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_gazebo) by extensions ['colcon_meta']
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_gazebo) by extension 'colcon_meta'
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_gazebo) by extensions ['ros']
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_gazebo) by extension 'ros'
+[0.629s] DEBUG:colcon.colcon_core.package_identification:Package 'solarbot_gazebo' with type 'ros.ament_cmake' and name 'solarbot_gazebo'
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_hardware) by extensions ['ignore', 'ignore_ament_install']
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_hardware) by extension 'ignore'
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_hardware) by extension 'ignore_ament_install'
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_hardware) by extensions ['colcon_pkg']
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_hardware) by extension 'colcon_pkg'
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_hardware) by extensions ['colcon_meta']
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_hardware) by extension 'colcon_meta'
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_hardware) by extensions ['ros']
+[0.629s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_hardware) by extension 'ros'
+[0.630s] DEBUG:colcon.colcon_core.package_identification:Package 'solarbot_hardware' with type 'ros.ament_cmake' and name 'solarbot_hardware'
+[0.630s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_localization) by extensions ['ignore', 'ignore_ament_install']
+[0.630s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_localization) by extension 'ignore'
+[0.630s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_localization) by extension 'ignore_ament_install'
+[0.630s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_localization) by extensions ['colcon_pkg']
+[0.630s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_localization) by extension 'colcon_pkg'
+[0.630s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_localization) by extensions ['colcon_meta']
+[0.630s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_localization) by extension 'colcon_meta'
+[0.630s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_localization) by extensions ['ros']
+[0.630s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_localization) by extension 'ros'
+[0.631s] DEBUG:colcon.colcon_core.package_identification:Package 'solarbot_localization' with type 'ros.ament_python' and name 'solarbot_localization'
+[0.631s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_msgs) by extensions ['ignore', 'ignore_ament_install']
+[0.631s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_msgs) by extension 'ignore'
+[0.631s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_msgs) by extension 'ignore_ament_install'
+[0.631s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_msgs) by extensions ['colcon_pkg']
+[0.631s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_msgs) by extension 'colcon_pkg'
+[0.631s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_msgs) by extensions ['colcon_meta']
+[0.631s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_msgs) by extension 'colcon_meta'
+[0.631s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_msgs) by extensions ['ros']
+[0.631s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_msgs) by extension 'ros'
+[0.631s] DEBUG:colcon.colcon_core.package_identification:Package 'solarbot_msgs' with type 'ros.ament_cmake' and name 'solarbot_msgs'
+[0.632s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_navigation) by extensions ['ignore', 'ignore_ament_install']
+[0.632s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_navigation) by extension 'ignore'
+[0.632s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_navigation) by extension 'ignore_ament_install'
+[0.632s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_navigation) by extensions ['colcon_pkg']
+[0.632s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_navigation) by extension 'colcon_pkg'
+[0.632s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_navigation) by extensions ['colcon_meta']
+[0.632s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_navigation) by extension 'colcon_meta'
+[0.632s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_navigation) by extensions ['ros']
+[0.632s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_navigation) by extension 'ros'
+[0.632s] DEBUG:colcon.colcon_core.package_identification:Package 'solarbot_navigation' with type 'ros.ament_cmake' and name 'solarbot_navigation'
+[0.632s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_safety) by extensions ['ignore', 'ignore_ament_install']
+[0.633s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_safety) by extension 'ignore'
+[0.633s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_safety) by extension 'ignore_ament_install'
+[0.633s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_safety) by extensions ['colcon_pkg']
+[0.633s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_safety) by extension 'colcon_pkg'
+[0.633s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_safety) by extensions ['colcon_meta']
+[0.633s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_safety) by extension 'colcon_meta'
+[0.633s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_safety) by extensions ['ros']
+[0.633s] Level 1:colcon.colcon_core.package_identification:_identify(solarbot_safety) by extension 'ros'
+[0.633s] DEBUG:colcon.colcon_core.package_identification:Package 'solarbot_safety' with type 'ros.ament_python' and name 'solarbot_safety'
+[0.633s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.633s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.633s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.633s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.633s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.653s] INFO:colcon.colcon_core.package_selection:Skipping not selected package 'solarbot_bringup' in 'solarbot_bringup'
+[0.653s] INFO:colcon.colcon_core.package_selection:Skipping not selected package 'solarbot_cleaning' in 'solarbot_cleaning'
+[0.653s] INFO:colcon.colcon_core.package_selection:Skipping not selected package 'solarbot_description' in 'solarbot_description'
+[0.653s] INFO:colcon.colcon_core.package_selection:Skipping not selected package 'solarbot_hardware' in 'solarbot_hardware'
+[0.653s] INFO:colcon.colcon_core.package_selection:Skipping not selected package 'solarbot_msgs' in 'solarbot_msgs'
+[0.653s] INFO:colcon.colcon_core.package_selection:Skipping not selected package 'solarbot_navigation' in 'solarbot_navigation'
+[0.653s] INFO:colcon.colcon_core.package_selection:Skipping not selected package 'solarbot_gazebo' in 'solarbot_gazebo'
+[0.653s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.653s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.656s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 2 installed packages in /home/erum_ifti/solarbot_ws-1/src/install
+[0.659s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 11 installed packages in /home/erum_ifti/solarbot_ws-1/install
+[0.660s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 426 installed packages in /opt/ros/jazzy
+[0.661s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_localization' build argument 'cmake_args' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_localization' build argument 'cmake_target' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_localization' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_localization' build argument 'cmake_clean_cache' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_localization' build argument 'cmake_clean_first' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_localization' build argument 'cmake_force_configure' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_localization' build argument 'ament_cmake_args' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_localization' build argument 'catkin_cmake_args' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_localization' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.724s] DEBUG:colcon.colcon_core.verb:Building package 'solarbot_localization' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization', 'merge_install': False, 'path': '/home/erum_ifti/solarbot_ws-1/src/solarbot_localization', 'symlink_install': True, 'test_result_base': None}
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_safety' build argument 'cmake_args' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_safety' build argument 'cmake_target' from command line to 'None'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_safety' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_safety' build argument 'cmake_clean_cache' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_safety' build argument 'cmake_clean_first' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_safety' build argument 'cmake_force_configure' from command line to 'False'
+[0.724s] Level 5:colcon.colcon_core.verb:set package 'solarbot_safety' build argument 'ament_cmake_args' from command line to 'None'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'solarbot_safety' build argument 'catkin_cmake_args' from command line to 'None'
+[0.725s] Level 5:colcon.colcon_core.verb:set package 'solarbot_safety' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.725s] DEBUG:colcon.colcon_core.verb:Building package 'solarbot_safety' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety', 'merge_install': False, 'path': '/home/erum_ifti/solarbot_ws-1/src/solarbot_safety', 'symlink_install': True, 'test_result_base': None}
+[0.725s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.726s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.726s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/erum_ifti/solarbot_ws-1/src/solarbot_localization' with build type 'ament_python'
+[0.726s] Level 1:colcon.colcon_core.shell:create_environment_hook('solarbot_localization', 'ament_prefix_path')
+[0.729s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.729s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/hook/ament_prefix_path.ps1'
+[0.730s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/hook/ament_prefix_path.dsv'
+[0.730s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/hook/ament_prefix_path.sh'
+[0.731s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.731s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.736s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/home/erum_ifti/solarbot_ws-1/src/solarbot_safety' with build type 'ament_python'
+[0.736s] Level 1:colcon.colcon_core.shell:create_environment_hook('solarbot_safety', 'ament_prefix_path')
+[0.736s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/hook/ament_prefix_path.ps1'
+[0.737s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/hook/ament_prefix_path.dsv'
+[0.738s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/hook/ament_prefix_path.sh'
+[0.738s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.738s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.906s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/erum_ifti/solarbot_ws-1/src/solarbot_localization'
+[0.906s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.906s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.056s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/home/erum_ifti/solarbot_ws-1/src/solarbot_safety'
+[1.056s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.056s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.514s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety': PYTHONPATH=/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/build --no-deps symlink_data
+[1.517s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization': PYTHONPATH=/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/build --no-deps symlink_data
+[0.084s] Level 1:colcon.colcon_core.shell:create_environment_hook('solarbot_safety', 'pythonpath_develop')
+[0.084s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety' returned '0': PYTHONPATH=/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/build --no-deps symlink_data
+[0.084s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/share/solarbot_safety/hook/pythonpath_develop.ps1'
+[0.085s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/share/solarbot_safety/hook/pythonpath_develop.dsv'
+[0.086s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/share/solarbot_safety/hook/pythonpath_develop.sh'
+[0.090s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety' for CMake module files
+[0.090s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety' for CMake config files
+[0.092s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib'
+[0.092s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/bin'
+[0.092s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib/pkgconfig/solarbot_safety.pc'
+[0.092s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib/python3.12/site-packages'
+[0.093s] Level 1:colcon.colcon_core.shell:create_environment_hook('solarbot_safety', 'pythonpath')
+[0.093s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/hook/pythonpath.ps1'
+[0.093s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/hook/pythonpath.dsv'
+[0.093s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/hook/pythonpath.sh'
+[0.094s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/bin'
+[0.094s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(solarbot_safety)
+[0.094s] INFO:colcon.colcon_core.shell:Creating package script '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/package.ps1'
+[0.095s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/package.dsv'
+[0.095s] INFO:colcon.colcon_core.shell:Creating package script '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/package.sh'
+[0.096s] INFO:colcon.colcon_core.shell:Creating package script '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/package.bash'
+[0.096s] INFO:colcon.colcon_core.shell:Creating package script '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/package.zsh'
+[0.097s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/colcon-core/packages/solarbot_safety)
+[0.098s] Level 1:colcon.colcon_core.shell:create_environment_hook('solarbot_localization', 'pythonpath_develop')
+[0.098s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/share/solarbot_localization/hook/pythonpath_develop.ps1'
+[0.098s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization' returned '0': PYTHONPATH=/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/build --no-deps symlink_data
+[0.099s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/share/solarbot_localization/hook/pythonpath_develop.dsv'
+[0.099s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/build/solarbot_localization/share/solarbot_localization/hook/pythonpath_develop.sh'
+[0.100s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization' for CMake module files
+[0.100s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization' for CMake config files
+[0.102s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib'
+[0.102s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/bin'
+[0.103s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/pkgconfig/solarbot_localization.pc'
+[0.103s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/lib/python3.12/site-packages'
+[0.103s] Level 1:colcon.colcon_core.shell:create_environment_hook('solarbot_localization', 'pythonpath')
+[0.103s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/hook/pythonpath.ps1'
+[0.103s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/hook/pythonpath.dsv'
+[0.104s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/hook/pythonpath.sh'
+[0.104s] Level 1:colcon.colcon_core.environment:checking '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/bin'
+[0.104s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(solarbot_localization)
+[0.104s] INFO:colcon.colcon_core.shell:Creating package script '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/package.ps1'
+[0.105s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/package.dsv'
+[0.105s] INFO:colcon.colcon_core.shell:Creating package script '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/package.sh'
+[0.105s] INFO:colcon.colcon_core.shell:Creating package script '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/package.bash'
+[0.106s] INFO:colcon.colcon_core.shell:Creating package script '/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/solarbot_localization/package.zsh'
+[0.106s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/erum_ifti/solarbot_ws-1/src/install/solarbot_localization/share/colcon-core/packages/solarbot_localization)
+[0.106s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[0.106s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[0.107s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[0.107s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[0.250s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[0.250s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[0.251s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[0.251s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[0.262s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.Notifications was not provided by any .service files
+[0.262s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[0.263s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/erum_ifti/solarbot_ws-1/src/install/local_setup.ps1'
+[0.264s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/erum_ifti/solarbot_ws-1/src/install/_local_setup_util_ps1.py'
+[0.266s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/erum_ifti/solarbot_ws-1/src/install/setup.ps1'
+[0.267s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/erum_ifti/solarbot_ws-1/src/install/local_setup.sh'
+[0.269s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/erum_ifti/solarbot_ws-1/src/install/_local_setup_util_sh.py'
+[0.269s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/erum_ifti/solarbot_ws-1/src/install/setup.sh'
+[0.270s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/erum_ifti/solarbot_ws-1/src/install/local_setup.bash'
+[0.271s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/erum_ifti/solarbot_ws-1/src/install/setup.bash'
+[0.272s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/erum_ifti/solarbot_ws-1/src/install/local_setup.zsh'
+[0.273s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/erum_ifti/solarbot_ws-1/src/install/setup.zsh'

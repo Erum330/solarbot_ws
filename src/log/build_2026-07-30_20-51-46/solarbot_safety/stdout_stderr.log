@@ -1,0 +1,23 @@
+running develop
+running egg_info
+creating solarbot_safety.egg-info
+writing solarbot_safety.egg-info/PKG-INFO
+writing dependency_links to solarbot_safety.egg-info/dependency_links.txt
+writing entry points to solarbot_safety.egg-info/entry_points.txt
+writing requirements to solarbot_safety.egg-info/requires.txt
+writing top-level names to solarbot_safety.egg-info/top_level.txt
+writing manifest file 'solarbot_safety.egg-info/SOURCES.txt'
+reading manifest file 'solarbot_safety.egg-info/SOURCES.txt'
+writing manifest file 'solarbot_safety.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib/python3.12/site-packages/solarbot-safety.egg-link (link to .)
+Installing solarbot_perimeter_node script to /home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/lib/solarbot_safety
+
+Installed /home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety
+running symlink_data
+creating /home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/ament_index
+creating /home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/ament_index/resource_index
+creating /home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/ament_index/resource_index/packages
+symbolically linking /home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/resource/solarbot_safety -> /home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/ament_index/resource_index/packages
+symbolically linking /home/erum_ifti/solarbot_ws-1/src/build/solarbot_safety/package.xml -> /home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety
+creating /home/erum_ifti/solarbot_ws-1/src/install/solarbot_safety/share/solarbot_safety/launch
