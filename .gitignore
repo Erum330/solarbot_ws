@@ -1,4 +1,14 @@
-/build
-/install
-/log
+# ROS 2 Build & Install Folders
+build/
+install/
+log/
+src/build/
+src/install/
+src/log/
+**/build/
+**/install/
+**/log/
+
+# Python Cache
 __pycache__/
+*.pyc
