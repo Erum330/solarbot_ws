@@ -25,7 +25,7 @@ setup(
     entry_points={
         'console_scripts': [
             'solarbot_perimeter_node = solarbot_safety.solarbot_perimeter_node:main',
-        
+            'solarbot_roof_coverage_node = solarbot_safety.solarbot_roof_coverage_node:main',
         ],
     },
 )

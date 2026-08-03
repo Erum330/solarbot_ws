@@ -90,7 +90,7 @@ class OdometryIntegrator:
 # CALIBRATION
 # ============================================================
 class PixelToMeter:
-    def __init__(self, px_per_meter=2900):
+    def __init__(self, px_per_meter=2875):
         self.scale = px_per_meter
 
     def to_m(self, px):
