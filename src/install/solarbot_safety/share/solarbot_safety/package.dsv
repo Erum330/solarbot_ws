@@ -1,9 +1,0 @@
-source;share/solarbot_safety/hook/pythonpath.ps1
-source;share/solarbot_safety/hook/pythonpath.dsv
-source;share/solarbot_safety/hook/pythonpath.sh
-source;share/solarbot_safety/hook/ament_prefix_path.ps1
-source;share/solarbot_safety/hook/ament_prefix_path.dsv
-source;share/solarbot_safety/hook/ament_prefix_path.sh
-source;../../build/solarbot_safety/share/solarbot_safety/hook/pythonpath_develop.ps1
-source;../../build/solarbot_safety/share/solarbot_safety/hook/pythonpath_develop.dsv
-source;../../build/solarbot_safety/share/solarbot_safety/hook/pythonpath_develop.sh

@@ -1,9 +1,0 @@
-source;share/solarbot_localization/hook/pythonpath.ps1
-source;share/solarbot_localization/hook/pythonpath.dsv
-source;share/solarbot_localization/hook/pythonpath.sh
-source;share/solarbot_localization/hook/ament_prefix_path.ps1
-source;share/solarbot_localization/hook/ament_prefix_path.dsv
-source;share/solarbot_localization/hook/ament_prefix_path.sh
-source;../../build/solarbot_localization/share/solarbot_localization/hook/pythonpath_develop.ps1
-source;../../build/solarbot_localization/share/solarbot_localization/hook/pythonpath_develop.dsv
-source;../../build/solarbot_localization/share/solarbot_localization/hook/pythonpath_develop.sh

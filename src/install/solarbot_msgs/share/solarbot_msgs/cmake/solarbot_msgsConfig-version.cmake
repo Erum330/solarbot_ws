@@ -1,1 +1,0 @@
-/home/erum_ifti/solarbot_ws-1/src/build/solarbot_msgs/ament_cmake_core/solarbot_msgsConfig-version.cmake
