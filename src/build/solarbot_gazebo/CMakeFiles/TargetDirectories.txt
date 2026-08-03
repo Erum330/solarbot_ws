@@ -1,9 +1,0 @@
-/home/erum_ifti/solarbot_ws-1/src/build/solarbot_gazebo/CMakeFiles/uninstall.dir
-/home/erum_ifti/solarbot_ws-1/src/build/solarbot_gazebo/CMakeFiles/solarbot_gazebo_uninstall.dir
-/home/erum_ifti/solarbot_ws-1/src/build/solarbot_gazebo/CMakeFiles/test.dir
-/home/erum_ifti/solarbot_ws-1/src/build/solarbot_gazebo/CMakeFiles/edit_cache.dir
-/home/erum_ifti/solarbot_ws-1/src/build/solarbot_gazebo/CMakeFiles/rebuild_cache.dir
-/home/erum_ifti/solarbot_ws-1/src/build/solarbot_gazebo/CMakeFiles/list_install_components.dir
-/home/erum_ifti/solarbot_ws-1/src/build/solarbot_gazebo/CMakeFiles/install.dir
-/home/erum_ifti/solarbot_ws-1/src/build/solarbot_gazebo/CMakeFiles/install/local.dir
-/home/erum_ifti/solarbot_ws-1/src/build/solarbot_gazebo/CMakeFiles/install/strip.dir

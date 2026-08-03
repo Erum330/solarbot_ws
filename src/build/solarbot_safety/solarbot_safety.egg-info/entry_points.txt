@@ -1,2 +1,0 @@
-[console_scripts]
-solarbot_perimeter_node = solarbot_safety.solarbot_perimeter_node:main
