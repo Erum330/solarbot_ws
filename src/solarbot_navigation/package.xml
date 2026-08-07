@@ -3,11 +3,23 @@
 <package format="3">
   <name>solarbot_navigation</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="58556663+Erum330@users.noreply.github.com">erum</maintainer>
-  <license>TODO: License declaration</license>
+  <description>Full Nav2 integration for SolarBot - odom-only localization (no AMCL, no wide-FOV laser scanner available), costmaps fed by the four cliff ToF sensors, planner/controller/BT navigator using the maps produced by solarbot_localization's odom_mapper</description>
+  <maintainer email="erum8000@gmail.com">erum_ifti</maintainer>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>nav2_bringup</exec_depend>
+  <exec_depend>nav2_map_server</exec_depend>
+  <exec_depend>nav2_costmap_2d</exec_depend>
+  <exec_depend>nav2_planner</exec_depend>
+  <exec_depend>nav2_controller</exec_depend>
+  <exec_depend>nav2_bt_navigator</exec_depend>
+  <exec_depend>nav2_behaviors</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+  <exec_depend>nav2_smoother</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>solarbot_localization</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
