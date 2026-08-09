@@ -115,14 +115,26 @@ def generate_launch_description():
             "/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
 
             "/gps/fix@sensor_msgs/msg/NavSatFix[gz.msgs.NavSat",
-            # Front obstacle ToF
-            "/front_tof@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
 
-            # Cliff sensors
-            "/front_left_tof@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
-            "/front_right_tof@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
-            "/rear_left_tof@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
-            "/rear_right_tof@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            # ToF sensors - 4 middle-of-side layout (replaces the old
+            # front+4-corner arrangement). front_mid/rear_mid/left_mid
+            # are point sensors (VL53L0X-class); right_mid is the
+            # VL53L5CX-class grid sensor, simulated as a multi-sample
+            # horizontal scan (see solarbot_description/urdf/gazebo/
+            # gazebo.xacro for the sensor definition itself).
+            "/front_mid_tof@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/rear_mid_tof@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            "/left_mid_tof@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan",
+            # right_mid_tof: the real VL53L5CX is a genuine 8x8 grid, and
+            # sensor_msgs/LaserScan (bridged above for the other 3 point
+            # sensors) is strictly 1D - confirmed empirically that
+            # ros_gz_bridge's LaserScan converter silently truncates a
+            # true 2D gz.msgs.LaserScan down to a single row (8 of 64
+            # values came through, not an error, just quietly wrong).
+            # gz-sim's gpu_lidar sensor also auto-publishes a proper
+            # point cloud on "<topic>/points" - bridging THAT instead
+            # preserves the full 2D structure natively.
+            "/right_mid_tof/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
 
             # Joint states
             "/joint_states@sensor_msgs/msg/JointState[gz.msgs.JointState",

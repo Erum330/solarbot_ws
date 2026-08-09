@@ -59,7 +59,7 @@ Visualization Manager:
       Show Names: false
       Value: true
 
-    # Static map from odom_mapper, loaded by map_server
+    # Static map loaded by map_server
     - Alpha: 0.7
       Class: rviz_default_plugins/Map
       Color Scheme: map
@@ -73,8 +73,7 @@ Visualization Manager:
         Value: /map
       Value: true
 
-    # Global costmap - includes the static layer (panel boundary) plus
-    # front_tof obstacle marking
+    # Global costmap
     - Alpha: 0.5
       Class: rviz_default_plugins/Map
       Color Scheme: costmap
@@ -88,7 +87,7 @@ Visualization Manager:
         Value: /global_costmap/costmap
       Value: true
 
-    # Local costmap - rolling window, front_tof only
+    # Local costmap
     - Alpha: 0.5
       Class: rviz_default_plugins/Map
       Color Scheme: costmap
@@ -100,6 +99,36 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /local_costmap/costmap
+      Value: true
+
+    # Single-point Front ToF Visualizer
+    - Class: rviz_default_plugins/LaserScan
+      Color: 0; 100; 255
+      Enabled: true
+      Name: Front Mid ToF
+      Point Size: 5
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /front_mid_tof
+      Value: true
+
+    # 8x8 VL53L5CX Grid PointCloud2 Visualizer
+    - Class: rviz_default_plugins/PointCloud2
+      Color: 255; 0; 0
+      Color Transformer: AxisColor
+      Enabled: true
+      Name: Right VL53L5CX Grid ToF
+      Size (m): 0.05
+      Style: Flat Squares
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /right_mid_tof/points
       Value: true
 
     # Global plan from planner_server
@@ -129,8 +158,6 @@ Visualization Manager:
     - Class: rviz_default_plugins/Select
     - Class: rviz_default_plugins/FocusCamera
     - Class: rviz_default_plugins/Measure
-    # Deliberately NOT including "2D Pose Estimate" - there's no AMCL
-    # in this setup, that tool does nothing here and just adds confusion.
     - Class: nav2_rviz_plugins/GoalTool
     - Class: rviz_default_plugins/PublishPoint
       Single click: true

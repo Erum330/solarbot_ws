@@ -46,31 +46,32 @@ controller_server:
 
     goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.10     # Relaxed slightly to account for VO rotation jitter
-      yaw_goal_tolerance: 0.15    # ~8.5 degrees yaw tolerance
+      xy_goal_tolerance: 0.15     # Relaxed to prevent micro-adjustments
+      yaw_goal_tolerance: 0.25    # Relaxed to ~14.3 deg to account for VO heading jitter
       stateful: true
 
     FollowPath:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 0.15
-      max_linear_accel: 0.5
-      max_linear_decel: 0.5
-      lookahead_dist: 0.4
-      min_lookahead_dist: 0.2
-      max_lookahead_dist: 0.6
+      desired_linear_vel: 0.25          # INCREASED: Target cruising speed (was 0.15 m/s)
+      max_linear_accel: 0.8            # INCREASED: Faster acceleration ramp-up (was 0.5)
+      max_linear_decel: 0.8            # INCREASED: Controlled braking (was 0.5)
+      lookahead_dist: 0.6              # INCREASED: Look further ahead for smoother cruising (was 0.4)
+      min_lookahead_dist: 0.3          # INCREASED: Prevents low-speed twitching (was 0.2)
+      max_lookahead_dist: 0.9          # INCREASED: Allows higher speeds on straight paths (was 0.6)
       lookahead_time: 1.5
 
-      # In-Place Rotation to Fix Goal Spinning
-      use_rotate_to_heading: true           # Enables explicit in-place turns at goal/path start
-      rotate_to_heading_min_angle: 0.785   # Turn in place if angle difference > 45 deg
-      rotate_to_heading_angular_vel: 0.3  # Controlled turn speed for VO stability
-      max_angular_accel: 0.8
+      # In-Place Rotation Tuning to Stop Goal Overshoot Spinning
+      use_rotate_to_heading: true
+      rotate_to_heading_min_angle: 0.35    # Trigger in-place turn when heading error > ~20 deg
+      rotate_to_heading_angular_vel: 0.4   # INCREASED: Faster in-place turn speed (was 0.2)
+      max_angular_accel: 0.8               # INCREASED: Snappier orientation alignment (was 0.4)
       min_turning_radius: 0.0
 
+      # Speed Scaling Tweaks (Prevents Sluggish Choking)
       use_regulated_linear_velocity_scaling: true
       use_cost_regulated_linear_velocity_scaling: false
-      regulated_linear_scaling_min_radius: 0.5
-      regulated_linear_scaling_min_speed: 0.08
+      regulated_linear_scaling_min_radius: 0.4
+      regulated_linear_scaling_min_speed: 0.18   # INCREASED: Floor speed during turns/scaling (was 0.08)
 
 velocity_smoother:
   ros__parameters:
@@ -78,10 +79,10 @@ velocity_smoother:
     smoothing_frequency: 20.0
     scale_velocities: false
     feedback: "OPEN_LOOP"
-    max_velocity: [0.20, 0.0, 0.60]
-    min_velocity: [-0.20, 0.0, -0.60]
-    max_accel: [0.5, 0.0, 1.0]
-    max_decel: [-0.5, 0.0, -1.0]
+    max_velocity: [0.30, 0.0, 0.80]     # INCREASED: Upper bound limits (was 0.20, 0.0, 0.60)
+    min_velocity: [-0.30, 0.0, -0.80]
+    max_accel: [1.0, 0.0, 1.5]          # INCREASED: Acceleration headroom (was 0.5, 0.0, 1.0)
+    max_decel: [-1.0, 0.0, -1.5]
     odom_topic: "/diff_drive_controller/odom"
     odom_duration: 0.1
 
@@ -151,22 +152,30 @@ global_costmap:
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: true
-        observation_sources: "front_tof"
-        front_tof:
-          topic: /front_tof
-          sensor_frame: front_tof_link
+        observation_sources: "front_mid_tof right_mid_tof"
+        front_mid_tof:
+          topic: /front_mid_tof
+          sensor_frame: front_mid_tof_link
           data_type: "LaserScan"
           marking: true
           clearing: true
-          obstacle_max_range: 0.5
-          obstacle_min_range: 0.0
-          raytrace_max_range: 0.5
+          obstacle_max_range: 0.8
+          obstacle_min_range: 0.01
+          raytrace_max_range: 1.0
           raytrace_min_range: 0.0
+        right_mid_tof:
+          topic: /right_mid_tof/points
+          sensor_frame: right_mid_tof_link
+          data_type: "PointCloud2"
+          marking: true
+          clearing: true
+          obstacle_max_range: 1.2
+          obstacle_min_range: 0.02
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.25   # Exceeds footprint inscribed radius (~0.224m)
+        inflation_radius: 0.25
 
 local_costmap:
   local_costmap:
@@ -186,19 +195,27 @@ local_costmap:
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: true
-        observation_sources: "front_tof"
-        front_tof:
-          topic: /front_tof
-          sensor_frame: front_tof_link
+        observation_sources: "front_mid_tof right_mid_tof"
+        front_mid_tof:
+          topic: /front_mid_tof
+          sensor_frame: front_mid_tof_link
           data_type: "LaserScan"
           marking: true
           clearing: true
-          obstacle_max_range: 0.5
-          obstacle_min_range: 0.0
-          raytrace_max_range: 0.5
+          obstacle_max_range: 0.8
+          obstacle_min_range: 0.01
+          raytrace_max_range: 1.0
           raytrace_min_range: 0.0
+        right_mid_tof:
+          topic: /right_mid_tof/points
+          sensor_frame: right_mid_tof_link
+          data_type: "PointCloud2"
+          marking: true
+          clearing: true
+          obstacle_max_range: 1.2
+          obstacle_min_range: 0.02
 
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 0.25   # Exceeds footprint inscribed radius (~0.224m)
+        inflation_radius: 0.25

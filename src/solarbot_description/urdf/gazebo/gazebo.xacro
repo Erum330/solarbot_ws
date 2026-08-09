@@ -139,34 +139,78 @@
     </gazebo>
   </xacro:macro>
 
-  <xacro:cliff_tof_gazebo link_name="front_left_tof_link"   topic="/front_left_tof"/>
-  <xacro:cliff_tof_gazebo link_name="front_right_tof_link" topic="/front_right_tof"/>
-  <xacro:cliff_tof_gazebo link_name="rear_left_tof_link"    topic="/rear_left_tof"/>
-  <xacro:cliff_tof_gazebo link_name="rear_right_tof_link"   topic="/rear_right_tof"/>
+  <xacro:cliff_tof_gazebo link_name="front_mid_tof_link" topic="/front_mid_tof"/>
+  <xacro:cliff_tof_gazebo link_name="rear_mid_tof_link"  topic="/rear_mid_tof"/>
+  <xacro:cliff_tof_gazebo link_name="left_mid_tof_link"  topic="/left_mid_tof"/>
 
-  <!-- ══ 5. Front obstacle ToF ════════════════════════════════ -->
-  <gazebo reference="front_tof_link">
-    <sensor name="front_tof_sensor" type="gpu_lidar">
+  <!-- ══ 5. Right side grid ToF (VL53L5CX-class, simulated approximation) ═ -->
+  <!-- Real sensor: genuine 8x8=64-ray grid. This block now matches that
+       directly - 8 horizontal x 8 vertical samples, both spanning
+       +/-22.98deg (per-axis FOV derived from the confirmed real 65deg
+       diagonal FOV, same method the VL53L5CX-BNO08X-viewer firmware's
+       own config.py uses). This gives Gazebo's own ray visualization
+       and physics a true square-spreading fan, matching the real
+       sensor's reference visualization - NOT the earlier 64x1
+       flattened-single-row approximation, which looked like a flat
+       line/wedge instead of a square.
+
+       STILL UNVERIFIED: whether ros_gz_bridge's LaserScan converter
+       correctly carries through BOTH dimensions to ROS's
+       sensor_msgs/LaserScan, which has no vertical field at all. Gazebo's
+       own internal gz.msgs.LaserScan CAN represent 2D scan data, but the
+       ROS-side message fundamentally cannot - the bridge's actual
+       behavior with a genuinely 2D input (rather than 1D) needs
+       confirming empirically once this is running, not assumed.
+       CHECK THIS FIRST once built: run "ros2 topic echo /right_mid_tof
+       once" (single dash flag, not shown literally here since XML
+       comments can't contain double-dash sequences)
+       - does `ranges` contain all 64 values, or does something look
+       wrong/truncated/only-one-row? If the bridge mishandles the 2D
+       input, the fallback is switching this sensor to publish
+       PointCloud2 instead (which natively supports 2D structure) and
+       updating solarbot_perimeter_node.py's parsing to match - a real
+       scope increase, not attempted here, but the correct fix if the
+       LaserScan bridge turns out not to work cleanly.
+
+       Range 0.020-4.000m matches config.py's real MIN_RANGE_MM/
+       MAX_RANGE_MM exactly. Orientation (down + outward tilt) is
+       inherited automatically from right_mid_tof_link's joint in
+       sensors.xacro - not configured here.
+
+       NOTE: the 4m max range above is a sensor ceiling, not a
+       guarantee of reach - actual horizontal reach into the panel
+       gaps is set by mount height + tilt angle (see the reach-vs-tilt
+       derivation on the right_mid_tof instantiation in sensors.xacro).
+       With the current 30.6deg-below-horizontal boresight and 5cm
+       mount height, the grid's rows reach roughly 3.8-35cm depending
+       on row, nowhere near 4m - that's expected and correct for
+       resolving a 0.3-0.5m gap up close, not a sign of something
+       wrong with the range config here. -->
+  <gazebo reference="right_mid_tof_link">
+    <sensor name="right_mid_tof_sensor" type="gpu_lidar">
       <always_on>true</always_on>
       <update_rate>50</update_rate>
-      <topic>/front_tof</topic>
-      <gz_frame_id>front_tof_link</gz_frame_id>
+      <topic>/right_mid_tof</topic>
+      <gz_frame_id>right_mid_tof_link</gz_frame_id>
       <lidar>
         <scan>
           <horizontal>
-            <samples>1</samples><resolution>1</resolution>
-            <min_angle>0</min_angle><max_angle>0</max_angle>
+            <samples>8</samples><resolution>1</resolution>
+            <min_angle>-0.4011</min_angle><max_angle>0.4011</max_angle>
           </horizontal>
           <vertical>
-            <samples>1</samples><resolution>1</resolution>
-            <min_angle>0</min_angle><max_angle>0</max_angle>
+            <samples>8</samples><resolution>1</resolution>
+            <min_angle>-0.4011</min_angle><max_angle>0.4011</max_angle>
           </vertical>
         </scan>
         <range>
-          <min>0.010</min><max>2.000</max><resolution>0.001</resolution>
+          <!-- Confirmed real datasheet values (VL53L5CX-BNO08X-viewer
+               firmware's config.py: MIN_RANGE_MM=20, MAX_RANGE_MM=4000),
+               not estimates. -->
+          <min>0.020</min><max>4.000</max><resolution>0.001</resolution>
         </range>
         <noise>
-          <type>gaussian</type><mean>0.0</mean><stddev>0.003</stddev>
+          <type>gaussian</type><mean>0.0</mean><stddev>0.002</stddev>
         </noise>
       </lidar>
     </sensor>
@@ -203,10 +247,9 @@
   <gazebo reference="stm32_link">        <material>Gazebo/Red</material>      </gazebo>
   <gazebo reference="imu_link">          <material>Gazebo/Blue</material>     </gazebo>
   <gazebo reference="downward_camera_link"> <material>Gazebo/DarkGrey</material> </gazebo>
-  <gazebo reference="front_tof_link">       <material>Gazebo/Blue</material>  </gazebo>
-  <gazebo reference="front_left_tof_link">  <material>Gazebo/Blue</material>  </gazebo>
-  <gazebo reference="front_right_tof_link"> <material>Gazebo/Blue</material>  </gazebo>
-  <gazebo reference="rear_left_tof_link">   <material>Gazebo/Blue</material>  </gazebo>
-  <gazebo reference="rear_right_tof_link">  <material>Gazebo/Blue</material>  </gazebo>
+  <gazebo reference="front_mid_tof_link">   <material>Gazebo/Blue</material>  </gazebo>
+  <gazebo reference="rear_mid_tof_link">    <material>Gazebo/Blue</material>  </gazebo>
+  <gazebo reference="left_mid_tof_link">    <material>Gazebo/Blue</material>  </gazebo>
+  <gazebo reference="right_mid_tof_link">   <material>Gazebo/DarkGrey</material>  </gazebo>
 
 </robot>

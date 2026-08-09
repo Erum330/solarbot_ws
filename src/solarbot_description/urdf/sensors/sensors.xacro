@@ -10,18 +10,18 @@
       imu_link                    GY-91 / MPU9250 IMU
       downward_camera_link        OV9732 downward-facing camera
       downward_camera_optical_frame  ROS optical frame (Z forward, X right)
-      front_tof_link              Forward obstacle ToF
-      front_left_tof_link  }
-      front_right_tof_link }      Corner cliff ToF sensors
-      rear_left_tof_link   }      (detect panel edges, face downward)
-      rear_right_tof_link  }
+      front_mid_tof_link          Point ToF (VL53L0X), front side
+      rear_mid_tof_link           Point ToF (VL53L0X), rear side
+      left_mid_tof_link           Point ToF (VL53L0X), left side
+      right_mid_tof_link          Grid ToF (VL53L5CX), right side -
+                                   actively used for continuous lateral
+                                   edge-following, not just trip/stop
 
     Published ROS topics (driver nodes, not defined here):
       /imu
       /camera/image_raw
-      /front_tof
-      /front_left_tof   /front_right_tof
-      /rear_left_tof    /rear_right_tof
+      /front_mid_tof   /rear_mid_tof
+      /left_mid_tof    /right_mid_tof
 
     All positions come from common/properties.xacro.
 
@@ -53,6 +53,29 @@
           <box size="0.025 0.025 0.015"/>
         </geometry>
         <material name="blue"/>
+      </visual>
+    </link>
+
+    <joint name="${name}_joint" type="fixed">
+      <parent link="base_link"/>
+      <child  link="${name}_link"/>
+      <origin xyz="${x} ${y} ${z}" rpy="${rpy}"/>
+    </joint>
+
+  </xacro:macro>
+
+  <!-- Grid ToF (VL53L5CX-class multi-zone sensor) - larger box than the
+       point sensors, purely visual distinction so it's identifiable in
+       RViz/Gazebo. Update the box size once real board dimensions are
+       confirmed - currently a placeholder estimate (~25x25mm breakout). -->
+  <xacro:macro name="grid_tof_sensor" params="name x y z rpy">
+
+    <link name="${name}_link">
+      <visual>
+        <geometry>
+          <box size="0.025 0.025 0.008"/>
+        </geometry>
+        <material name="dark_gray"/>
       </visual>
     </link>
 
@@ -115,54 +138,94 @@
     <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
   </joint> -->
 
-  <!-- ── Front obstacle ToF (forward-facing) ───────────────── -->
+  <!-- ── Middle-of-side ToF sensors ─────────────────────────── -->
   <!--
-    rpy="0 0 0" tilts the sensor to face forward (+X direction).
-    Detects obstacles ahead of the robot on the panel surface.
+    Replaces the earlier front + 4-corner layout entirely. One sensor
+    centered on each side. front/rear/left are point sensors
+    (VL53L0X-class); right is a VL53L5CX-class grid sensor, actively
+    used for continuous lateral edge-following in
+    solarbot_perimeter_node.py (not just a trip-and-stop reading like
+    the others).
+
+    front_mid / rear_mid: trigger the "reached the end of this side"
+    stop-and-turn event, same role the old front_tof/corner sensors
+    played, just repositioned.
+
+    left_mid: passive point sensor, safety backup only.
+
+    right_mid (GRID): tilted 35deg OUTWARD from straight-down (toward
+    -Y, across the gap) rather than forward along the direction of
+    travel - lets it see the panel edge on the far side of the gap
+    (the next panel over), not just the current edge beneath the robot.
+    See the detailed rpy derivation comment at its instantiation below.
   -->
   <xacro:tof_sensor
-    name="front_tof"
-    x="${front_tof_x}"
-    y="${front_tof_y}"
-    z="${front_tof_z}"
-    rpy="0 0 0"/>
-
-  <!-- ── Corner cliff ToF sensors (downward-facing) ────────── -->
-  <!--
-    rpy="0 1.5708 0" — sensor faces straight down (-Z in base_link frame).
-    Placed at the four corners just inboard of the tracks so they
-    detect the panel edge drop-off before wheels reach it.
-    These feed edge_guard_node to trigger the safety stop + turn.
-  -->
-  <xacro:tof_sensor
-    name="front_left_tof"
-    x="${front_left_tof_x}"
-    y="${front_left_tof_y}"
-    z="${front_left_tof_z}"
+    name="front_mid_tof"
+    x="${front_mid_tof_x}"
+    y="${front_mid_tof_y}"
+    z="${front_mid_tof_z}"
     rpy="0 1.5708 0"/>
 
   <xacro:tof_sensor
-    name="front_right_tof"
-    x="${front_right_tof_x}"
-    y="${front_right_tof_y}"
-    z="${front_right_tof_z}"
+    name="rear_mid_tof"
+    x="${rear_mid_tof_x}"
+    y="${rear_mid_tof_y}"
+    z="${rear_mid_tof_z}"
     rpy="0 1.5708 0"/>
 
   <xacro:tof_sensor
-    name="rear_left_tof"
-    x="${rear_left_tof_x}"
-    y="${rear_left_tof_y}"
-    z="${rear_left_tof_z}"
+    name="left_mid_tof"
+    x="${left_mid_tof_x}"
+    y="${left_mid_tof_y}"
+    z="${left_mid_tof_z}"
     rpy="0 1.5708 0"/>
 
-  <xacro:tof_sensor
-    name="rear_right_tof"
-    x="${rear_right_tof_x}"
-    y="${rear_right_tof_y}"
-    z="${rear_right_tof_z}"
-    rpy="0 1.5708 0"/>
+  <!-- right_mid_tof tilt: pitch=0.534 (30.6deg) + yaw=-1.5708 (-90deg)
+       combine to tilt the downward beam OUTWARD toward -Y (right side,
+       across the gap toward the next panel), not forward along the
+       direction of travel. Roll has no effect on this sensor's final
+       beam direction (its default scan axis is local +X, which is
+       invariant under any roll rotation applied before the pitch) -
+       the outward tilt is achieved through pitch+yaw composition
+       instead.
 
-    <!-- ── GPS (UBX M8030 M8N) ───────────────────────────────── -->
+       REACH FIX (was pitch=0.9599 / 55deg): at the old 55deg-below-
+       horizontal tilt and a 3cm mount height, horizontal reach before
+       hitting a surface is only height*cot(elevation) ~= 0.03*0.70 =
+       2.1cm - nowhere near the 0.3-0.5m panel gaps, so every ray in
+       the grid was hitting the near-flush gap floor marker almost
+       immediately instead of the neighboring panel. This was NOT a
+       sensor-range limitation (max range is still 4m, see gazebo.xacro)
+       - it was mount height + tilt angle geometry.
+
+       New boresight: 30.6deg below horizontal, paired with
+       right_mid_tof_z raised to +0.010 in properties.xacro (5cm mount
+       height instead of 3cm). With the sensor's +/-22.5deg per-axis
+       FOV (see gazebo.xacro sensor block) this spreads the 8x8 grid's
+       rows across:
+         top row    (30.6-22.5=8.1deg below horizontal):  5cm*cot(8.1)  ~= 0.35m reach -> clears the 0.3m row gap, hits next panel
+         boresight  (30.6deg):                             5cm*cot(30.6)~= 0.084m reach
+         bottom row (30.6+22.5=53.1deg below horizontal):  5cm*cot(53.1)~= 0.038m reach -> still tight enough for near gap-floor/cliff read
+       Top-row hits are a grazing ~8deg intercept on a ~1.2cm-tall
+       target from 35cm away - fragile to mount height/pitch/roll
+       tolerance while driving. Prefer treating "top rows near max-range
+       + bottom rows showing gap floor" as the CROSS_GAP signature in
+       solarbot_roof_coverage_node.py rather than requiring a clean top-
+       row panel hit every cycle. If more margin is needed, raising
+       mount height further is a bigger lever than tightening the angle
+       more. Verified numerically: final beam direction with the new
+       pitch is (0, -0.861, -0.509) - shallower down (was -0.819,
+       now -0.509 in z) and more outward-leaning (was -0.574, now
+       -0.861 in y) than before, which is exactly the trade that buys
+       the extra horizontal reach. -->
+  <xacro:grid_tof_sensor
+    name="right_mid_tof"
+    x="${right_mid_tof_x}"
+    y="${right_mid_tof_y}"
+    z="${right_mid_tof_z}"
+    rpy="0 0.534 -1.5708"/>
+
+  <!-- ── GPS (UBX M8030 M8N) ───────────────────────────────── -->
   <link name="gps_link">
     <visual>
       <geometry>

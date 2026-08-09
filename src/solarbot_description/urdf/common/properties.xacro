@@ -26,7 +26,7 @@
   <xacro:property name="track_pod_length"       value="0.115"/>
   <xacro:property name="track_pod_width"        value="0.050"/>
   <xacro:property name="track_pod_height"       value="0.052"/>
-  <xacro:property name="track_full_length"      value="0.393"/>
+  <xacro:property name="track_full_length"       value="0.393"/>
   <xacro:property name="track_front_x"          value="0.135"/>
   <xacro:property name="track_rear_x"           value="-0.135"/>
   <xacro:property name="track_y_offset"         value="0.078"/>
@@ -39,7 +39,6 @@
   <xacro:property name="wheel_mass"             value="0.1"/>
 
   <!-- ── Inboard Skirting Calculation ────────────────────── -->
-  <!-- Inner boundary for central camera shroud (~0.051m) -->
   <xacro:property name="skirt_inboard_y"       value="${wheel_y_offset - (wheel_width/2) - 0.002}"/>
 
   <!-- ── Motors ───────────────────────────────────────────── -->
@@ -81,25 +80,22 @@
   <xacro:property name="camera_y"               value="0.000"/>
   <xacro:property name="camera_z"               value="-0.020"/>
 
-  <xacro:property name="front_tof_x"            value="0.200"/>
-  <xacro:property name="front_tof_y"            value="0.000"/>
-  <xacro:property name="front_tof_z"            value="0.010"/>
+  <xacro:property name="front_mid_tof_x"        value="0.200"/>
+  <xacro:property name="front_mid_tof_y"        value="0.000"/>
+  <xacro:property name="front_mid_tof_z"        value="-0.010"/>
 
-  <xacro:property name="front_left_tof_x"       value="0.200"/>
-  <xacro:property name="front_left_tof_y"       value="0.075"/>
-  <xacro:property name="front_left_tof_z"       value="-0.010"/>
+  <xacro:property name="rear_mid_tof_x"         value="-0.200"/>
+  <xacro:property name="rear_mid_tof_y"         value="0.000"/>
+  <xacro:property name="rear_mid_tof_z"         value="-0.010"/>
 
-  <xacro:property name="front_right_tof_x"      value="0.200"/>
-  <xacro:property name="front_right_tof_y"      value="-0.075"/>
-  <xacro:property name="front_right_tof_z"      value="-0.010"/>
+  <xacro:property name="left_mid_tof_x"         value="0.000"/>
+  <xacro:property name="left_mid_tof_y"         value="0.115"/>
+  <xacro:property name="left_mid_tof_z"         value="-0.010"/>
 
-  <xacro:property name="rear_left_tof_x"        value="-0.200"/>
-  <xacro:property name="rear_left_tof_y"        value="0.075"/>
-  <xacro:property name="rear_left_tof_z"        value="-0.010"/>
-
-  <xacro:property name="rear_right_tof_x"       value="-0.200"/>
-  <xacro:property name="rear_right_tof_y"       value="-0.075"/>
-  <xacro:property name="rear_right_tof_z"       value="-0.010"/>
+  <!-- Right side: VL53L5CX grid sensor -->
+  <xacro:property name="right_mid_tof_x"        value="0.000"/>
+  <xacro:property name="right_mid_tof_y"        value="-0.105"/>
+  <xacro:property name="right_mid_tof_z"        value="-0.005"/>
 
   <xacro:property name="gps_x"                  value="-0.090"/>
   <xacro:property name="gps_y"                  value="0.000"/>
