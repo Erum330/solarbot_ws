@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 """
-solarbot_roof_coverage_node.py
+solarbot_perimeter_node.py
 
-Rooftop array coverage FSM updated for 4-ToF middle-of-side layout.
+Perimeter-following FSM updated for 4-ToF middle-of-side layout.
 Synchronized with properties.xacro (right_mid_tof_y = -0.105, right_mid_tof_z = -0.005)
 and reading /right_mid_tof/points (PointCloud2).
-
-BEHAVIOR: Completes 4-side perimeter scans per panel array. After finishing Side 4,
-solarbot skips the 90-degree corner turn and drives straight forward across the
-roof gap onto the next panel array to continue continuous roof mapping.
 """
 
 import math
@@ -27,6 +23,12 @@ from sensor_msgs_py import point_cloud2
 
 class Stage(Enum):
     CALIBRATE     = auto()
+    RECALIBRATE   = auto()  # Fresh baselines after every gap crossing -
+                             # confirmed on hardware that a stale
+                             # baseline (calibrated once on panel 1,
+                             # never refreshed) let open roof deck
+                             # false-positive as "solid panel" once the
+                             # robot crossed off the actual panel grid.
     INIT_BACKUP   = auto()
     FOLLOW_SIDE   = auto()
     CORNER_BACKUP = auto()
@@ -34,14 +36,19 @@ class Stage(Enum):
     PANEL_ADJUST  = auto()
     ALIGN_BACKUP  = auto()
     ALIGN_TO_EDGE = auto()
-    CROSS_GAP     = auto()  # Straight-forward transition across roof gaps
+    CROSS_GAP     = auto()  # Drive toward a DELIBERATELY chosen next-
+                             # panel heading (see _plan_next_crossing) -
+                             # confirmed crossed once BOTH front AND
+                             # rear read "on panel" (not tripped), since
+                             # that means the whole chassis has cleared
+                             # the gap, not just the front tip.
     SETTLE        = auto()
     DONE          = auto()
 
 
-class SolarbotRoofCoverageNode(Node):
+class SolarbotPerimeterNode(Node):
     def __init__(self):
-        super().__init__('solarbot_roof_coverage_node')
+        super().__init__('solarbot_perimeter_node')
 
         # ---------------- Configurable Parameters ----------------
         self.declare_parameter('forward_speed',         0.12)
@@ -56,7 +63,20 @@ class SolarbotRoofCoverageNode(Node):
         self.declare_parameter('align_backup_dist_m',   0.01)
         self.declare_parameter('edge_find_cap_m',       0.15)
         self.declare_parameter('adjust_dist_m',         0.04)
-        self.declare_parameter('gap_cross_dist_m',      0.55)  # Drive straight across gap onto next panel
+        # Safety-only backstop for a crossing that doesn't find a panel
+        # within a reasonable distance - see _plan_next_crossing for the
+        # actual (deliberate) mission-end detection.
+        self.declare_parameter('gap_cross_max_dist_m',  1.00)
+
+        # Grid topology - confirmed from warehouse_rooftop.sdf: 2
+        # columns (0.5m column gap between them), 5 panels per column
+        # (0.3m row gap within a column). A panel's own 4-sided
+        # perimeter loop always ends facing the OPPOSITE of its entry
+        # heading, so "just keep going straight after side 4" only
+        # reaches the next panel by coincidence - this plan explicitly
+        # turns toward the real next-panel direction instead.
+        self.declare_parameter('panels_per_column',     5)
+        self.declare_parameter('num_columns',           2)
 
         self.declare_parameter('settle_sec',            0.40)
         self.declare_parameter('straight_kp',           2.5)
@@ -100,7 +120,9 @@ class SolarbotRoofCoverageNode(Node):
         self.align_backup_dist  = float(p('align_backup_dist_m').value)
         self.edge_find_cap      = float(p('edge_find_cap_m').value)
         self.adjust_dist        = float(p('adjust_dist_m').value)
-        self.gap_cross_dist     = float(p('gap_cross_dist_m').value)
+        self.gap_cross_max_dist = float(p('gap_cross_max_dist_m').value)
+        self.panels_per_column  = int(p('panels_per_column').value)
+        self.num_columns        = int(p('num_columns').value)
 
         self.settle_sec       = float(p('settle_sec').value)
         self.straight_kp      = float(p('straight_kp').value)
@@ -155,6 +177,18 @@ class SolarbotRoofCoverageNode(Node):
 
         self.adjust_spd = self.fwd_spd
 
+        # Grid-plan state. row_gap_heading/col_gap_heading are captured
+        # ONCE, from panel_1's own entry/Side2 headings, then every
+        # later crossing direction is derived from them rather than
+        # re-guessed - see _plan_next_crossing.
+        self.row_gap_heading = None
+        self.col_gap_heading = None
+        self.row_in_col = 0
+        self.col_index = 0
+        self.turning_for_cross = False
+        self.cross_target_yaw = 0.0
+        self.after_calibrate_stage = Stage.INIT_BACKUP
+
         # ROS 2 Communications
         self.cmd_pub          = self.create_publisher(Twist, self.cmd_vel_topic, 10)
         self.panel_corner_pub = self.create_publisher(Point, '/panel_corner', 10)
@@ -168,7 +202,7 @@ class SolarbotRoofCoverageNode(Node):
         self.create_subscription(Imu,       '/imu',             self._imu_cb, 10)
 
         self.create_timer(0.05, self._loop)
-        self.get_logger().info('🚀 SolarBot Rooftop Coverage Controller Active')
+        self.get_logger().info('🚀 SolarBot Uniform Perimeter Controller Active')
 
     def _scan_min(self, msg):
         vals = [r for r in msg.ranges if math.isfinite(r) and msg.range_min <= r <= msg.range_max]
@@ -279,6 +313,41 @@ class SolarbotRoofCoverageNode(Node):
     def _yaw_err(self, target):
         return self._norm_angle(target - self._heading())
 
+    def _plan_next_crossing(self):
+        """Decide what happens after the current panel's last side.
+        Returns True if there's a next panel to cross to (and sets
+        self.cross_target_yaw, self.row_in_col, self.col_index for it),
+        or False if this was the last panel in the grid.
+
+        Snake pattern: go straight up column 0 (row_gap_heading), cross
+        to column 1 at the top (col_gap_heading), then straight down
+        column 1 (row_gap_heading + 180deg) back to the start row.
+        """
+        is_last_in_column = self.row_in_col >= (self.panels_per_column - 1)
+        is_last_column = self.col_index >= (self.num_columns - 1)
+
+        if not is_last_in_column:
+            # Stay in this column, cross a row gap. Direction alternates
+            # per column so the overall path snakes instead of always
+            # trying to go the same absolute direction (which would be
+            # wrong for every other column).
+            if self.col_index % 2 == 0:
+                target = self.row_gap_heading
+            else:
+                target = self._norm_angle(self.row_gap_heading + math.pi)
+            self.row_in_col += 1
+            self.cross_target_yaw = target
+            return True
+
+        if not is_last_column:
+            # Last panel in this column - cross the column gap instead.
+            self.cross_target_yaw = self.col_gap_heading
+            self.col_index += 1
+            self.row_in_col = 0
+            return True
+
+        return False
+
     def _enter_settle(self, next_stage):
         self.stage = Stage.SETTLE
         self.after_settle_stage = next_stage
@@ -286,9 +355,22 @@ class SolarbotRoofCoverageNode(Node):
 
     def _enter_follow_side(self):
         self.side_heading_yaw = self._heading()
+        if self.row_gap_heading is None:
+            # First time ever - this defines the whole grid's reference
+            # frame. row_gap_heading is the direction that stays within
+            # the current column (matches panel_1's own Side2 heading,
+            # i.e. entry+90deg); col_gap_heading is the direction that
+            # switches columns (matches panel_1's own entry heading).
+            self.row_gap_heading = self._norm_angle(self.side_heading_yaw + math.pi / 2.0)
+            self.col_gap_heading = self.side_heading_yaw
+            self.get_logger().info(
+                f'📐 Grid reference captured: row_gap_heading={math.degrees(self.row_gap_heading):.1f}°, '
+                f'col_gap_heading={math.degrees(self.col_gap_heading):.1f}°')
         self.stage = Stage.FOLLOW_SIDE
         self._snap_xy()
-        self.get_logger().info(f'▶️ SIDE {self.completed_sides + 1} (Heading: {math.degrees(self.side_heading_yaw):.1f}°)')
+        self.get_logger().info(
+            f'▶️ Column {self.col_index + 1}, Panel {self.row_in_col + 1}/{self.panels_per_column}, '
+            f'SIDE {self.completed_sides + 1} (Heading: {math.degrees(self.side_heading_yaw):.1f}°)')
 
     def _loop(self):
         if not (self.have_odom and self.have_imu):
@@ -298,12 +380,12 @@ class SolarbotRoofCoverageNode(Node):
             self._stop()
             return
 
-        # ---- CALIBRATE ----
-        if self.stage == Stage.CALIBRATE:
+        # ---- CALIBRATE / RECALIBRATE ----
+        if self.stage in (Stage.CALIBRATE, Stage.RECALIBRATE):
             self._stop()
             if self.calib_start is None:
                 self.calib_start = self.get_clock().now()
-                self.get_logger().info('🔧 Calibrating baselines on panel...')
+                self.get_logger().info('🔧 Calibrating baselines...')
                 return
             elapsed = (self.get_clock().now() - self.calib_start).nanoseconds * 1e-9
             if elapsed >= self.calibration_sec:
@@ -311,7 +393,11 @@ class SolarbotRoofCoverageNode(Node):
                 for k in self.baseline:
                     self.baseline[k] = readings[k]
                 self.get_logger().info(f"✅ Baselines set: {self.baseline}")
-                self.stage = Stage.INIT_BACKUP
+                self.calib_start = None
+                if self.after_calibrate_stage == Stage.FOLLOW_SIDE:
+                    self._enter_follow_side()
+                else:
+                    self.stage = self.after_calibrate_stage
             return
 
         # ---- INIT_BACKUP ----
@@ -337,10 +423,17 @@ class SolarbotRoofCoverageNode(Node):
                 self._stop()
                 self._snap_xy()
 
-                # IF SIDE 4 COMPLETED: DO NOT TURN 90° -> DRIVE STRAIGHT ACROSS GAP TO NEXT PANEL
                 if self.completed_sides == (self.num_sides - 1):
-                    self.get_logger().info('✅ SIDE 4 FINISHED! Driving straight forward across roof gap to next panel...')
-                    self.stage = Stage.CROSS_GAP
+                    has_next = self._plan_next_crossing()
+                    if not has_next:
+                        self.get_logger().info('✅ ALL PANELS COVERED - MISSION COMPLETE!')
+                        self.stage = Stage.DONE
+                        return
+                    self.get_logger().info(
+                        f'✅ Side {self.completed_sides + 1} (last side) done! Turning to face '
+                        f'next panel (target {math.degrees(self.cross_target_yaw):.1f}°)...')
+                    self.turning_for_cross = True
+                    self.stage = Stage.CORNER_BACKUP
                     return
 
                 self.get_logger().info(f'⚠️ Edge reached on Side {self.completed_sides + 1} — backing up for turn...')
@@ -354,17 +447,32 @@ class SolarbotRoofCoverageNode(Node):
 
         # ---- CROSS_GAP ----
         if self.stage == Stage.CROSS_GAP:
-            if self._dist_from_snap() >= self.gap_cross_dist:
+            front_tripped = self._get_tripped_sensor(('front',))
+            rear_tripped = self._get_tripped_sensor(('rear',))
+
+            if not front_tripped and not rear_tripped:
+                # Whole chassis clear - both ends read solid panel, not
+                # just the front tip.
                 self._stop()
                 self._snap_xy()
-                self.get_logger().info('📍 Safely mounted next panel array! Resetting perimeter side count...')
-                
-                # Reset side counter for the new panel array
                 self.completed_sides = 0
-                self._enter_settle(Stage.FOLLOW_SIDE)
+                self.get_logger().info(
+                    '📍 Front and rear both confirm next panel. Recalibrating baselines '
+                    '(now on a different physical panel - a stale baseline previously let '
+                    'open roof false-positive as solid panel here)...')
+                self.after_calibrate_stage = Stage.FOLLOW_SIDE
+                self.calib_start = None
+                self._enter_settle(Stage.RECALIBRATE)
                 return
 
-            # Keep straight heading while crossing the gap
+            if self._dist_from_snap() >= self.gap_cross_max_dist:
+                self._stop()
+                self.get_logger().warn(
+                    f'⚠️ No next panel confirmed within {self.gap_cross_max_dist}m - the grid plan '
+                    f'expected one here. Stopping rather than continuing blind.')
+                self.stage = Stage.DONE
+                return
+
             err = self._yaw_err(self.side_heading_yaw)
             wz = max(-self.straight_max_wz, min(self.straight_max_wz, self.straight_kp * err))
             self._pub(self.fwd_spd, wz)
@@ -381,11 +489,17 @@ class SolarbotRoofCoverageNode(Node):
                 self._stop()
                 current_heading = self._heading()
 
-                grid_cardinal = round(current_heading / (math.pi / 2.0)) * (math.pi / 2.0)
-                self.turn_target_yaw = self._norm_angle(grid_cardinal + self.turn_angle)
+                if self.turning_for_cross:
+                    # Deliberate grid-plan heading, not a fixed +90deg
+                    # corner turn - could be +90, +180, or -90 depending
+                    # on where the actual next panel is.
+                    self.turn_target_yaw = self.cross_target_yaw
+                else:
+                    grid_cardinal = round(current_heading / (math.pi / 2.0)) * (math.pi / 2.0)
+                    self.turn_target_yaw = self._norm_angle(grid_cardinal + self.turn_angle)
 
                 self.get_logger().info(
-                    f'🔄 Corner Backup complete. Turning 90° '
+                    f'🔄 Corner Backup complete. Turning '
                     f'(Current: {math.degrees(current_heading):.1f}°, Target: {math.degrees(self.turn_target_yaw):.1f}°)...'
                 )
                 self.stage = Stage.TURN_CORNER
@@ -418,6 +532,12 @@ class SolarbotRoofCoverageNode(Node):
                 self._snap_xy()
 
                 self.side_heading_yaw = self.turn_target_yaw
+
+                if self.turning_for_cross:
+                    self.turning_for_cross = False
+                    self.get_logger().info('✅ Facing next panel. Crossing gap...')
+                    self.stage = Stage.CROSS_GAP
+                    return
 
                 corner_pt = Point()
                 corner_pt.x, corner_pt.y, corner_pt.z = self.x, self.y, 0.0
@@ -501,7 +621,7 @@ class SolarbotRoofCoverageNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = SolarbotRoofCoverageNode()
+    node = SolarbotPerimeterNode()
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

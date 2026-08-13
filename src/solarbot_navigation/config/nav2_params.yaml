@@ -1,12 +1,11 @@
 amcl:
   ros__parameters:
     use_sim_time: true
-    # AMCL intentionally NOT used - map->odom static transform publisher handles frame alignment.
 
 map_server:
   ros__parameters:
     use_sim_time: true
-    yaml_filename: ""   # Passed dynamically via launch argument
+    yaml_filename: ""
 
 map_saver:
   ros__parameters:
@@ -46,32 +45,30 @@ controller_server:
 
     goal_checker:
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.15     # Relaxed to prevent micro-adjustments
-      yaw_goal_tolerance: 0.25    # Relaxed to ~14.3 deg to account for VO heading jitter
+      xy_goal_tolerance: 0.15
+      yaw_goal_tolerance: 0.25
       stateful: true
 
     FollowPath:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
-      desired_linear_vel: 0.25          # INCREASED: Target cruising speed (was 0.15 m/s)
-      max_linear_accel: 0.8            # INCREASED: Faster acceleration ramp-up (was 0.5)
-      max_linear_decel: 0.8            # INCREASED: Controlled braking (was 0.5)
-      lookahead_dist: 0.6              # INCREASED: Look further ahead for smoother cruising (was 0.4)
-      min_lookahead_dist: 0.3          # INCREASED: Prevents low-speed twitching (was 0.2)
-      max_lookahead_dist: 0.9          # INCREASED: Allows higher speeds on straight paths (was 0.6)
+      desired_linear_vel: 0.25
+      max_linear_accel: 0.8
+      max_linear_decel: 0.8
+      lookahead_dist: 0.6
+      min_lookahead_dist: 0.3
+      max_lookahead_dist: 0.9
       lookahead_time: 1.5
 
-      # In-Place Rotation Tuning to Stop Goal Overshoot Spinning
       use_rotate_to_heading: true
-      rotate_to_heading_min_angle: 0.35    # Trigger in-place turn when heading error > ~20 deg
-      rotate_to_heading_angular_vel: 0.4   # INCREASED: Faster in-place turn speed (was 0.2)
-      max_angular_accel: 0.8               # INCREASED: Snappier orientation alignment (was 0.4)
+      rotate_to_heading_min_angle: 0.35
+      rotate_to_heading_angular_vel: 0.4
+      max_angular_accel: 0.8
       min_turning_radius: 0.0
 
-      # Speed Scaling Tweaks (Prevents Sluggish Choking)
       use_regulated_linear_velocity_scaling: true
       use_cost_regulated_linear_velocity_scaling: false
       regulated_linear_scaling_min_radius: 0.4
-      regulated_linear_scaling_min_speed: 0.18   # INCREASED: Floor speed during turns/scaling (was 0.08)
+      regulated_linear_scaling_min_speed: 0.18
 
 velocity_smoother:
   ros__parameters:
@@ -79,11 +76,11 @@ velocity_smoother:
     smoothing_frequency: 20.0
     scale_velocities: false
     feedback: "OPEN_LOOP"
-    max_velocity: [0.30, 0.0, 0.80]     # INCREASED: Upper bound limits (was 0.20, 0.0, 0.60)
+    max_velocity: [0.30, 0.0, 0.80]
     min_velocity: [-0.30, 0.0, -0.80]
-    max_accel: [1.0, 0.0, 1.5]          # INCREASED: Acceleration headroom (was 0.5, 0.0, 1.0)
+    max_accel: [1.0, 0.0, 1.5]
     max_decel: [-1.0, 0.0, -1.5]
-    odom_topic: "/diff_drive_controller/odom"
+    odom_topic: "/odom_cam"
     odom_duration: 0.1
 
 planner_server:
@@ -128,7 +125,7 @@ bt_navigator:
     use_sim_time: true
     global_frame: map
     robot_base_frame: base_footprint
-    odom_topic: /diff_drive_controller/odom
+    odom_topic: /odom_cam
     default_nav_to_pose_bt_xml: "/opt/ros/jazzy/share/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml"
     default_nav_through_poses_bt_xml: "/opt/ros/jazzy/share/nav2_bt_navigator/behavior_trees/navigate_through_poses_w_replanning_and_recovery.xml"
 

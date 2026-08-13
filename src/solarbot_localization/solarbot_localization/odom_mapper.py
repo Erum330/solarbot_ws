@@ -17,8 +17,8 @@ class OdomGridMapNode(Node):
 
         # Parameters
         self.resolution = 0.05  # meters per cell
-        self.width = 140       # number of cells
-        self.height = 100
+        self.width = 250       # number of cells
+        self.height = 250
         self.origin_x = -2.5  # meters
         self.origin_y = -2.5
 

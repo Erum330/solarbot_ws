@@ -21,7 +21,7 @@ def generate_launch_description():
     map_yaml_arg = DeclareLaunchArgument(
         'map_yaml',
         default_value='',
-        description='Full path to the saved map.yaml from odom_mapper'
+        description='Full path to the saved map.yaml'
     )
     params_arg = DeclareLaunchArgument(
         'params_file',
@@ -40,6 +40,12 @@ def generate_launch_description():
         'behavior_server',
         'bt_navigator',
         'velocity_smoother',
+    ]
+
+    # Remap default odom topic across all Nav2 servers to /odom_cam
+    odom_remappings = [
+        ('/diff_drive_controller/odom', '/odom_cam'),
+        ('odom', '/odom_cam'),
     ]
 
     return LaunchDescription([
@@ -73,7 +79,7 @@ def generate_launch_description():
             name='controller_server',
             output='screen',
             parameters=[params_file],
-            remappings=[('cmd_vel', 'cmd_vel_nav')],
+            remappings=[('cmd_vel', 'cmd_vel_nav')] + odom_remappings,
         ),
 
         Node(
@@ -82,6 +88,7 @@ def generate_launch_description():
             name='planner_server',
             output='screen',
             parameters=[params_file],
+            remappings=odom_remappings,
         ),
 
         Node(
@@ -98,6 +105,7 @@ def generate_launch_description():
             name='behavior_server',
             output='screen',
             parameters=[params_file],
+            remappings=odom_remappings,
         ),
 
         Node(
@@ -112,6 +120,7 @@ def generate_launch_description():
                     'default_nav_through_poses_bt_xml': default_through_bt_xml,
                 }
             ],
+            remappings=odom_remappings,
         ),
 
         Node(
@@ -123,7 +132,7 @@ def generate_launch_description():
             remappings=[
                 ('cmd_vel', 'cmd_vel_nav'),
                 ('cmd_vel_smoothed', '/cmd_vel'),
-            ],
+            ] + odom_remappings,
         ),
 
         Node(

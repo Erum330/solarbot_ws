@@ -13,7 +13,7 @@ Usage:
 Optional arguments:
   use_joint_state_gui:=false   headless, no GUI sliders
   use_rviz:=false              skip RViz (useful for CI / scripted tests)
-  use_real_hardware:=true      load real SkidSteerHardware plugin
+  use_real_hardware:=true      load real DiffDriveHardware plugin
   serial_port:=/dev/ttyACM0   Arduino USB port (only when above = true)
   xacro_path:=<full_path>      override the default xacro file location
   rviz_config:=<full_path>     override the default RViz config
@@ -57,7 +57,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'use_real_hardware',
             default_value='false',
-            description='Load SkidSteerHardware plugin (requires Arduino connected)'
+            description='Load DiffDriveHardware plugin (requires Arduino connected)'
         ),
         DeclareLaunchArgument(
             'serial_port',

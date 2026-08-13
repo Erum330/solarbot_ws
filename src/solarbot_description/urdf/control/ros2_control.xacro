@@ -14,7 +14,7 @@
   <!-- <ros2_control name="SolarbotHardware" type="system">
     <hardware>
       <xacro:if value="$(arg use_real_hardware)">
-        <plugin>panelbot_hardware/SkidSteerHardware</plugin>
+        <plugin>diffdrive_arduino/DiffDriveArduinoHardware</plugin>
         <param name="serial_port">$(arg serial_port)</param>
         <param name="baud_rate">115200</param>
         <param name="wheel_radius">${wheel_radius}</param>

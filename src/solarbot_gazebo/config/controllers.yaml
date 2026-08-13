@@ -1,8 +1,8 @@
 # ──────────────────────────────────────────────────────────────────
 # solarbot_controllers.yaml
 # Authoritative ros2_control controller configuration.
-# Used by both simulation (sim_control.launch.py)
-# and real hardware (real_bringup.launch.py).
+# Used by both simulation 
+# and real hardware 
 # ──────────────────────────────────────────────────────────────────
 
 controller_manager:

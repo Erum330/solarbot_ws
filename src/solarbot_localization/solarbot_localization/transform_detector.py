@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image, Imu
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TransformStamped
 from cv_bridge import CvBridge
@@ -28,12 +29,12 @@ class SE2Estimator:
 
         warp = np.eye(2, 3, dtype=np.float32)
 
-        # Gaussian falloff from center
+        # Gaussian falloff mask centered on image
         x = np.linspace(-1, 1, w)
         y = np.linspace(-1, 1, h)
         xv, yv = np.meshgrid(x, y)
         dist2 = xv**2 + yv**2
-        mask = np.exp(-dist2 / 0.25)   # adjust denominator for spread
+        mask = np.exp(-dist2 / 0.25)
         mask = (mask * 255).astype(np.uint8)
 
         try:
@@ -52,10 +53,10 @@ class SE2Estimator:
         dx = warp[0, 2]
         dy = warp[1, 2]
         theta = np.arctan2(warp[1, 0], warp[0, 0])
-        if theta > -0.0004 and theta < 0.0004:
-            theta = 0
+        if -0.0004 < theta < 0.0004:
+            theta = 0.0
 
-        # rotation compensation
+        # Rotation compensation for image translation
         dx_corr = dx - (cx * (1 - np.cos(theta)) + cy * np.sin(theta))
         dy_corr = dy - (cy * (1 - np.cos(theta)) - cx * np.sin(theta))
 
@@ -63,7 +64,7 @@ class SE2Estimator:
 
 
 # ============================================================
-# ODOMETRY INTEGRATOR
+# ODOMETRY INTEGRATOR (Fused with IMU Heading)
 # ============================================================
 class OdometryIntegrator:
     def __init__(self):
@@ -71,16 +72,22 @@ class OdometryIntegrator:
         self.y = 0.0
         self.theta = 0.0
 
-    def update(self, dy, dx, dtheta):
+    def update(self, dx, dy, imu_theta=None, dtheta_vis=0.0):
+        # Prefer direct IMU yaw if available; fallback to visual dtheta
+        if imu_theta is not None:
+            self.theta = imu_theta
+        else:
+            self.theta += dtheta_vis
+
+        # Normalize heading to [-pi, pi]
+        self.theta = (self.theta + np.pi) % (2 * np.pi) - np.pi
+
+        # Transform body displacements (dx=Forward, dy=Left/Right) into global odom frame
         global_dx = dx * np.cos(self.theta) - dy * np.sin(self.theta)
         global_dy = dx * np.sin(self.theta) + dy * np.cos(self.theta)
 
-        # FIXED AXIS BUG
         self.x += global_dx
         self.y += global_dy
-
-        self.theta += dtheta
-        self.theta = (self.theta + np.pi) % (2 * np.pi) - np.pi
 
     def get_pose(self):
         return self.x, self.y, self.theta
@@ -98,19 +105,12 @@ class PixelToMeter:
 
 
 # ============================================================
-# IMAGE PREPROCESSOR (FAST)
+# IMAGE PREPROCESSOR
 # ============================================================
 class ImagePreprocessor:
     def __init__(self):
         self.crop_w = 470
         self.crop_h = 480
-        self.thresh_min = 30
-        self.thresh_max = 70
-
-        # PREALLOCATED KERNELS
-        self.dilate_kernel = np.ones((3, 3), np.uint8)
-        self.glare_kernel = np.ones((5, 5), np.uint8)
-        self.conv_kernel = np.ones((5,5), np.uint8)
 
     def process(self, img_gray):
         h, w = img_gray.shape
@@ -124,26 +124,19 @@ class ImagePreprocessor:
 
         img = img_gray[y1:y2, x1:x2]
 
-        # ---------------------------------------------------
-        # 2. Contrast normalization (optional but useful)
-        # ---------------------------------------------------
+        # 2. Contrast normalization (CLAHE)
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         img_eq = clahe.apply(img)
 
-        # ---------------------------------------------------
-        # 3. Gradient magnitude (non-binary edge strength)
-        # ---------------------------------------------------
+        # 3. Gradient magnitude
         sobelx = cv2.Sobel(img_eq, cv2.CV_32F, 1, 0, ksize=7)
         sobely = cv2.Sobel(img_eq, cv2.CV_32F, 0, 1, ksize=7)
         grad = cv2.magnitude(sobelx, sobely)
 
-        # Normalize gradient to 0–255
         grad = cv2.normalize(grad, None, 0, 255, cv2.NORM_MINMAX)
         grad = grad.astype(np.uint8)
 
-        # ---------------------------------------------------
-        # 4. Directional line enhancement (thick structures)
-        # ---------------------------------------------------
+        # 4. Directional line enhancement
         horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 1))
         vertical_kernel   = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 3))
 
@@ -152,33 +145,23 @@ class ImagePreprocessor:
 
         line_response = cv2.max(horiz, vert)
 
-        # Threshold to binary mask
         _, mask_bin = cv2.threshold(line_response, 30, 255, cv2.THRESH_BINARY)
 
-        # Connected components
-        num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(mask_bin, connectivity=8)
-        min_width = 8  # pixels
+        num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(mask_bin, connectivity=8)
+        min_width = 8
 
         mask_filtered = np.zeros_like(mask_bin)
-        for i in range(1, num_labels):  # skip background
-            x, y, w, h, area = stats[i]
-            if w >= min_width or h >= min_width:
+        for i in range(1, num_labels):
+            _, _, w_comp, h_comp, _ = stats[i]
+            if w_comp >= min_width or h_comp >= min_width:
                 mask_filtered[labels == i] = 255
 
-        # Apply mask to line_response
         line_response = cv2.bitwise_and(line_response, mask_filtered)
 
-        # ---------------------------------------------------
-        # 5. Blend with original (KEY STEP — non-binary output)
-        # ---------------------------------------------------
-        alpha = 0.3   # original weight
-        beta  = 1.9   # line emphasis weight
-
+        # 5. Blend
+        alpha = 0.3
+        beta  = 1.9
         enhanced = cv2.addWeighted(img, alpha, line_response, beta, 0)
-
-        # Optional: slight sharpening to further emphasize lines
-        # enhanced = cv2.GaussianBlur(enhanced, (0,0), 1)
-        # enhanced = cv2.addWeighted(enhanced, 1.5, img, -0.5, 0)
 
         return enhanced
 
@@ -190,10 +173,19 @@ class SE2OdometryNode(Node):
     def __init__(self):
         super().__init__('se2_odometry_node')
 
-        self.sub = self.create_subscription(
+        # Camera Subscription
+        self.sub_cam = self.create_subscription(
             Image,
             'camera/image_raw',
-            self.callback,
+            self.image_callback,
+            10
+        )
+
+        # IMU Subscription
+        self.sub_imu = self.create_subscription(
+            Imu,
+            '/imu',
+            self.imu_callback,
             10
         )
 
@@ -207,29 +199,44 @@ class SE2OdometryNode(Node):
 
         self.estimator = SE2Estimator()
         self.odom = OdometryIntegrator()
-        self.calib = PixelToMeter()
+        self.calib = PixelToMeter(px_per_meter=2875)
         self.preproc = ImagePreprocessor()
 
         self.skip_count = 0
         self.odom_lost = False
 
-        # THREADING
+        # State Variables & Thread Locking
         self.lock = threading.Lock()
         self.latest_frame = None
         self.latest_stamp = None
+        
+        self.current_imu_yaw = None
+        self.have_imu = False
 
         self.worker = threading.Thread(target=self.process_loop, daemon=True)
         self.worker.start()
 
+        self.get_logger().info('🚀 SE(2) Visual-Inertial Odometry Node Active (Axes Mapped to ROS ENU)')
+
     # ---------------------------
-    # FAST CALLBACK (NON-BLOCKING)
+    # FAST CALLBACKS
     # ---------------------------
-    def callback(self, msg):
+    def image_callback(self, msg):
         img = self.bridge.imgmsg_to_cv2(msg, 'mono8')
 
         with self.lock:
             self.latest_frame = img
             self.latest_stamp = msg.header.stamp
+
+    def imu_callback(self, msg: Imu):
+        q = msg.orientation
+        siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
+        cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+        yaw = np.arctan2(siny_cosp, cosy_cosp)
+
+        with self.lock:
+            self.current_imu_yaw = yaw
+            self.have_imu = True
 
     # ---------------------------
     # WORKER LOOP
@@ -238,11 +245,13 @@ class SE2OdometryNode(Node):
         while rclpy.ok():
             frame = None
             stamp = None
+            imu_yaw = None
 
             with self.lock:
                 if self.latest_frame is not None:
                     frame = self.latest_frame.copy()
                     stamp = self.latest_stamp
+                    imu_yaw = self.current_imu_yaw
                     self.latest_frame = None
 
             if frame is None:
@@ -250,31 +259,36 @@ class SE2OdometryNode(Node):
 
             frame = self.preproc.process(frame)
 
-            # DOWNSCALE FOR SPEED
+            # Downscale image for fast ECC estimation
             img = cv2.resize(frame, None, fx=0.5, fy=0.5)
 
             if self.prev is None:
                 self.prev = img
                 continue
 
-            dx, dy, dtheta, score = self.estimator.estimate(self.prev, img)
+            img_dx, img_dy, dtheta_vis, score = self.estimator.estimate(self.prev, img)
 
-            # if score < 0.2 or abs(dx) > 40 or abs(dy) > 40:
             if score < 0.5 or self.odom_lost:
-                self.get_logger().info(f"Skipping score = {score:.2f}, odom lost : {self.odom_lost}")
-                # self.prev = img
+                self.get_logger().info(f"Skipping frame score = {score:.2f}, odom lost : {self.odom_lost}")
                 self.skip_count += 1
-                if(self.skip_count > 5):
+                if self.skip_count > 5:
                     self.odom_lost = True
                 continue
             else:
                 self.skip_count = 0
 
-            # SCALE BACK (because of resize)
-            dx *= 2.0
-            dy *= 2.0
+            # Scale translation back due to image downscaling (fx=0.5, fy=0.5)
+            img_dx *= 2.0
+            img_dy *= 2.0
 
-            self.odom.update(dx, dy, dtheta)
+            # CAMERA-TO-CHASSIS AXIS MAP:
+            # - Forward robot motion moves camera pixels DOWN (+img_dy) -> Chassis +X
+            # - Leftward robot motion moves camera pixels RIGHT (+img_dx) -> Chassis +Y
+            body_dx = img_dy
+            body_dy = img_dx
+
+            # Update odometry integrator using mapped axes and fused IMU yaw
+            self.odom.update(body_dx, body_dy, imu_theta=imu_yaw, dtheta_vis=dtheta_vis)
             x_px, y_px, theta = self.odom.get_pose()
 
             x = self.calib.to_m(x_px)
@@ -283,10 +297,10 @@ class SE2OdometryNode(Node):
             self.publish_odom(stamp, x, y, theta)
 
             self.get_logger().info(
-                f"x={x:.3f} y={y:.3f} θ={np.degrees(theta):.2f} score={score:.2f}"
+                f"x={x:.3f} y={y:.3f} θ={np.degrees(theta):.2f}° score={score:.2f} [IMU Used: {imu_yaw is not None}]"
             )
 
-            # publish processed image (optional)
+            # Publish processed diagnostic image
             proc_msg = self.bridge.cv2_to_imgmsg(img, encoding='mono8')
             proc_msg.header.stamp = stamp
             self.proc_img_pub.publish(proc_msg)
@@ -294,7 +308,7 @@ class SE2OdometryNode(Node):
             self.prev = img
 
     # ---------------------------
-    # ODOM + TF
+    # ODOM + TF PUBLISHER
     # ---------------------------
     def publish_odom(self, stamp, x, y, theta):
         odom = Odometry()
@@ -305,8 +319,8 @@ class SE2OdometryNode(Node):
         odom.pose.pose.position.x = x
         odom.pose.pose.position.y = y
 
-        qz = np.sin(theta / 2)
-        qw = np.cos(theta / 2)
+        qz = np.sin(theta / 2.0)
+        qw = np.cos(theta / 2.0)
 
         odom.pose.pose.orientation.z = qz
         odom.pose.pose.orientation.w = qw
@@ -332,9 +346,14 @@ class SE2OdometryNode(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = SE2OdometryNode()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':

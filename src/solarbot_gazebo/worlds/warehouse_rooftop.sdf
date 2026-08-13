@@ -137,7 +137,18 @@
       <link name="link">
         <visual name="visual">
           <geometry><box><size>4.0 0.3 0.0001</size></box></geometry>
-          <material><ambient>0.20 0.20 0.20 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse></material>
+          <material>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.60 0.60 0.60 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>../materials/textures/gap_texture.png</albedo_map>
+                <roughness>0.85</roughness>
+                <metalness>0.02</metalness>
+              </metal>
+            </pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -187,7 +198,18 @@
       <link name="link">
         <visual name="visual">
           <geometry><box><size>4.0 0.3 0.0001</size></box></geometry>
-          <material><ambient>0.20 0.20 0.20 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse></material>
+          <material>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.60 0.60 0.60 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>../materials/textures/gap_texture.png</albedo_map>
+                <roughness>0.85</roughness>
+                <metalness>0.02</metalness>
+              </metal>
+            </pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -237,7 +259,18 @@
       <link name="link">
         <visual name="visual">
           <geometry><box><size>4.0 0.3 0.0001</size></box></geometry>
-          <material><ambient>0.20 0.20 0.20 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse></material>
+          <material>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.60 0.60 0.60 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>../materials/textures/gap_texture.png</albedo_map>
+                <roughness>0.85</roughness>
+                <metalness>0.02</metalness>
+              </metal>
+            </pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -287,7 +320,18 @@
       <link name="link">
         <visual name="visual">
           <geometry><box><size>4.0 0.3 0.0001</size></box></geometry>
-          <material><ambient>0.20 0.20 0.20 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse></material>
+          <material>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.60 0.60 0.60 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>../materials/textures/gap_texture.png</albedo_map>
+                <roughness>0.85</roughness>
+                <metalness>0.02</metalness>
+              </metal>
+            </pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -375,7 +419,18 @@
       <link name="link">
         <visual name="visual">
           <geometry><box><size>4.0 0.3 0.0001</size></box></geometry>
-          <material><ambient>0.20 0.20 0.20 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse></material>
+          <material>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.60 0.60 0.60 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>../materials/textures/gap_texture.png</albedo_map>
+                <roughness>0.85</roughness>
+                <metalness>0.02</metalness>
+              </metal>
+            </pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -425,7 +480,18 @@
       <link name="link">
         <visual name="visual">
           <geometry><box><size>4.0 0.3 0.0001</size></box></geometry>
-          <material><ambient>0.20 0.20 0.20 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse></material>
+          <material>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.60 0.60 0.60 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>../materials/textures/gap_texture.png</albedo_map>
+                <roughness>0.85</roughness>
+                <metalness>0.02</metalness>
+              </metal>
+            </pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -475,7 +541,18 @@
       <link name="link">
         <visual name="visual">
           <geometry><box><size>4.0 0.3 0.0001</size></box></geometry>
-          <material><ambient>0.20 0.20 0.20 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse></material>
+          <material>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.60 0.60 0.60 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>../materials/textures/gap_texture.png</albedo_map>
+                <roughness>0.85</roughness>
+                <metalness>0.02</metalness>
+              </metal>
+            </pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -525,7 +602,18 @@
       <link name="link">
         <visual name="visual">
           <geometry><box><size>4.0 0.3 0.0001</size></box></geometry>
-          <material><ambient>0.20 0.20 0.20 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse></material>
+          <material>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.60 0.60 0.60 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>../materials/textures/gap_texture.png</albedo_map>
+                <roughness>0.85</roughness>
+                <metalness>0.02</metalness>
+              </metal>
+            </pbr>
+          </material>
         </visual>
       </link>
     </model>
@@ -575,7 +663,18 @@
       <link name="link">
         <visual name="visual">
           <geometry><box><size>0.500 10.200 0.0001</size></box></geometry>
-          <material><ambient>0.20 0.20 0.20 1</ambient><diffuse>0.20 0.20 0.20 1</diffuse></material>
+          <material>
+            <ambient>0.55 0.55 0.55 1</ambient>
+            <diffuse>0.60 0.60 0.60 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>../materials/textures/gap_texture.png</albedo_map>
+                <roughness>0.85</roughness>
+                <metalness>0.02</metalness>
+              </metal>
+            </pbr>
+          </material>
         </visual>
       </link>
     </model>
