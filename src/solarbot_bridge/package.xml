@@ -1,18 +1,23 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>solarbot_safety</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <name>solarbot_bridge</name>
+  <version>0.0.1</version>
+  <description>
+    Translates between panelbot2_ws's ESP32/micro-ROS message set
+    (mros_interfaces) and the standard ROS 2 messages solarbot_ws's
+    localization/navigation/safety nodes expect. Sits between
+    mros_converter and the rest of solarbot_ws on real hardware.
+  </description>
   <maintainer email="erum8000@gmail.com">erum_ifti</maintainer>
   <license>TODO: License declaration</license>
 
   <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
-  <depend>nav_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>sensor_msgs_py</depend>
   <depend>std_msgs</depend>
+  <depend>mros_interfaces</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

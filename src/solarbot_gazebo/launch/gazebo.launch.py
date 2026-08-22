@@ -85,7 +85,7 @@ def generate_launch_description():
             "-entity", "solarbot",
             "-x", "-1.75",
             "-y", "3.45",
-            "-z", "0.05",
+            "-z", "0.20",
         ],
         output="screen",
     )
