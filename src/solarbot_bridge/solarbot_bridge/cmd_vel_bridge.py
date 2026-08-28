@@ -2,17 +2,20 @@
 """
 cmd_vel_bridge.py
 
-Converts geometry_msgs/Twist on '/cmd_vel' (published by whichever
-solarbot_navigation/solarbot_safety FSM node is driving, or nav2's
-velocity_smoother) into mros_interfaces/MotorCmd on '/motorCmd',
-which panelbot2_ws's mros_converter already knows how to turn into
-raw/cmd_vel for the ESP32 firmware.
+Converts geometry_msgs/Twist on '/cmd_vel' into mros_interfaces/MotorCmd
+on '/motorCmd'.
 
-Differential-drive kinematics use wheel_separation from
-solarbot_gazebo/config/controllers.yaml (0.156 m) so this stays
-consistent with the simulated robot's turning behaviour.
+Two output modes, controlled by the 'publish_raw_mps' param:
+  - publish_raw_mps=True  (default): left_lin/right_lin carry the actual
+    per-wheel ground speed in m/s, unscaled. Use this for bench/no-hardware
+    testing so /motorCmd values are directly interpretable without doing
+    cmd_scale math by hand.
+  - publish_raw_mps=False: left_lin/right_lin are multiplied by cmd_scale
+    into the raw firmware units converter_node.mCmd_callback() expects
+    (clamped +/-400, dead zone 10). Use this once actually driving real
+    hardware -- cmd_scale is still an UNCALIBRATED GUESS, see TODO below.
 
-TODO(calibrate) before driving on hardware:
+TODO(calibrate) before driving on hardware with publish_raw_mps=False:
   converter_node.mCmd_callback() clamps MotorCmd.left_lin/right_lin to
   +/-400 with a dead zone of 10 and passes the value straight through
   as a raw command to the firmware - it does NOT know about m/s. That
@@ -38,7 +41,11 @@ class CmdVelBridge(Node):
         self.declare_parameter('output_topic', '/motorCmd')
         self.declare_parameter('wheel_separation_m', 0.156)
         # Raw MotorCmd units per (m/s) of wheel-ground speed. PLACEHOLDER.
-        self.declare_parameter('cmd_scale', 200.0)
+        # Only used when publish_raw_mps is False.
+        self.declare_parameter('cmd_scale', 350.0)
+        # True = publish left_lin/right_lin directly in m/s (bench testing,
+        # no hardware needed). False = apply cmd_scale for real firmware.
+        self.declare_parameter('publish_raw_mps', True)
         # Safety: stop the motors if no fresh /cmd_vel arrives in time -
         # mros_converter/firmware have no watchdog of their own.
         self.declare_parameter('cmd_vel_timeout_sec', 0.5)
@@ -47,6 +54,7 @@ class CmdVelBridge(Node):
         output_topic = self.get_parameter('output_topic').value
         self.wheel_sep = float(self.get_parameter('wheel_separation_m').value)
         self.scale = float(self.get_parameter('cmd_scale').value)
+        self.raw_mps = bool(self.get_parameter('publish_raw_mps').value)
         self.timeout = Duration(seconds=float(self.get_parameter('cmd_vel_timeout_sec').value))
 
         self.pub = self.create_publisher(MotorCmd, output_topic, 10)
@@ -55,10 +63,11 @@ class CmdVelBridge(Node):
         self.last_rx = self.get_clock().now()
         self.create_timer(0.1, self.watchdog_cb)
 
+        mode = 'RAW m/s (bench mode, no hardware needed)' if self.raw_mps \
+            else f'SCALED raw units (cmd_scale={self.scale}, UNCALIBRATED - tune on the bench)'
         self.get_logger().info(
             f'cmd_vel_bridge: {input_topic} (Twist) -> {output_topic} (MotorCmd), '
-            f'wheel_separation={self.wheel_sep} m, cmd_scale={self.scale} '
-            f'(UNCALIBRATED - tune on the bench)'
+            f'wheel_separation={self.wheel_sep} m, mode: {mode}'
         )
 
     def cb(self, msg: Twist):
@@ -76,8 +85,12 @@ class CmdVelBridge(Node):
         right_mps = v + (w * self.wheel_sep / 2.0)
 
         out = MotorCmd()
-        out.left_lin = left_mps * self.scale
-        out.right_lin = right_mps * self.scale
+        if self.raw_mps:
+            out.left_lin = left_mps
+            out.right_lin = right_mps
+        else:
+            out.left_lin = left_mps * self.scale
+            out.right_lin = right_mps * self.scale
         self.pub.publish(out)
 
 

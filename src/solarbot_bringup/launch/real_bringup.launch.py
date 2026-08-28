@@ -4,7 +4,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, TimerAction
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 import xacro
 
@@ -24,9 +24,26 @@ def generate_launch_description():
         'use_gps', default_value='true',
         description='Start the GPS driver')
 
+    # --- cmd_vel_bridge output mode ---
+    # false (default here): apply cmd_scale, publish raw firmware units --
+    # what you need for the real robot to actually move with the
+    # current (unmodified) converter_node.mCmd_callback().
+    # true: publish plain m/s on /motorCmd, for bench-testing cmd_vel_bridge's
+    # own kinematics, or once converter_node/firmware is updated to
+    # consume m/s directly.
+    publish_raw_mps_arg = DeclareLaunchArgument(
+        'publish_raw_mps', default_value='false',
+        description='cmd_vel_bridge output mode: true = raw m/s, false = scaled raw firmware units')
+    cmd_scale_arg = DeclareLaunchArgument(
+        'cmd_scale', default_value='350.0',
+        description='m/s -> raw firmware units gain, only used when publish_raw_mps is false. '
+                     'UNCALIBRATED default -- see Week 13 calibration log before trusting this on hardware.')
+
     esp32_port = LaunchConfiguration('esp32_port')
     gps_port = LaunchConfiguration('gps_port')
     camera_device = LaunchConfiguration('camera_device')
+    publish_raw_mps = LaunchConfiguration('publish_raw_mps')
+    cmd_scale = LaunchConfiguration('cmd_scale')
 
     # ------------------------------------------------------------
     # 1. Robot description / TF tree - everything else assumes the
@@ -84,9 +101,9 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'video_device': camera_device,
-            'image_size': [1280, 720],
+            'image_size': [680, 420],
             'pixel_format': 'YUYV',
-            'camera_frame_id': 'downward_camera_optical_frame',
+            'camera_frame_id': 'downward_camera_link',
         }],
     )
 
@@ -118,7 +135,11 @@ def generate_launch_description():
             Node(package='solarbot_bridge', executable='tof_bridge',
                  name='tof_bridge', output='screen'),
             Node(package='solarbot_bridge', executable='cmd_vel_bridge',
-                 name='cmd_vel_bridge', output='screen'),
+                 name='cmd_vel_bridge', output='screen',
+                 parameters=[{
+                     'publish_raw_mps': PythonExpression(["'", publish_raw_mps, "' == 'true'"]),
+                     'cmd_scale': cmd_scale,
+                 }]),
         ],
     )
 
@@ -165,6 +186,8 @@ def generate_launch_description():
         gps_port_arg,
         camera_device_arg,
         use_gps_arg,
+        publish_raw_mps_arg,
+        cmd_scale_arg,
 
         robot_state_publisher,
         micro_ros_agent,

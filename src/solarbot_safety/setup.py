@@ -25,6 +25,9 @@ setup(
     entry_points={
         'console_scripts': [
             'solarbot_perimeter_node = solarbot_safety.solarbot_perimeter_node:main',
+            'solarbot_perimeter_openloop_node = solarbot_safety.solarbot_perimeter_openloop_node:main',
+            'solarbot_edge_align_test_node = solarbot_safety.solarbot_edge_align_test_node:main',
+
             
         ],
     },

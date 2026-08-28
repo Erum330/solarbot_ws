@@ -26,6 +26,7 @@ setup(
             'imu_bridge = solarbot_bridge.imu_bridge:main',
             'tof_bridge = solarbot_bridge.tof_bridge:main',
             'cmd_vel_bridge = solarbot_bridge.cmd_vel_bridge:main',
+            'motor_teleop = solarbot_bridge.motor_teleop:main',
         ],
     },
 )
