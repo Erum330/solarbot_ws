@@ -26,7 +26,12 @@ setup(
         'console_scripts': [
             'solarbot_perimeter_node = solarbot_safety.solarbot_perimeter_node:main',
             'solarbot_perimeter_openloop_node = solarbot_safety.solarbot_perimeter_openloop_node:main',
-            'solarbot_edge_align_test_node = solarbot_safety.solarbot_edge_align_test_node:main',
+            'test_mtof_edge_detector = solarbot_safety.test_mtof_edge_detector:main',
+            'test_straight_tof_stop = solarbot_safety.test_straight_tof_stop:main',
+            'test_imu_turn = solarbot_safety.test_imu_turn:main',
+            'test_timed_backup = solarbot_safety.test_timed_backup:main',
+            'mtof_edge_filter = solarbot_safety.mtof_edge_filter:main',
+            'view_mtof_grid = solarbot_safety.view_mtof_grid:main',
 
             
         ],
