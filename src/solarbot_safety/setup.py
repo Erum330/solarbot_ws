@@ -30,8 +30,13 @@ setup(
             'test_straight_tof_stop = solarbot_safety.test_straight_tof_stop:main',
             'test_imu_turn = solarbot_safety.test_imu_turn:main',
             'test_timed_backup = solarbot_safety.test_timed_backup:main',
-            'mtof_edge_filter = solarbot_safety.mtof_edge_filter:main',
-            'view_mtof_grid = solarbot_safety.view_mtof_grid:main',
+            'mtof_edge_follower = solarbot_safety.mtof_edge_follower:main',
+            'view_mtof_gui = solarbot_safety.view_mtof_gui:main',
+            'solarbot_perimeter_mtof_node = solarbot_safety.solarbot_perimeter_mtof_node:main',
+            'solarbot_row_perimeter_node = solarbot_safety.solarbot_row_perimeter_node:main',
+            'edge_logger_node = solarbot_safety.edge_logger_node:main',
+
+        
 
             
         ],

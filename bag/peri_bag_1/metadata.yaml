@@ -1,0 +1,66 @@
+rosbag2_bagfile_information:
+  version: 9
+  storage_identifier: mcap
+  duration:
+    nanoseconds: 46995305590
+  starting_time:
+    nanoseconds_since_epoch: 1789031543148721321
+  message_count: 941
+  topics_with_message_count:
+    - topic_metadata:
+        name: /imu/data
+        type: mros_interfaces/msg/Imu
+        serialization_format: cdr
+        offered_qos_profiles:
+          - history: keep_last
+            depth: 10
+            reliability: reliable
+            durability: volatile
+            deadline:
+              sec: 9223372036
+              nsec: 854775807
+            lifespan:
+              sec: 9223372036
+              nsec: 854775807
+            liveliness: automatic
+            liveliness_lease_duration:
+              sec: 9223372036
+              nsec: 854775807
+            avoid_ros_namespace_conventions: false
+        type_description_hash: RIHS01_d385c4f6a8a7ae5250287ee80b2ac405e380652d47e47091acc6ec04b7dc528c
+      message_count: 470
+    - topic_metadata:
+        name: /tof/data
+        type: mros_interfaces/msg/Tof
+        serialization_format: cdr
+        offered_qos_profiles:
+          - history: keep_last
+            depth: 10
+            reliability: reliable
+            durability: volatile
+            deadline:
+              sec: 9223372036
+              nsec: 854775807
+            lifespan:
+              sec: 9223372036
+              nsec: 854775807
+            liveliness: automatic
+            liveliness_lease_duration:
+              sec: 9223372036
+              nsec: 854775807
+            avoid_ros_namespace_conventions: false
+        type_description_hash: RIHS01_86d37a50c130df4f156cd3f879e02b51472eb20eb73b34cc07dc0e8e48eb10cc
+      message_count: 471
+  compression_format: ""
+  compression_mode: ""
+  relative_file_paths:
+    - peri_bag_1_0.mcap
+  files:
+    - path: peri_bag_1_0.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1789031543148721321
+      duration:
+        nanoseconds: 46995305590
+      message_count: 941
+  custom_data: ~
+  ros_distro: jazzy

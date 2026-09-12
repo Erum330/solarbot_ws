@@ -24,7 +24,7 @@ def generate_launch_description():
     )
     cmd_scale_arg = DeclareLaunchArgument(
         'cmd_scale',
-        default_value='350.0',
+        default_value='1.0',
         description='Scale factor mapping (m/s) to raw firmware PWM/counts.'
     )
     wheel_separation_arg = DeclareLaunchArgument(
