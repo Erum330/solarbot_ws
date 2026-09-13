@@ -10,7 +10,8 @@ from launch_ros.actions import Node
 def generate_launch_description():
     pkg_dir = get_package_share_directory('solarbot_navigation')
 
-    default_map_file = os.path.join(pkg_dir, 'maps', 'panel_map.yaml')
+    # Updated default map file path to point to solar_panel_map.yaml in solarbot_localization/maps
+    default_map_file = os.path.expanduser('~/solarbot_ws/src/solarbot_localization/maps/solar_panel_map.yaml')
     default_params_file = os.path.join(pkg_dir, 'config', 'nav2_params.yaml')
 
     use_sim_time = LaunchConfiguration('use_sim_time')

@@ -44,16 +44,17 @@ controller_server:
       max_lookahead_dist: 0.50
       lookahead_time: 1.0
 
-      rotate_to_heading_angular_vel: 2.80
-      rotate_to_heading_min_angular_vel: 2.60
-      max_angular_vel: 3.20
-      max_angular_accel: 3.5
+      # High-torque breakaway speeds to eliminate manual nudging
+      use_rotate_to_heading: True
+      rotate_to_heading_angular_vel: 3.80
+      rotate_to_heading_min_angular_vel: 3.40
+      max_angular_vel: 4.20
+      max_angular_accel: 5.0
 
       use_velocity_scaled_lookahead_dist: False
       use_collision_detection: False
       use_regulated_linear_velocity_scaling: False
       use_cost_regulated_linear_velocity_scaling: False
-      use_rotate_to_heading: True
       allow_reversing: False
 
 planner_server:
@@ -86,9 +87,9 @@ behavior_server:
     transform_timeout: 0.1
     use_sim_time: False
     simulate_ahead_time: 2.0
-    max_rotational_vel: 2.80
-    min_rotational_vel: 2.60
-    rotational_acc_lim: 3.5
+    max_rotational_vel: 3.80
+    min_rotational_vel: 3.40
+    rotational_acc_lim: 5.0
 
 local_costmap:
   local_costmap:
@@ -132,4 +133,4 @@ global_costmap:
 map_server:
   ros__parameters:
     use_sim_time: False
-    yaml_filename: ""
+    yaml_filename: "/home/erum/solarbot_ws/src/solarbot_localization/maps/solar_panel_map.yaml"

@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """
-solarbot_perimeter_openloop_node.py
+solarbot_lawnmower_mtof_node.py
 
-Odom-free perimeter-following FSM for table/panel edge testing.
-- Uses IMU yaw for straight-line tracking and 90-degree corner spins.
-- Uses timed open-loop displacements for micro-backups and nudges.
-- Uses qos_profile_sensor_data (BEST_EFFORT) for hardware sensor compatibility.
+Boustrophedon (Lawnmower) Coverage Path Node:
+- SWEEP_LANE: Active IMU heading hold with anti-oscillation deadband.
+- DIRECTION-AWARE SPACE CHECK: Checks the Right MToF ONLY when facing 
+  180° opposite to start heading (facing the far boundary), avoiding false 
+  stops on Lane 1 when starting against the reference edge.
+- DUAL 90° PIVOTS: Direct-drive breakaway pivots without Nav2.
 """
 
 import math
-from collections import deque
 from enum import Enum, auto
+import cv2
+import numpy as np
 
 import rclpy
 from rclpy.node import Node
@@ -18,382 +21,624 @@ from rclpy.duration import Duration
 from rclpy.qos import qos_profile_sensor_data
 
 from geometry_msgs.msg import Twist
+from std_msgs.msg import String, Float32
 from sensor_msgs.msg import LaserScan, Imu, PointCloud2
 from sensor_msgs_py import point_cloud2
 
+try:
+    from mros_interfaces.msg import MotorCmd
+    HAVE_MOTOR_CMD = True
+except ImportError:
+    HAVE_MOTOR_CMD = False
+
+
+class PID:
+    def __init__(self, kp, ki, kd):
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+        self.prev_error = 0.0
+        self.integral = 0.0
+
+    def reset(self):
+        self.prev_error = 0.0
+        self.integral = 0.0
+
+    def compute(self, error, dt):
+        if dt <= 1e-4:
+            return self.kp * error
+        self.integral += error * dt
+        derivative = (error - self.prev_error) / dt
+        self.prev_error = error
+        return self.kp * error + self.ki * self.integral + self.kd * derivative
+
 
 class Stage(Enum):
-    CALIBRATE     = auto()
-    INIT_BACKUP   = auto()
-    FOLLOW_SIDE   = auto()
-    CORNER_BACKUP = auto()
-    TURN_CORNER   = auto()
-    PANEL_ADJUST  = auto()
-    ALIGN_BACKUP  = auto()
-    ALIGN_TO_EDGE = auto()
-    SETTLE        = auto()
-    DONE          = auto()
+    CALIBRATE            = auto()
+    SWEEP_LANE           = auto()
+    CHECK_SPACE          = auto()
+    MOVE_TO_CORNER_APEX  = auto()
+    CORNER_PAUSE_1       = auto()
+    TURN_1               = auto()
+    COUNTER_BRAKE_1      = auto()
+    SETTLE_1             = auto()
+    TRIM_1               = auto()
+    ADVANCE_STRIPE       = auto()
+    CORNER_PAUSE_2       = auto()
+    TURN_2               = auto()
+    COUNTER_BRAKE_2      = auto()
+    SETTLE_2             = auto()
+    TRIM_2               = auto()
+    ADVANCE_ENTRY        = auto()
+    DONE                 = auto()
 
 
-class SolarbotPerimeterOpenLoopNode(Node):
+class SolarbotLawnmowerMtofNode(Node):
     def __init__(self):
-        super().__init__('solarbot_perimeter_openloop_node')
+        super().__init__('solarbot_lawnmower_mtof_node')
 
-        # ---------------- Configurable Parameters ----------------
-        self.declare_parameter('forward_speed',         0.12)
-        self.declare_parameter('backup_speed',        -0.08)
-        self.declare_parameter('turn_speed',           0.40)
-        self.declare_parameter('turn_angle_deg',       90.0)
-        self.declare_parameter('turn_tolerance_deg',   1.5)
+        # ---------------- Movement Speeds ----------------
+        self.declare_parameter('base_speed',             0.22)
+        self.declare_parameter('shift_speed',            0.22)
+        self.declare_parameter('track_width',            0.20)
 
-        # Distances (Converted to duration: t = dist / |speed|)
-        self.declare_parameter('init_backup_dist_m',    0.06)
-        self.declare_parameter('corner_backup_dist_m',  0.02)
-        self.declare_parameter('align_backup_dist_m',   0.02)
-        self.declare_parameter('edge_find_cap_m',       0.15)
-        self.declare_parameter('adjust_dist_m',         0.04)
+        # ---------------- Heading PID Parameters ----------------
+        self.declare_parameter('pid_kp',                 0.90)
+        self.declare_parameter('pid_ki',                 0.00)
+        self.declare_parameter('pid_kd',                 0.10)
+        self.declare_parameter('max_correction',         0.035)
+        self.declare_parameter('yaw_deadband_deg',       0.80)
 
-        self.declare_parameter('settle_sec',            0.40)
-        self.declare_parameter('straight_kp',           2.5)
-        self.declare_parameter('straight_max_wz',       0.30)
-        self.declare_parameter('num_sides',             4)
+        # ---------------- IMU Turn Parameters ----------------
+        self.declare_parameter('turn_speed',             3.50)
+        self.declare_parameter('brake_lead_deg',         9.50)
+        self.declare_parameter('counter_brake_spd',      2.40)
+        self.declare_parameter('counter_brake_sec',      0.080)
+        self.declare_parameter('trim_tolerance_deg',     1.20)
+        self.declare_parameter('settle_time_sec',        0.30)
 
-        # Sensor Filtering
-        self.declare_parameter('filter_window',        5)
-        self.declare_parameter('min_filter_samples',    3)
-        self.declare_parameter('calibration_sec',       1.0)
-        self.declare_parameter('gap_delta_m',           0.008)
+        # ---------------- MToF Parameters ----------------
+        self.declare_parameter('surface_threshold_m',    0.18)
+        self.declare_parameter('mtof_slope_m_per_col',   0.0325)
+        self.declare_parameter('mtof_base_offset_m',     0.0940)
+        self.declare_parameter('transpose_grid',         True)
+        self.declare_parameter('flip_vertical',           True)
+        self.declare_parameter('min_space_next_lane_m',  0.22)
 
-        self.declare_parameter('cmd_vel_topic',  '/cmd_vel')
+        # ---------------- Sequential Timings ----------------
+        self.declare_parameter('pre_turn_forward_sec',   0.45)
+        self.declare_parameter('pause_duration_sec',     0.30)
+        self.declare_parameter('stripe_shift_sec',       2.20)
+        self.declare_parameter('advance_entry_sec',      0.70)
+        self.declare_parameter('shift_debounce_sec',     0.40)
+        self.declare_parameter('max_passes',             20)
+        self.declare_parameter('gap_delta_m',            0.05)
+        self.declare_parameter('corner_debounce_count',  2)
+        self.declare_parameter('cmd_vel_topic',          '/cmd_vel')
 
         p = self.get_parameter
-        self.fwd_spd          = float(p('forward_speed').value)
-        self.bkp_spd          = float(p('backup_speed').value)
-        self.turn_spd         = float(p('turn_speed').value)
-        self.turn_angle       = math.radians(float(p('turn_angle_deg').value))
-        self.turn_tol         = math.radians(float(p('turn_tolerance_deg').value))
+        self.base_spd        = float(p('base_speed').value)
+        self.shift_spd       = float(p('shift_speed').value)
+        self.track_width     = float(p('track_width').value)
 
-        self.init_backup_dist   = float(p('init_backup_dist_m').value)
-        self.corner_backup_dist = float(p('corner_backup_dist_m').value)
-        self.align_backup_dist  = float(p('align_backup_dist_m').value)
-        self.edge_find_cap      = float(p('edge_find_cap_m').value)
-        self.adjust_dist        = float(p('adjust_dist_m').value)
+        kp = float(p('pid_kp').value)
+        ki = float(p('pid_ki').value)
+        kd = float(p('pid_kd').value)
+        self.pid_heading     = PID(kp, ki, kd)
+        self.max_corr        = float(p('max_correction').value)
+        self.yaw_deadband    = math.radians(float(p('yaw_deadband_deg').value))
 
-        self.settle_sec       = float(p('settle_sec').value)
-        self.straight_kp      = float(p('straight_kp').value)
-        self.straight_max_wz  = float(p('straight_max_wz').value)
-        self.num_sides        = int(p('num_sides').value)
+        self.turn_angle      = math.radians(90.0)
+        self.turn_spd        = float(p('turn_speed').value)
+        self.brake_lead_rad  = math.radians(float(p('brake_lead_deg').value))
+        self.counter_spd     = float(p('counter_brake_spd').value)
+        self.counter_sec     = float(p('counter_brake_sec').value)
+        self.trim_tol_rad    = math.radians(float(p('trim_tolerance_deg').value))
+        self.settle_time     = float(p('settle_time_sec').value)
 
-        self.filter_window      = int(p('filter_window').value)
-        self.min_filter_samples = int(p('min_filter_samples').value)
-        self.calibration_sec    = float(p('calibration_sec').value)
-        self.gap_delta          = float(p('gap_delta_m').value)
+        self.thresh          = float(p('surface_threshold_m').value)
+        self.mtof_slope      = float(p('mtof_slope_m_per_col').value)
+        self.mtof_offset     = float(p('mtof_base_offset_m').value)
+        self.transpose       = bool(p('transpose_grid').value)
+        self.flip_vertical   = bool(p('flip_vertical').value)
+        self.min_space_m     = float(p('min_space_next_lane_m').value)
 
-        self.cmd_vel_topic = str(p('cmd_vel_topic').value)
+        self.pre_turn_dur    = float(p('pre_turn_forward_sec').value)
+        self.pause_dur       = float(p('pause_duration_sec').value)
+        self.stripe_shift_dur= float(p('stripe_shift_sec').value)
+        self.advance_dur     = float(p('advance_entry_sec').value)
+        self.shift_blank_dur = float(p('shift_debounce_sec').value)
+        self.max_passes      = int(p('max_passes').value)
+        self.gap_delta       = float(p('gap_delta_m').value)
+        self.debounce_req    = int(p('corner_debounce_count').value)
 
-        # Buffers
-        self.front_buf = deque(maxlen=self.filter_window)
-        self.rear_buf  = deque(maxlen=self.filter_window)
-        self.left_buf  = deque(maxlen=self.filter_window)
-        self.right_buf = deque(maxlen=self.filter_window)
+        # State tracking
+        self.stage = Stage.CALIBRATE
+        self.completed_lanes = 0
+        self.initial_yaw = 0.0
+        self.target_yaw = 0.0
+        self.lane_heading = 0.0
+        self.turn_start_yaw = 0.0
+        self.active_turn_dir = 1.0
+        self.turn_left = True
 
-        self.baseline = {'front': None, 'rear': None, 'left': None, 'right': None}
-        self.calib_start = None
+        self.last_loop_time = self.get_clock().now()
+        self.brake_start = self.get_clock().now()
+        self.settle_start = self.get_clock().now()
+        self.stage_timer_start = self.get_clock().now()
+        self.stage_timer_end = self.get_clock().now()
 
-        # State Tracking
-        self.have_imu  = False
-        self.imu_yaw   = 0.0
+        self.has_moved = False
+        self.trim_done = False
+        self.edge_trip_streak = 0
 
-        self.stage           = Stage.CALIBRATE
-        self.completed_sides = 0
+        self.have_imu = False
+        self.imu_yaw = 0.0
 
-        self.turn_target_yaw  = 0.0
-        self.side_heading_yaw = 0.0
+        # Sensor variables
+        self.front_dist = None
+        self.rear_dist = None
+        self.baseline = {'front': None, 'rear': None}
+        self.calib_samples = []
+        self.latest_grid = None
 
-        self.settle_end         = self.get_clock().now()
-        self.action_timeout_end = self.get_clock().now()
-        self.after_settle_stage = Stage.FOLLOW_SIDE
+        self.latest_edge_dist = None
+        self.latest_edge_tilt = None
 
-        self.adjust_spd = self.fwd_spd
+        # Publishers
+        cmd_topic = str(p('cmd_vel_topic').value)
+        self.cmd_pub = self.create_publisher(Twist, cmd_topic, 10)
+        self.status_pub = self.create_publisher(String, '/coverage_status', 10)
+        self.edge_dist_pub = self.create_publisher(Float32, '/edge_distance', 10)
+        self.edge_tilt_pub = self.create_publisher(Float32, '/edge_tilt', 10)
 
-        # ROS 2 Communications
-        self.cmd_pub = self.create_publisher(Twist, self.cmd_vel_topic, 10)
+        if HAVE_MOTOR_CMD:
+            self.motor_pub = self.create_publisher(MotorCmd, '/motorCmd', 10)
+        else:
+            self.motor_pub = None
 
-        # BEST_EFFORT QoS subscriptions
-        self.create_subscription(LaserScan,  '/front_mid_tof',        self._front_cb, qos_profile=qos_profile_sensor_data)
-        self.create_subscription(LaserScan,  '/rear_mid_tof',         self._rear_cb,  qos_profile=qos_profile_sensor_data)
-        self.create_subscription(LaserScan,  '/left_mid_tof',         self._left_cb,  qos_profile=qos_profile_sensor_data)
-        self.create_subscription(PointCloud2, '/right_mid_tof/points', self._right_cb, qos_profile=qos_profile_sensor_data)
-        self.create_subscription(Imu,        '/imu',                  self._imu_cb,   qos_profile=qos_profile_sensor_data)
+        # Subscriptions
+        self.create_subscription(LaserScan,   '/front_mid_tof',        self._front_cb, qos_profile=qos_profile_sensor_data)
+        self.create_subscription(LaserScan,   '/rear_mid_tof',         self._rear_cb,  qos_profile=qos_profile_sensor_data)
+        self.create_subscription(PointCloud2, '/right_mid_tof/points', self._cloud_cb, qos_profile=qos_profile_sensor_data)
+        self.create_subscription(Imu,         '/imu',                  self._imu_cb,   qos_profile=qos_profile_sensor_data)
 
-        self.create_timer(0.05, self._loop)
-        self.get_logger().info('🚀 SolarBot Odom-Free Perimeter Controller Initialized')
+        self.create_timer(0.02, self._loop)
+        self.get_logger().info('🌾 SolarBot Lawnmower Node Active (180° Directional Space Gating).')
 
-    def _scan_min(self, msg):
-        vals = [r for r in msg.ranges if math.isfinite(r) and msg.range_min <= r <= msg.range_max]
-        return min(vals) if vals else math.inf
+    def _front_cb(self, msg: LaserScan):
+        valid = [r for r in msg.ranges if math.isfinite(r) and msg.range_min <= r <= msg.range_max]
+        if valid:
+            self.front_dist = min(valid)
 
-    def _front_cb(self, msg):
-        v = self._scan_min(msg)
-        if math.isfinite(v): self.front_buf.append(v)
+    def _rear_cb(self, msg: LaserScan):
+        valid = [r for r in msg.ranges if math.isfinite(r) and msg.range_min <= r <= msg.range_max]
+        if valid:
+            self.rear_dist = min(valid)
 
-    def _rear_cb(self, msg):
-        v = self._scan_min(msg)
-        if math.isfinite(v): self.rear_buf.append(v)
-
-    def _left_cb(self, msg):
-        v = self._scan_min(msg)
-        if math.isfinite(v): self.left_buf.append(v)
-
-    def _right_cb(self, msg):
-        min_dist = math.inf
-        for x, y, z in point_cloud2.read_points(msg, field_names=('x', 'y', 'z'), skip_nans=True):
-            d = math.sqrt(x * x + y * y + z * z)
-            if d < min_dist:
-                min_dist = d
-        if math.isfinite(min_dist):
-            self.right_buf.append(min_dist)
-
-    def _imu_cb(self, msg):
-        q = msg.orientation
+    def _imu_cb(self, msg: Imu):
+        q = msg.quaternion if hasattr(msg, 'quaternion') else msg.orientation
         if not (math.isfinite(q.x) and math.isfinite(q.y) and math.isfinite(q.z) and math.isfinite(q.w)):
             return
-        self.imu_yaw = math.atan2(2.0 * (q.w * q.z + q.x * q.y), 1.0 - 2.0 * (q.y * q.y + q.z * q.z))
+
+        yaw = float(np.arctan2(2.0 * (q.w * q.z + q.x * q.y), 1.0 - 2.0 * (q.y * q.y + q.z * q.z)))
+        self.imu_yaw = yaw
         self.have_imu = True
 
-    def _mean(self, buf):
-        return (sum(buf) / len(buf)) if len(buf) >= self.min_filter_samples else None
+        if self.stage == Stage.CALIBRATE:
+            self.calib_samples.append(yaw)
 
-    def _filtered_readings(self):
-        return {
-            'front': self._mean(self.front_buf),
-            'rear':  self._mean(self.rear_buf),
-            'left':  self._mean(self.left_buf),
-            'right': self._mean(self.right_buf),
-        }
+    def _cloud_cb(self, msg: PointCloud2):
+        pts = list(point_cloud2.read_points(msg, field_names=('x', 'y', 'z'), skip_nans=False))
+        if len(pts) < 64:
+            return
 
-    def _filters_ready(self):
-        return all(v is not None for v in self._filtered_readings().values())
+        raw_grid = np.zeros((8, 8), dtype=np.float32)
+        for r in range(8):
+            for c in range(8):
+                x, y, z = pts[r * 8 + c]
+                raw_grid[r, c] = math.sqrt(x*x + y*y + z*z) if (math.isfinite(x) and x > 0) else 9.99
 
-    def _get_tripped_sensor(self, keys):
-        readings = self._filtered_readings()
-        for key in keys:
-            r = readings[key]
-            b = self.baseline[key]
-            if r is not None and b is not None:
-                if (r - b) > self.gap_delta:
-                    return key
+        grid = raw_grid.T if self.transpose else raw_grid
+        if self.flip_vertical:
+            grid = np.flipud(grid)
+
+        self.latest_grid = grid
+        self._compute_and_publish_edge_mapping()
+
+    def _subpixel_edge(self, row):
+        for c in range(7):
+            d1 = row[c]
+            d2 = row[c + 1]
+            if d1 <= self.thresh and d2 > self.thresh:
+                fraction = (self.thresh - d1) / max(1e-4, (d2 - d1))
+                return float(c) + float(fraction)
+        if row[0] > self.thresh:
+            return 0.0
         return None
 
-    def _heading(self):
-        return self.imu_yaw
+    def _compute_and_publish_edge_mapping(self):
+        if self.latest_grid is None:
+            return
+
+        edge_pts_2d = []
+        for r in range(8):
+            col_cross = self._subpixel_edge(self.latest_grid[r, :])
+            if col_cross is not None:
+                edge_pts_2d.append([col_cross, float(r)])
+
+        if len(edge_pts_2d) < 3:
+            return
+
+        pts_array = np.array(edge_pts_2d, dtype=np.float32)
+        [vx, vy, x0, y0] = cv2.fitLine(pts_array, cv2.DIST_L2, 0, 0.01, 0.01)
+        vx, vy, x0, y0 = float(vx[0]), float(vy[0]), float(x0[0]), float(y0[0])
+
+        if vy < 0:
+            vx = -vx
+            vy = -vy
+
+        tilt_deg = math.degrees(math.atan2(vx, vy))
+        avg_col = x0
+
+        total_edge_distance = (self.mtof_slope * avg_col) + self.mtof_offset
+        self.latest_edge_dist = total_edge_distance
+        self.latest_edge_tilt = tilt_deg
+
+        msg_dist = Float32()
+        msg_dist.data = float(total_edge_distance)
+        self.edge_dist_pub.publish(msg_dist)
+
+        msg_tilt = Float32()
+        msg_tilt.data = float(tilt_deg)
+        self.edge_tilt_pub.publish(msg_tilt)
+
+    def _is_tripped(self, key):
+        dist = self.front_dist if key == 'front' else self.rear_dist
+        base = self.baseline[key]
+        if dist is not None and base is not None:
+            return (dist - base) > self.gap_delta
+        return False
 
     def _norm_angle(self, a):
         while a > math.pi:  a -= 2.0 * math.pi
         while a < -math.pi: a += 2.0 * math.pi
         return a
 
-    def _yaw_err(self, target):
-        return self._norm_angle(target - self._heading())
+    def _publish_wheels(self, left: float, right: float):
+        if self.motor_pub is not None:
+            mc = MotorCmd()
+            mc.left_lin = float(left)
+            mc.right_lin = float(right)
+            self.motor_pub.publish(mc)
 
-    def _pub(self, vx=0.0, wz=0.0):
-        cmd = Twist()
-        cmd.linear.x  = float(vx) if math.isfinite(vx) else 0.0
-        cmd.angular.z = float(wz) if math.isfinite(wz) else 0.0
-        self.cmd_pub.publish(cmd)
+        tw = Twist()
+        tw.linear.x = float((left + right) / 2.0)
+        tw.angular.z = float((right - left) / self.track_width)
+        self.cmd_pub.publish(tw)
 
     def _stop(self):
-        self.cmd_pub.publish(Twist())
+        self._publish_wheels(0.0, 0.0)
 
-    def _set_action_duration(self, dist_m, speed):
-        duration_sec = abs(dist_m / speed) if abs(speed) > 1e-5 else 0.5
-        self.action_timeout_end = self.get_clock().now() + Duration(seconds=duration_sec)
+    def _compute_steer(self, target_heading, cruise_speed, dt):
+        yaw_error = self._norm_angle(target_heading - self.imu_yaw)
+        if abs(yaw_error) < self.yaw_deadband:
+            correction = 0.0
+        else:
+            raw_corr = self.pid_heading.compute(yaw_error, dt)
+            correction = float(np.clip(raw_corr, -self.max_corr, self.max_corr))
 
-    def _action_timed_out(self):
-        return self.get_clock().now() >= self.action_timeout_end
-
-    def _enter_settle(self, next_stage):
-        self.stage = Stage.SETTLE
-        self.after_settle_stage = next_stage
-        self.settle_end = self.get_clock().now() + Duration(seconds=self.settle_sec)
-
-    def _enter_follow_side(self):
-        self.side_heading_yaw = self._heading()
-        self.stage = Stage.FOLLOW_SIDE
-        self.get_logger().info(f'▶️ SIDE {self.completed_sides + 1} (Heading: {math.degrees(self.side_heading_yaw):.1f}°)')
+        return cruise_speed - correction, cruise_speed + correction
 
     def _loop(self):
-        if not self.have_imu:
+        if not self.have_imu or self.front_dist is None or self.rear_dist is None:
             self._stop()
             return
-        if not self._filters_ready():
-            self._stop()
-            return
+
+        now = self.get_clock().now()
+        dt = (now - self.last_loop_time).nanoseconds * 1e-9
+        self.last_loop_time = now
 
         # ---- 1. CALIBRATE ----
         if self.stage == Stage.CALIBRATE:
             self._stop()
-            if self.calib_start is None:
-                self.calib_start = self.get_clock().now()
-                self.get_logger().info('🔧 Calibrating ToF baselines on table surface...')
-                return
-            elapsed = (self.get_clock().now() - self.calib_start).nanoseconds * 1e-9
-            if elapsed >= self.calibration_sec:
-                readings = self._filtered_readings()
-                for k in self.baseline:
-                    self.baseline[k] = readings[k]
-                self.get_logger().info(f"✅ Baselines set: {self.baseline}")
-                self._set_action_duration(self.init_backup_dist, self.bkp_spd)
-                self.stage = Stage.INIT_BACKUP
+            if len(self.calib_samples) >= 15:
+                self.baseline['front'] = self.front_dist
+                self.baseline['rear']  = self.rear_dist
+                avg_yaw = float(np.mean(self.calib_samples))
+                self.initial_yaw = round(avg_yaw / (math.pi / 2.0)) * (math.pi / 2.0)
+                self.lane_heading = self.initial_yaw
+                self.target_yaw = self.lane_heading
+                self.pid_heading.reset()
+
+                self.get_logger().info(f"✅ Baselines set: Front={self.baseline['front']:.3f}m, Rear={self.baseline['rear']:.3f}m")
+                self.get_logger().info(f"🏁 Starting Lane 1 at heading: {math.degrees(self.lane_heading):.2f}°")
+                self.stage = Stage.SWEEP_LANE
             return
 
-        # ---- 2. INIT_BACKUP ----
-        if self.stage == Stage.INIT_BACKUP:
-            tripped = self._get_tripped_sensor(('rear',))
-            if tripped or self._action_timed_out():
-                self._stop()
-                self._enter_settle(Stage.FOLLOW_SIDE)
-                return
-            self._pub(self.bkp_spd, 0.0)
-            return
+        # ---- 2. SWEEP_LANE ----
+        if self.stage == Stage.SWEEP_LANE:
+            if self._is_tripped('front'):
+                self.edge_trip_streak += 1
+            else:
+                self.edge_trip_streak = 0
 
-        # ---- 3. FOLLOW_SIDE ----
-        if self.stage == Stage.FOLLOW_SIDE:
-            tripped = self._get_tripped_sensor(('front',))
-            if tripped:
-                self._stop()
-                self.get_logger().info(f'⚠️ Edge reached on Side {self.completed_sides + 1} via [{tripped}] — backing up...')
-                self._set_action_duration(self.corner_backup_dist, self.bkp_spd)
-                self.stage = Stage.CORNER_BACKUP
-                return
+            if self.edge_trip_streak >= self.debounce_req:
+                self.edge_trip_streak = 0
+                self.completed_lanes += 1
 
-            err = self._yaw_err(self.side_heading_yaw)
-            wz = max(-self.straight_max_wz, min(self.straight_max_wz, self.straight_kp * err))
-            self._pub(self.fwd_spd, wz)
-            return
-
-        # ---- 4. CORNER_BACKUP ----
-        if self.stage == Stage.CORNER_BACKUP:
-            rear_tripped = self._get_tripped_sensor(('rear',))
-            if rear_tripped or self._action_timed_out():
-                self._stop()
-                current_heading = self._heading()
-                grid_cardinal = round(current_heading / (math.pi / 2.0)) * (math.pi / 2.0)
-                self.turn_target_yaw = self._norm_angle(grid_cardinal + self.turn_angle)
-
-                self.get_logger().info(
-                    f'🔄 Corner Backup complete. Turning 90° '
-                    f'(Current: {math.degrees(current_heading):.1f}°, Target: {math.degrees(self.turn_target_yaw):.1f}°)...'
-                )
-                self.stage = Stage.TURN_CORNER
-                return
-
-            self._pub(self.bkp_spd, 0.0)
-            return
-
-        # ---- 5. TURN_CORNER ----
-        if self.stage == Stage.TURN_CORNER:
-            sensors_to_check = ('rear',) if self.completed_sides == 0 else ('front',)
-            tripped_key = self._get_tripped_sensor(sensors_to_check)
-
-            if tripped_key is not None:
-                self._stop()
-                self.adjust_spd = self.fwd_spd if tripped_key == 'rear' else self.bkp_spd
-                self.get_logger().warn(f'⚠️ Sensor [{tripped_key}] hit edge mid-turn! Creeping...')
-                self._set_action_duration(self.adjust_dist, self.adjust_spd)
-                self.stage = Stage.PANEL_ADJUST
-                return
-
-            err = self._yaw_err(self.turn_target_yaw)
-            if abs(err) <= self.turn_tol:
-                self._stop()
-                self.side_heading_yaw = self.turn_target_yaw
-                self.get_logger().info('✅ Turn complete. Aligning frame to edge...')
-                self._set_action_duration(self.align_backup_dist, self.bkp_spd)
-                self.stage = Stage.ALIGN_BACKUP
-                return
-
-            p_turn_spd = max(0.18, min(self.turn_speed, 1.2 * abs(err)))
-            self._pub(0.0, math.copysign(p_turn_spd, err))
-            return
-
-        # ---- 6. PANEL_ADJUST ----
-        if self.stage == Stage.PANEL_ADJUST:
-            if self._action_timed_out():
-                self._stop()
-                self.get_logger().info('↩️ Nudge complete. Resuming turn...')
-                self.stage = Stage.TURN_CORNER
-                return
-            self._pub(self.adjust_spd, 0.0)
-            return
-
-        # ---- 7. ALIGN_BACKUP ----
-        if self.stage == Stage.ALIGN_BACKUP:
-            tripped = self._get_tripped_sensor(('rear',))
-            if tripped or self._action_timed_out():
-                self._stop()
-                self.completed_sides += 1
-                if self.completed_sides >= self.num_sides:
+                if self.completed_lanes >= self.max_passes:
+                    self._stop()
                     self.stage = Stage.DONE
-                    self.get_logger().info('🎉 FULL PERIMETER COMPLETED!')
+                    self.get_logger().info('🎉 Max passes reached! Coverage finished.')
+                    status_msg = String()
+                    status_msg.data = "done"
+                    self.status_pub.publish(status_msg)
                     return
 
-                self.get_logger().info(f'🔍 Nudging outward for Side {self.completed_sides + 1}...')
-                self._set_action_duration(self.edge_find_cap, self.fwd_spd * 0.5)
-                self.stage = Stage.ALIGN_TO_EDGE
-                return
-            self._pub(self.bkp_spd, 0.0)
-            return
-
-        # ---- 8. ALIGN_TO_EDGE ----
-        if self.stage == Stage.ALIGN_TO_EDGE:
-            tripped = self._get_tripped_sensor(('front',))
-            if tripped or self._action_timed_out():
                 self._stop()
-                self.get_logger().info(f'📍 Edge located for Side {self.completed_sides + 1}! Starting side follow...')
-                self._enter_settle(Stage.FOLLOW_SIDE)
+                self.stage = Stage.CHECK_SPACE
                 return
 
-            self._pub(self.fwd_spd * 0.5, 0.0)
+            left, right = self._compute_steer(self.target_yaw, self.base_spd, dt)
+            self._publish_wheels(left, right)
             return
 
-        # ---- 9. SETTLE ----
-        if self.stage == Stage.SETTLE:
+        # ---- 3. CHECK_SPACE ----
+        if self.stage == Stage.CHECK_SPACE:
             self._stop()
-            if self.get_clock().now() >= self.settle_end:
-                if self.after_settle_stage == Stage.FOLLOW_SIDE:
-                    self._enter_follow_side()
-                else:
-                    self.stage = self.after_settle_stage
+            # Calculate heading offset from initial start
+            rel_yaw = abs(self._norm_angle(self.lane_heading - self.initial_yaw))
+            is_facing_opposite = rel_yaw > math.radians(135.0)
+
+            if is_facing_opposite:
+                if self.latest_edge_dist is not None:
+                    self.get_logger().info(f"🔍 Far edge space: {self.latest_edge_dist*100.0:.1f} cm available")
+                    if self.latest_edge_dist < self.min_space_m:
+                        self.get_logger().warn(
+                            f"🛑 Boundary reached! Only {self.latest_edge_dist*100.0:.1f} cm left (< {self.min_space_m*100.0:.1f} cm). Stopping coverage."
+                        )
+                        self.stage = Stage.DONE
+                        status_msg = String()
+                        status_msg.data = "done"
+                        self.status_pub.publish(status_msg)
+                        return
+            else:
+                self.get_logger().info("ℹ️ Facing start direction: bypassing right MToF gate (facing cleaned panel).")
+
+            self.get_logger().warn(f'🛑 Edge hit on Lane {self.completed_lanes}! Rolling forward to apex...')
+            self.stage_timer_end = now + Duration(seconds=self.pre_turn_dur)
+            self.stage = Stage.MOVE_TO_CORNER_APEX
             return
 
-        # ---- 10. DONE ----
+        # ---- 4. MOVE_TO_CORNER_APEX ----
+        if self.stage == Stage.MOVE_TO_CORNER_APEX:
+            if now >= self.stage_timer_end:
+                self._stop()
+                self.stage_timer_end = now + Duration(seconds=self.pause_dur)
+                self.stage = Stage.CORNER_PAUSE_1
+                return
+
+            left, right = self._compute_steer(self.target_yaw, self.base_spd, dt)
+            self._publish_wheels(left, right)
+            return
+
+        # ---- 5. CORNER_PAUSE_1 ----
+        if self.stage == Stage.CORNER_PAUSE_1:
+            self._stop()
+            if now >= self.stage_timer_end:
+                turn_dir = 1.0 if self.turn_left else -1.0
+                self.target_yaw = self._norm_angle(self.lane_heading + (turn_dir * self.turn_angle))
+                self.turn_start_yaw = self.imu_yaw
+                self.has_moved = False
+                self.trim_done = False
+                self.get_logger().info(
+                    f'🔄 TURN 1: Pivoting 90° toward adjacent stripe. Target: {math.degrees(self.target_yaw):.2f}°'
+                )
+                self.stage = Stage.TURN_1
+            return
+
+        # ---- 6. TURN_1 ----
+        if self.stage == Stage.TURN_1:
+            err = self._norm_angle(self.target_yaw - self.imu_yaw)
+            abs_err = abs(err)
+
+            if abs(self._norm_angle(self.imu_yaw - self.turn_start_yaw)) > math.radians(2.0):
+                self.has_moved = True
+
+            if self.has_moved and abs_err <= self.brake_lead_rad:
+                self.brake_start = now
+                self.stage = Stage.COUNTER_BRAKE_1
+                return
+
+            wz_dir = math.copysign(1.0, err)
+            self.active_turn_dir = wz_dir
+            turn_wheel_spd = (self.turn_spd * self.track_width) / 2.0
+            self._publish_wheels(-wz_dir * turn_wheel_spd, wz_dir * turn_wheel_spd)
+            return
+
+        # ---- 7. COUNTER_BRAKE_1 ----
+        if self.stage == Stage.COUNTER_BRAKE_1:
+            dt_brake = (now - self.brake_start).nanoseconds * 1e-9
+            if dt_brake < self.counter_sec:
+                plug_dir = -self.active_turn_dir
+                plug_wheel_spd = (self.counter_spd * self.track_width) / 2.0
+                self._publish_wheels(-plug_dir * plug_wheel_spd, plug_dir * plug_wheel_spd)
+            else:
+                self._stop()
+                self.settle_start = now
+                self.stage = Stage.SETTLE_1
+            return
+
+        # ---- 8. SETTLE_1 ----
+        if self.stage == Stage.SETTLE_1:
+            self._stop()
+            dt_settle = (now - self.settle_start).nanoseconds * 1e-9
+            if dt_settle >= self.settle_time:
+                err = self._norm_angle(self.target_yaw - self.imu_yaw)
+                if abs(err) > self.trim_tol_rad and not self.trim_done:
+                    self.trim_done = True
+                    self.brake_start = now
+                    self.stage = Stage.TRIM_1
+                    return
+
+                self.stage_timer_start = now
+                self.stage_timer_end = now + Duration(seconds=self.stripe_shift_dur)
+                self.pid_heading.reset()
+                self.get_logger().info(f'➡️ Shifting forward along edge ({self.stripe_shift_dur:.1f}s)...')
+                self.stage = Stage.ADVANCE_STRIPE
+            return
+
+        # ---- 9. TRIM_1 ----
+        if self.stage == Stage.TRIM_1:
+            dt_trim = (now - self.brake_start).nanoseconds * 1e-9
+            err = self._norm_angle(self.target_yaw - self.imu_yaw)
+            if dt_trim < 0.040:
+                wz_dir = math.copysign(1.0, err)
+                trim_wheel_spd = (self.turn_spd * self.track_width) / 2.0
+                self._publish_wheels(-wz_dir * trim_wheel_spd, wz_dir * trim_wheel_spd)
+            else:
+                self._stop()
+                self.settle_start = now
+                self.stage = Stage.SETTLE_1
+            return
+
+        # ---- 10. ADVANCE_STRIPE ----
+        if self.stage == Stage.ADVANCE_STRIPE:
+            elapsed_shift = (now - self.stage_timer_start).nanoseconds * 1e-9
+            if elapsed_shift > self.shift_blank_dur and self._is_tripped('front'):
+                self.get_logger().warn('⚠️ End of panel hit during stripe shift - stopping shift')
+                self._stop()
+                self.stage = Stage.DONE
+                status_msg = String()
+                status_msg.data = "done"
+                self.status_pub.publish(status_msg)
+                return
+
+            if now >= self.stage_timer_end:
+                self._stop()
+                self.stage_timer_end = now + Duration(seconds=self.pause_dur)
+                self.stage = Stage.CORNER_PAUSE_2
+                return
+
+            left, right = self._compute_steer(self.target_yaw, self.shift_spd, dt)
+            self._publish_wheels(left, right)
+            return
+
+        # ---- 11. CORNER_PAUSE_2 ----
+        if self.stage == Stage.CORNER_PAUSE_2:
+            self._stop()
+            if now >= self.stage_timer_end:
+                turn_dir = 1.0 if self.turn_left else -1.0
+                self.target_yaw = self._norm_angle(self.target_yaw + (turn_dir * self.turn_angle))
+                self.lane_heading = self.target_yaw
+                self.turn_start_yaw = self.imu_yaw
+                self.has_moved = False
+                self.trim_done = False
+                self.get_logger().info(
+                    f'🔄 TURN 2: Pivoting 90° into reversed lane. Target: {math.degrees(self.target_yaw):.2f}°'
+                )
+                self.stage = Stage.TURN_2
+            return
+
+        # ---- 12. TURN_2 ----
+        if self.stage == Stage.TURN_2:
+            err = self._norm_angle(self.target_yaw - self.imu_yaw)
+            abs_err = abs(err)
+
+            if abs(self._norm_angle(self.imu_yaw - self.turn_start_yaw)) > math.radians(2.0):
+                self.has_moved = True
+
+            if self.has_moved and abs_err <= self.brake_lead_rad:
+                self.brake_start = now
+                self.stage = Stage.COUNTER_BRAKE_2
+                return
+
+            wz_dir = math.copysign(1.0, err)
+            self.active_turn_dir = wz_dir
+            turn_wheel_spd = (self.turn_spd * self.track_width) / 2.0
+            self._publish_wheels(-wz_dir * turn_wheel_spd, wz_dir * turn_wheel_spd)
+            return
+
+        # ---- 13. COUNTER_BRAKE_2 ----
+        if self.stage == Stage.COUNTER_BRAKE_2:
+            dt_brake = (now - self.brake_start).nanoseconds * 1e-9
+            if dt_brake < self.counter_sec:
+                plug_dir = -self.active_turn_dir
+                plug_wheel_spd = (self.counter_spd * self.track_width) / 2.0
+                self._publish_wheels(-plug_dir * plug_wheel_spd, plug_dir * plug_wheel_spd)
+            else:
+                self._stop()
+                self.settle_start = now
+                self.stage = Stage.SETTLE_2
+            return
+
+        # ---- 14. SETTLE_2 ----
+        if self.stage == Stage.SETTLE_2:
+            self._stop()
+            dt_settle = (now - self.settle_start).nanoseconds * 1e-9
+            if dt_settle >= self.settle_time:
+                err = self._norm_angle(self.target_yaw - self.imu_yaw)
+                if abs(err) > self.trim_tol_rad and not self.trim_done:
+                    self.trim_done = True
+                    self.brake_start = now
+                    self.stage = Stage.TRIM_2
+                    return
+
+                self.turn_left = not self.turn_left
+                self.stage_timer_end = now + Duration(seconds=self.advance_dur)
+                self.pid_heading.reset()
+                self.stage = Stage.ADVANCE_ENTRY
+            return
+
+        # ---- 15. TRIM_2 ----
+        if self.stage == Stage.TRIM_2:
+            dt_trim = (now - self.brake_start).nanoseconds * 1e-9
+            err = self._norm_angle(self.target_yaw - self.imu_yaw)
+            if dt_trim < 0.040:
+                wz_dir = math.copysign(1.0, err)
+                trim_wheel_spd = (self.turn_spd * self.track_width) / 2.0
+                self._publish_wheels(-wz_dir * trim_wheel_spd, wz_dir * trim_wheel_spd)
+            else:
+                self._stop()
+                self.settle_start = now
+                self.stage = Stage.SETTLE_2
+            return
+
+        # ---- 16. ADVANCE_ENTRY ----
+        if self.stage == Stage.ADVANCE_ENTRY:
+            if now >= self.stage_timer_end:
+                self._stop()
+                self.pid_heading.reset()
+                self.get_logger().info(f'▶️ Lane {self.completed_lanes + 1} sweeping.')
+                self.stage = Stage.SWEEP_LANE
+                return
+
+            left, right = self._compute_steer(self.target_yaw, self.base_spd, dt)
+            self._publish_wheels(left, right)
+            return
+
+        # ---- 17. DONE ----
         if self.stage == Stage.DONE:
             self._stop()
-            return
-
-    def destroy_cleanly(self):
-        try:
-            self._stop()
-            self.destroy_node()
-        except Exception:
-            pass
 
 
 def main(args=None):
     rclpy.init(args=args)
-    node = SolarbotPerimeterOpenLoopNode()
+    node = SolarbotLawnmowerMtofNode()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except (KeyboardInterrupt, rclpy.executors.ExternalShutdownException):
         pass
     finally:
-        node.destroy_cleanly()
         try:
             if rclpy.ok():
-                rclpy.shutdown()
+                node._stop()
         except Exception:
             pass
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
 
 
 if __name__ == '__main__':

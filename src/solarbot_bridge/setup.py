@@ -30,6 +30,7 @@ setup(
             'tof_bridge = solarbot_bridge.tof_bridge:main',
             'cmd_vel_bridge = solarbot_bridge.cmd_vel_bridge:main',
             'motor_teleop = solarbot_bridge.motor_teleop:main',
+            'cmd_vel_nav_bridge = solarbot_bridge.cmd_vel_nav_bridge:main',
         ],
     },
 )

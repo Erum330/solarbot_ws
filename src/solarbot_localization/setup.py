@@ -28,6 +28,7 @@ setup(
             'real_odo = solarbot_localization.real_odo:main',
             'odom_logger = solarbot_localization.odom_logger:main',
             'solar_panel_mapper_node = solarbot_localization.solar_panel_mapper_node:main',
+            'map_finalizer_node = solarbot_localization.map_finalizer_node:main',
         ],
     },
 )

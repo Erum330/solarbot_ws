@@ -35,6 +35,7 @@ setup(
             'solarbot_perimeter_mtof_node = solarbot_safety.solarbot_perimeter_mtof_node:main',
             'solarbot_row_perimeter_node = solarbot_safety.solarbot_row_perimeter_node:main',
             'edge_logger_node = solarbot_safety.edge_logger_node:main',
+            'solarbot_nav2_lawnmower = solarbot_safety.solarbot_nav2_lawnmower:main',
 
         
 

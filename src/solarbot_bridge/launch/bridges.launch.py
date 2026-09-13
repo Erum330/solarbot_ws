@@ -2,10 +2,11 @@
 """
 bridges.launch.py
 
-Launches the three interface bridges:
-  1. tof_bridge:     mros_interfaces/Tof -> 3x LaserScan + 1x PointCloud2
-  2. imu_bridge:     mros_interfaces/Imu -> sensor_msgs/Imu (/imu)
-  3. cmd_vel_bridge: geometry_msgs/Twist (/cmd_vel) -> mros_interfaces/MotorCmd (/motorCmd)
+Launches the interface bridges:
+  1. tof_bridge:         mros_interfaces/Tof -> 3x LaserScan + 1x PointCloud2
+  2. imu_bridge:         mros_interfaces/Imu -> sensor_msgs/Imu (/imu)
+  3. cmd_vel_bridge:     geometry_msgs/Twist (/cmd_vel) -> mros_interfaces/MotorCmd (/motorCmd)
+                         (Selectable: 'cmd_vel_bridge' or 'cmd_vel_nav_bridge')
 """
 
 from launch import LaunchDescription
@@ -16,7 +17,14 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # ---------------- Launch Configurations / Arguments ----------------
-    # cmd_vel_bridge arguments
+    # Bridge selection argument
+    bridge_type_arg = DeclareLaunchArgument(
+        'bridge_type',
+        default_value='cmd_vel_bridge',
+        description='Select bridge executable: "cmd_vel_bridge" (default/mapping) or "cmd_vel_nav_bridge" (Nav2 pivot boost).'
+    )
+
+    # cmd_vel bridge arguments
     publish_raw_mps_arg = DeclareLaunchArgument(
         'publish_raw_mps',
         default_value='false',
@@ -36,6 +44,11 @@ def generate_launch_description():
         'cmd_vel_timeout_sec',
         default_value='0.5',
         description='Watchdog timeout to zero motors if /cmd_vel stops streaming.'
+    )
+    min_pivot_mps_arg = DeclareLaunchArgument(
+        'min_pivot_mps',
+        default_value='0.23',
+        description='Minimum wheel velocity for in-place turns (used when bridge_type:=cmd_vel_nav_bridge).'
     )
 
     # imu_bridge arguments
@@ -95,7 +108,7 @@ def generate_launch_description():
 
     cmd_vel_bridge_node = Node(
         package='solarbot_bridge',
-        executable='cmd_vel_bridge',
+        executable=LaunchConfiguration('bridge_type'),
         name='cmd_vel_bridge',
         output='screen',
         emulate_tty=True,
@@ -106,14 +119,17 @@ def generate_launch_description():
             'cmd_scale': LaunchConfiguration('cmd_scale'),
             'publish_raw_mps': LaunchConfiguration('publish_raw_mps'),
             'cmd_vel_timeout_sec': LaunchConfiguration('cmd_vel_timeout_sec'),
+            'min_pivot_mps': LaunchConfiguration('min_pivot_mps'),
         }]
     )
 
     return LaunchDescription([
+        bridge_type_arg,
         publish_raw_mps_arg,
         cmd_scale_arg,
         wheel_separation_arg,
         cmd_vel_timeout_arg,
+        min_pivot_mps_arg,
         gyro_is_deg_per_sec_arg,
         imu_frame_id_arg,
         tof_unit_is_mm_arg,
